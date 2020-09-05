@@ -19,6 +19,7 @@ namespace Mobile
 
         protected override void OnStart()
         {
+            AppShell.Current.GoToAsync("//home");
         }
 
         protected override void OnSleep()
