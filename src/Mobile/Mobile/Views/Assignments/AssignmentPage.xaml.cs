@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mobile.ViewModels.Assignments;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,12 @@ namespace Mobile.Views.Assignments
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AssignmentPage : ContentPage
     {
+        AssignmentViewModel _viewModel;
         public AssignmentPage()
         {
             InitializeComponent();
+
+            BindingContext = _viewModel = new AssignmentViewModel();
         }
     }
 }
