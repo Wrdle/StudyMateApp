@@ -2,20 +2,39 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Mobile.Views.AssignmentsPage"
-             xmlns:vm="clr-namespace:Mobile.ViewModels"
+             xmlns:local="clr-namespace:Mobile.ViewModels"
+             xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
 
-    <ContentPage.BindingContext>
-        <vm:AssignmentsViewModel />
-    </ContentPage.BindingContext>
-    
-    <ContentPage.Content>
-        <ScrollView>
-            <StackLayout>
-                <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            </StackLayout>
-        </ScrollView>
-    </ContentPage.Content>
+    <RefreshView x:DataType="local:AssignmentsViewModel" Command="{Binding LoadAssignmentsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <CollectionView x:Name="AssignmentsListView"
+                ItemsSource="{Binding Assignments}"
+                SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame>
+                        <Frame HasShadow="True" Margin="-6" VerticalOptions="Center">
+                            <StackLayout Padding="12" x:DataType="model:Assignment">
+                                <Label Text="{Binding Title}" 
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="16" />
+                                <Label Text="{Binding Description}" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </Frame>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
 </ContentPage>
