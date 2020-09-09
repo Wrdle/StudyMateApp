@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using Mobile.Services;
+using Xamarin.Forms;
 
 namespace Mobile
 {
@@ -8,12 +9,13 @@ namespace Mobile
         public App()
         {
             InitializeComponent();
+            DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }
 
         protected override void OnStart()
         {
-            AppShell.Current.GoToAsync("//home");
+            AppShell.Current.GoToAsync("notifications");
         }
 
         protected override void OnSleep()

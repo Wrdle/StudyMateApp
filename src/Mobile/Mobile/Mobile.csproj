@@ -51,7 +51,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\Assignments\" />
     <Folder Include="ViewModels\Groups\" />
   </ItemGroup>
 </Project>
