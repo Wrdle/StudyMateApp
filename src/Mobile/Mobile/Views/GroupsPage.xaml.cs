@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,6 +10,11 @@ namespace Mobile.Views
         public GroupsPage()
         {
             InitializeComponent();
+        }
+
+        private void OnClick_AddGroup(object sender, System.EventArgs e)
+        {
+
         }
     }
 }
