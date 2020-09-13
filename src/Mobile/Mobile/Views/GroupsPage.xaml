@@ -4,18 +4,34 @@
              x:Class="Mobile.Views.GroupsPage"
              xmlns:vm="clr-namespace:Mobile.ViewModels"
              Title="{Binding Title}">
-
     <ContentPage.BindingContext>
         <vm:GroupsViewModel />
     </ContentPage.BindingContext>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="" Text="Add Group" Clicked="OnClick_AddGroup" />
+    </ContentPage.ToolbarItems>
+    
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout>
-                <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            </StackLayout>
-        </ScrollView>
+        <RefreshView>
+            <CollectionView x:Name="GroupsListView"
+                            ItemsSource="{Binding Groups}"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10">
+                            <Label Text="{Binding Id}" 
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="16" />
+                            <Label Text="{Binding Name}" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="13" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
     </ContentPage.Content>
 </ContentPage>
