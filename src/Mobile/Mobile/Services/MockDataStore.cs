@@ -17,7 +17,7 @@ namespace Mobile.Services
             assignments = new List<Assignment>()
             {
                 new Assignment { Id = 1, Title="IAB330 Assignment 1", Description = "This is a short description", Skills = null, DateDue = new DateTime(2020, 12, 25), CoverPhoto = null, CoverColour = null},
-                new Assignment { Id = 1, Title="CAB220 Assignment 4", Description = "This is a short description for my CAB220 Assignment", Skills = null, DateDue = new DateTime(2020, 11, 25), CoverPhoto = null, CoverColour = null}
+                new Assignment { Id = 2, Title="CAB220 Assignment 4", Description = "This is a short description for my CAB220 Assignment", Skills = null, DateDue = new DateTime(2020, 11, 25), CoverPhoto = null, CoverColour = null}
             };
         }
 

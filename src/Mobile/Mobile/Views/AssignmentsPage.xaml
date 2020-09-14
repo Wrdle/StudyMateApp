@@ -16,18 +16,18 @@
                         <Frame HasShadow="True" Margin="-6" VerticalOptions="Center">
                             <StackLayout Padding="12" x:DataType="model:Assignment">
                                 <Label Text="{Binding Title}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="16" />
+                                    LineBreakMode="NoWrap" 
+                                    Style="{DynamicResource ListItemTextStyle}" 
+                                    FontSize="16" />
                                 <Label Text="{Binding Description}" 
-                            LineBreakMode="NoWrap"
-                            Style="{DynamicResource ListItemDetailTextStyle}"
-                            FontSize="13" />
+                                    LineBreakMode="NoWrap"
+                                    Style="{DynamicResource ListItemDetailTextStyle}"
+                                    FontSize="13" />
                                 <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=ItemTapped}"		
-                                CommandParameter="{Binding .}">
+                                        NumberOfTapsRequired="1"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=ItemTapped}"		
+                                        CommandParameter="{Binding .}">
                                     </TapGestureRecognizer>
                                 </StackLayout.GestureRecognizers>
                             </StackLayout>
