@@ -8,8 +8,8 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">
-                <Frame Padding="0" Margin="0">
-                    <Image Source="{Binding CoverPhoto}" HeightRequest="200" Aspect="AspectFill"></Image>
+                <Frame Padding="0" Margin="0" BackgroundColor="{Binding CoverBackgroundColour}">
+                    <Image Source="{Binding CoverPhoto}" HeightRequest="200" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
                 </Frame>
                 <Frame HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
                     <Label Text="{Binding DueDate}" FontSize="Medium"></Label>

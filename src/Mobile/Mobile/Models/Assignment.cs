@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Mobile.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using Xamarin.Forms;
+using Color = Xamarin.Forms.Color;
 
 namespace Mobile.Models
 {
@@ -10,13 +14,28 @@ namespace Mobile.Models
         public string Description { get; set; }
         public ICollection<Skill> Skills { get; set; }
         public DateTime DateDue { get; set; }
-        public string CoverPhoto { get; set; }
-        public string CoverColour { get; set; }
+        public ImageSource CoverPhoto { get; set; }
+        public SMColour CoverColour { get; set; }
+
+        public Color CoverBackgroundColour 
+        {
+            get
+            {
+                return CoverColour.BackgroundColour;
+            }
+        }
+
+        public Color CoverFontColour
+        {
+            get
+            {
+                return CoverColour.FontColour;
+            }
+        }
 
         public Assignment()
         {
             Skills = new List<Skill>();
         }
-
     }
 }
