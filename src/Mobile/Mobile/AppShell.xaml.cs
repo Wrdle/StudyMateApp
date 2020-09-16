@@ -10,7 +10,11 @@ namespace Mobile
         public AppShell()
         {
             InitializeComponent();
+            RegisterRoutes();
+        }
 
+        void RegisterRoutes()
+        {
             // Add Main Page Routes
             Routing.RegisterRoute("home", typeof(HomePage));
             Routing.RegisterRoute("profile", typeof(ProfilePage));

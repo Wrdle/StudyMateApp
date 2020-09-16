@@ -13,24 +13,29 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame>
-                        <Frame HasShadow="True" Margin="-6" VerticalOptions="Center">
-                            <StackLayout Padding="12" x:DataType="model:Assignment">
-                                <Label Text="{Binding Title}" 
-                                    LineBreakMode="NoWrap" 
-                                    Style="{DynamicResource ListItemTextStyle}" 
-                                    FontSize="16" />
-                                <Label Text="{Binding Description}" 
-                                    LineBreakMode="NoWrap"
-                                    Style="{DynamicResource ListItemDetailTextStyle}"
-                                    FontSize="13" />
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer 
-                                        NumberOfTapsRequired="1"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=ItemTapped}"		
-                                        CommandParameter="{Binding .}">
-                                    </TapGestureRecognizer>
-                                </StackLayout.GestureRecognizers>
-                            </StackLayout>
+                        <Frame CornerRadius="2" Padding="0,0,0,0">
+                            <AbsoluteLayout BackgroundColor="{Binding CoverBackgroundColour}" x:DataType="model:Assignment" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
+                                <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
+                                        <Label Text="{Binding Title}" 
+                                            LineBreakMode="NoWrap" 
+                                            Style="{DynamicResource ListItemTextStyle}" 
+                                            FontSize="16" TextColor="{Binding CoverFontColour}"/>
+                                        <Label Text="{Binding Description}" 
+                                            LineBreakMode="NoWrap"
+                                            Style="{DynamicResource ListItemDetailTextStyle}"
+                                            FontSize="13" TextColor="{Binding CoverFontColour}"/>
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                NumberOfTapsRequired="1"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=ItemTapped}"		
+                                                CommandParameter="{Binding .}">
+                                            </TapGestureRecognizer>
+                                        </StackLayout.GestureRecognizers>
+                                    </StackLayout>
+                                </StackLayout>
+                            </AbsoluteLayout>
                         </Frame>
                     </Frame>
                 </DataTemplate>
