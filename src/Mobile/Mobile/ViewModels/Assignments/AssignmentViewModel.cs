@@ -1,8 +1,10 @@
-﻿using Mobile.Models;
+﻿using Mobile.Helpers;
+using Mobile.Models;
 using Mobile.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using Xamarin.Forms;
 
@@ -12,6 +14,11 @@ namespace Mobile.ViewModels.Assignments
     class AssignmentViewModel : BaseViewModel
     {
         private string assignmentID;
+        private string dueDate;
+        private string description;
+        private bool showCoverPhoto;
+        private Color coverBackgroundColour;
+        private ImageSource coverPhoto;
         private Assignment assignment;
 
         public AssignmentViewModel()
@@ -27,13 +34,47 @@ namespace Mobile.ViewModels.Assignments
 
         public string AssignmentID
         {
-            get {
-                return assignmentID;
+            get => assignmentID;
+            set
+            {
+                SetProperty(ref assignmentID, value);
+                LoadAssignmentId(value);
+            }
+        }
+
+        public string DueDate
+        { 
+            get => "Final Due: " + dueDate;
+            set => SetProperty(ref dueDate, value);
+        }
+
+        public string Description
+        {
+                get => description;
+                set => SetProperty(ref description, value);
+        }
+
+        public bool ShowCoverPhoto
+        {
+            get => showCoverPhoto;
+            set => SetProperty(ref showCoverPhoto, value);
+        }
+
+        public Color CoverBackgroundColour 
+        {
+            get => coverBackgroundColour;
+            set => SetProperty(ref coverBackgroundColour, value);
+        }
+
+        public ImageSource CoverPhoto
+        {
+            get
+            {
+                return coverPhoto;
             }
             set
             {
-                assignmentID = value;
-                LoadAssignmentId(value);
+                SetProperty(ref coverPhoto, value);
             }
         }
 
@@ -43,11 +84,28 @@ namespace Mobile.ViewModels.Assignments
             {
                 assignment = await DataStore.GetById(Convert.ToInt64(id));
                 Title = assignment.Title;
+                DueDate = assignment.DateDue.ToShortDateString();
+                Description = assignment.Description;
+                ShowCoverPhoto = CheckCoverPhoto();
+                CoverBackgroundColour = assignment.CoverColour.BackgroundColour;
+
+                //OnPropertyChanged(nameof(DueDate));
+                //OnPropertyChanged(nameof(Description));
             }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
             }
+        }
+
+        public bool CheckCoverPhoto()
+        {
+            if (assignment.CoverPhoto != null)
+            {
+                CoverPhoto = assignment.CoverPhoto;
+                return true;
+            }
+            return false;
         }
     }
 }

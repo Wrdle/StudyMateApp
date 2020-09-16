@@ -1,4 +1,5 @@
-﻿using Mobile.Models;
+﻿using Mobile.Helpers;
+using Mobile.Models;
 using Mobile.Services;
 using Mobile.ViewModels.Assignments;
 using Mobile.Views.Assignments;
@@ -42,6 +43,10 @@ namespace Mobile.ViewModels
                 var assignments = await DataStore.GetAllByUserAsync(1);
                 foreach (var assignment in assignments)
                 {
+                    if (assignment.CoverPhoto != null)
+                    {
+                        assignment.CoverColour = SMColours.DarkGray;
+                    }
                     Assignments.Add(assignment);
                 }
             }
