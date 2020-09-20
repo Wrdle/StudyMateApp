@@ -13,12 +13,11 @@ namespace Mobile.Views.Assignments
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AssignmentPage : ContentPage
     {
-        AssignmentViewModel _viewModel;
         public AssignmentPage()
         {
             InitializeComponent();
 
-            BindingContext = _viewModel = new AssignmentViewModel();
+            BindingContext = new AssignmentViewModel();
         }
     }
 }

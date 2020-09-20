@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.Android", "src\Mobil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.iOS", "src\Mobile\Mobile.iOS\Mobile.iOS.csproj", "{4030E337-D259-46F3-BB5B-1F0E4F271EA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile", "src\Mobile\Mobile\Mobile.csproj", "{4E33641C-0C41-44DE-B7D9-B4670F4CE5D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile", "src\Mobile\Mobile\Mobile.csproj", "{4E33641C-0C41-44DE-B7D9-B4670F4CE5D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
