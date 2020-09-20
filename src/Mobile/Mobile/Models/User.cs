@@ -10,9 +10,9 @@ namespace Mobile.Models
         public string LastName { get; set; }
         public string Institution { get; set; }
         public string Major { get; set; }
-        public ICollection<Skill> Skills { get; private set; }
-        public ICollection<Assignment> Assignments { get; private set; }
-        public ICollection<Group> Groups { get; private set; }
+        public ICollection<Skill> Skills { get; set; }
+        public ICollection<Assignment> Assignments { get; set; }
+        public ICollection<Group> Groups { get; set; }
 
         public User()
         {
