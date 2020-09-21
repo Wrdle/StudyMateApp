@@ -1,5 +1,6 @@
 ﻿using Mobile.Data;
 using Mobile.Services;
+using Mobile.Services.Interfaces;
 using MvvmHelpers;
 using Xamarin.Forms;
 
@@ -18,6 +19,9 @@ namespace Mobile
 
             // Register services
             DependencyService.Register<MockDataStore>();
+            DependencyService.Register<IUserStore, UserStore>();
+            DependencyService.Register<IGroupStore, GroupStore>();
+
 
             // Set main page
             MainPage = new AppShell();
