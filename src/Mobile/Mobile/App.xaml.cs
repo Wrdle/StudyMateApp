@@ -1,4 +1,6 @@
-﻿using Mobile.Services;
+﻿using Mobile.Data;
+using Mobile.Services;
+using MvvmHelpers;
 using Xamarin.Forms;
 
 namespace Mobile
@@ -8,8 +10,16 @@ namespace Mobile
 
         public App()
         {
+            // Initialize app
             InitializeComponent();
+
+            // Seed database
+            new AppDbSeeder().Seed().SafeFireAndForget();
+
+            // Register services
             DependencyService.Register<MockDataStore>();
+
+            // Set main page
             MainPage = new AppShell();
         }
 
