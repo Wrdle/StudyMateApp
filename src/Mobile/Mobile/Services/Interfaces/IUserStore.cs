@@ -5,6 +5,7 @@ namespace Mobile.Services.Interfaces
 {
     public interface IUserStore
     {
+        long CurrentUserId { get; }
         bool IsLoggedIn { get; }
         Task Login(string email, string password);
         Task Logout();

@@ -65,8 +65,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Mappings\" />
-    <Folder Include="Data\Repositories\" />
     <Folder Include="ViewModels\Groups\" />
   </ItemGroup>
 </Project>
