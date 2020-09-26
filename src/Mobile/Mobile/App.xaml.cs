@@ -21,7 +21,12 @@ namespace Mobile
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
+            DependencyService.Register<IAssignmentStore, AssignmentStore>();
 
+            {
+                var userStore = DependencyService.Get<IUserStore>();
+                userStore.Login(AppDbSeeder.TestUser.Email, "").SafeFireAndForget();
+            }
 
             // Set main page
             MainPage = new AppShell();
@@ -29,7 +34,6 @@ namespace Mobile
 
         protected override void OnStart()
         {
-            AppShell.Current.GoToAsync("notifications");
         }
 
         protected override void OnSleep()

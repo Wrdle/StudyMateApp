@@ -4,13 +4,16 @@ using System.Threading.Tasks;
 
 namespace Mobile.Services.Interfaces
 {
-    public interface IAssignmentStore<T>
+    public interface IAssignmentStore
     {
         // Commands
+        Task<long> Create(Assignment assignment, long? groupId = null);
+        Task Update(Assignment assignment);
+        Task Delete(long id);
 
         // Queries
-        //Task<ICollection<AssignmentListItem>> GetByGroup(long groupId);
+        Task<ICollection<Assignment>> GetByGroupId(long groupId);
         Task<Assignment> GetById(long id);
-        Task<ICollection<T>> GetAllByUserAsync(int userID, bool forceRefresh = false);
+        Task<ICollection<Assignment>> GetByUserIdAsync(long userId);
     }
 }

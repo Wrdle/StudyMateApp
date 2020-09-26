@@ -1,16 +1,14 @@
 ﻿using Mobile.Helpers;
 using Mobile.Models;
-using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Mobile.Services
 {
-    public class MockDataStore : IAssignmentStore<Assignment>
+    public class MockDataStore
     {
         ICollection<Assignment> assignments;
 

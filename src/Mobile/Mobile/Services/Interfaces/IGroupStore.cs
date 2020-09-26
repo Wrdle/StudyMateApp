@@ -8,9 +8,10 @@ namespace Mobile.Services.Interfaces
     {
         // Commands
         Task Create(string name);
-        Task Delete(long id);
+        Task Leave(long id);
 
         // Queries
+        Task<ICollection<GroupListItem>> Search(string searchTerm);
         Task<ICollection<GroupListItem>> MyGroups();
         Task<Group> GetById(long id);
 
