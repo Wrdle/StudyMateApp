@@ -11,13 +11,7 @@ namespace Mobile.Data
         //          Fields
         //------------------------------
 
-        private ICollection<User> users = new List<User>
-        {
-            new User { Email = "marko@studymate.com", FirstName = "Marko", LastName = "Lmnop" },
-            new User { Email = "louis@studymate.com", FirstName = "Louis", LastName = "Wasd" },
-            new User { Email = "matt@studymate.com", FirstName = "Matt", LastName = "Hjkl" },
-            new User { Email = "kiki@studymate.com", FirstName = "Kiki", LastName = "Qwer" }
-        };
+        public static User TestUser = new User { Email = "test-user@studymate.com", FirstName = "Test", LastName = "User" };
 
         //------------------------------
         //          Constructors
@@ -36,12 +30,15 @@ namespace Mobile.Data
         {
             using (var dbContext = new AppDbContext())
             {
-                // If users don't exist in the database, add users.
-                if (!await dbContext.Users.AnyAsync())
-                {
-                    await dbContext.Users.AddRangeAsync(users);
-                    await dbContext.SaveChangesAsync();
-                }
+                await dbContext.Database.EnsureDeletedAsync();
+                await dbContext.Database.EnsureCreatedAsync();
+
+                TestUser.Email = TestUser.Email.ToUpper();
+                await dbContext.Users.AddAsync(TestUser);
+                await dbContext.SaveChangesAsync();
+
+                await dbContext.Groups.AddAsync(new Group { Name = "Test Group", UserGroups = new List<UserGroup> { new UserGroup { UserId = TestUser.Id } } });
+                await dbContext.SaveChangesAsync();
             }
         }
 

@@ -1,17 +1,15 @@
-﻿using Mobile.Models;
-using Mobile.Services;
+﻿using Mobile.Services.Interfaces;
 using Xamarin.Forms;
-using Mobile.Services.Interfaces;
 
 namespace Mobile.ViewModels
 {
     public class BaseViewModel : MvvmHelpers.BaseViewModel
     {
-        public IAssignmentStore<Assignment> DataStore;
+        public IAssignmentStore DataStore;
 
         public BaseViewModel()
         {
-            DataStore = DependencyService.Get<IAssignmentStore<Assignment>>();
+            DataStore = DependencyService.Get<IAssignmentStore>();
         }
     }
 } 

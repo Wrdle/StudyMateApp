@@ -24,6 +24,7 @@ namespace Mobile.Services
         //------------------------------
         //          Constructor
         //------------------------------
+
         public GroupStore()
         {
             _userStore = DependencyService.Get<IUserStore>();
@@ -64,7 +65,7 @@ namespace Mobile.Services
             }
         }
 
-        public async Task Delete(long id)
+        public async Task Leave(long id)
         {
             if (!_userStore.IsLoggedIn)
             {
@@ -130,6 +131,30 @@ namespace Mobile.Services
                         Id = ug.Group.Id,
                         Name = ug.Group.Name
                     })
+                    .ToListAsync();
+
+                return groups;
+            }
+        }
+
+        public async Task<ICollection<GroupListItem>> Search(string searchTerm)
+        {
+            if (!_userStore.IsLoggedIn)
+            {
+                throw new Exception(Error.NotLoggedIn);
+            }
+
+            using (var dbContext = new AppDbContext())
+            {
+                var myGroupIds = await dbContext.UserGroups
+                    .Where(ug => ug.UserId == _userStore.CurrentUserId)
+                    .Select(ug => ug.GroupId)
+                    .ToListAsync();
+
+                var normalizedSearchTerm = searchTerm.ToLower();
+                var groups = await dbContext.Groups
+                    .Where(g => g.Name.ToLower().Contains(normalizedSearchTerm) && !myGroupIds.Contains(g.Id))
+                    .Select(g => new GroupListItem { Id = g.Id, Name = g.Name })
                     .ToListAsync();
 
                 return groups;

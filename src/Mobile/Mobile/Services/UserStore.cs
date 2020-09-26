@@ -18,11 +18,21 @@ namespace Mobile.Services
 
         private static long? _currentUserId = null;
 
-        long CurrentUserId
-        { 
+        /// <summary>
+        /// Gets the ID of the currently logged in user. Returns 0 if there is no currently logged in user.
+        /// </summary>
+        public long CurrentUserId
+        {
             get
             {
-                return _currentUserId.Value;
+                try
+                {
+                    return _currentUserId.Value;
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
             }
         }
 
@@ -163,5 +173,6 @@ namespace Mobile.Services
                 }
             }
         }
+
     }
 }
