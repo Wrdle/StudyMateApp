@@ -1,6 +1,12 @@
-﻿using System;
+﻿using Mobile.Data.Entites;
+using Mobile.Models;
+using MvvmHelpers.Commands;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mobile.ViewModels
 {
@@ -44,5 +50,5 @@ namespace Mobile.ViewModels
         string skillsTitle = "Skills";
 
         public string SkillsTitle => $"{skillsTitle}";
-    }
+    }  
 }
