@@ -15,6 +15,7 @@ namespace Mobile.ViewModels
         public ProfileViewModel()
         {
             Title = "Profile";
+
         }
 
         string name = "Felix";

@@ -14,6 +14,7 @@ namespace Mobile.Services
     public class MockDataStore : IAssignmentStore<Models.Assignment>, ISkillsStore<Models.Skill>, ICheckpointStore<Models.Checkpoint>
     {
         ICollection<Models.Assignment> assignments;
+        ICollection<Models.Skill> skills;
 
         public MockDataStore()
         {
@@ -27,11 +28,22 @@ namespace Mobile.Services
                 new Models.Assignment { Id = 3, Title="CAB303 Assignment 2", Description = "Networks go brrrrrr...", Skills = null, DateDue = new DateTime(2020, 11, 25), CoverPhoto = null, CoverColour = SMColours.LightGray},
                 new Models.Assignment { Id = 4, Title="CABu67 Assignment 2", Description = "Cars go brrmm", Skills = null, DateDue = new DateTime(2020, 11, 25), CoverPhoto = null, CoverColour = SMColours.LightBlue}
             };
+
+            skills = new List<Models.Skill>()
+            {
+                new Models.Skill(1, "Python"),
+                new Models.Skill(2, "C#")
+            };
         }
 
         public async Task<ICollection<Models.Assignment>> GetAllByUserAsync(int userID, bool forceRefresh = false)
         {
             return await Task.FromResult(assignments);
+        }
+
+        public async Task<ICollection<Models.Skill>> GetAllSkillsByUserIDAsync(int userID, bool forceRefresh = false)
+        {
+            return await Task.FromResult(skills);
         }
 
         public async Task<Models.Assignment> GetById(long id)
