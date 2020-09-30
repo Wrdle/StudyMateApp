@@ -7,11 +7,15 @@ namespace Mobile.ViewModels
 {
     public class BaseViewModel : MvvmHelpers.BaseViewModel
     {
-        public IAssignmentStore<Assignment> DataStore;
+        public IAssignmentStore<Assignment> AssignmentDataStore;
+        public ISkillsStore<Skill> SkillDataStore;
+        public ICheckpointStore<Checkpoint> CheckpointDataStore;
 
         public BaseViewModel()
         {
-            DataStore = DependencyService.Get<IAssignmentStore<Assignment>>();
+            AssignmentDataStore = DependencyService.Get<IAssignmentStore<Assignment>>();
+            SkillDataStore = DependencyService.Get<ISkillsStore<Skill>>();
+            CheckpointDataStore = DependencyService.Get<ICheckpointStore<Checkpoint>>();
         }
     }
 } 

@@ -3,6 +3,7 @@ using Mobile.Models;
 using Mobile.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -78,16 +79,24 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        public ObservableCollection<Checkpoint> Checkpoints { get; set; }
+
         public async void LoadAssignmentId(string id)
         {
             try
             {
-                assignment = await DataStore.GetById(Convert.ToInt64(id));
+                long assignmentID = Convert.ToInt64(id);
+
+                assignment = await AssignmentDataStore.GetById(assignmentID);
                 Title = assignment.Title;
                 DueDate = assignment.DateDue.ToShortDateString();
                 Description = assignment.Description;
                 ShowCoverPhoto = CheckCoverPhoto();
                 CoverBackgroundColour = assignment.CoverColour.BackgroundColour;
+
+                LoadCheckpoints(assignmentID);
+
+                Debug.WriteLine("Data loaded successfully.");
 
                 //OnPropertyChanged(nameof(DueDate));
                 //OnPropertyChanged(nameof(Description));
@@ -95,6 +104,18 @@ namespace Mobile.ViewModels.Assignments
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
+            }
+        }
+
+        public async void LoadCheckpoints(long id)
+        {
+            var checkpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
+
+            Checkpoints = new ObservableCollection<Checkpoint>();
+
+            foreach (Checkpoint checkpoint in checkpoints)
+            {
+                Checkpoints.Add(checkpoint);
             }
         }
 
