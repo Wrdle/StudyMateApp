@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Mobile.Services.Interfaces
 {
-    public interface IUserStore
+    public interface IUserStore<T>
     {
         bool IsLoggedIn { get; }
         Task Login(string email, string password);
