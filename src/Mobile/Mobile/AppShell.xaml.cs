@@ -35,6 +35,5 @@ namespace Mobile
             Routing.RegisterRoute("groups/groupInfo", typeof(GroupInfoPage));
             Routing.RegisterRoute("groups/group", typeof(GroupPage));
         }
-
     }
 }
