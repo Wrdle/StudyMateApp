@@ -28,6 +28,9 @@ namespace Mobile.ViewModels.Assignments
         
         public Command<Checkpoint> CheckpointTapped { get; }
 
+        /// <summary>
+        /// Constructor for AssignmentViewModel. Called on class instantiation
+        /// </summary>
         public AssignmentViewModel()
         {
             Title = "Assignment";
@@ -62,7 +65,7 @@ namespace Mobile.ViewModels.Assignments
                 get => description;
                 set => SetProperty(ref description, value);
         }
-
+        
         public bool ShowCoverPhoto
         {
             get => showCoverPhoto;
@@ -106,6 +109,10 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        /// <summary>
+        /// Navigate to selected checkpoint page
+        /// </summary>
+        /// <param name="checkpoint">Checkpoint to navigate to</param>
         async void OnCheckpointSelected(Checkpoint checkpoint)
         {
             if (checkpoint == null)
@@ -115,6 +122,10 @@ namespace Mobile.ViewModels.Assignments
             await Shell.Current.GoToAsync($"//assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
         }
 
+        /// <summary>
+        /// Loads a assignment from the datastore given an assignment id
+        /// </summary>
+        /// <param name="id">Assignment Id</param>
         public async void LoadAssignmentId(string id)
         {
             try
@@ -145,6 +156,10 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        /// <summary>
+        /// Loads checkpoints from datastore
+        /// </summary>
+        /// <param name="id">id of checkpoint</param>
         public async void LoadCheckpoints(long id)
         {
             var requestedCheckpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
@@ -157,6 +172,10 @@ namespace Mobile.ViewModels.Assignments
             } 
         }
 
+        /// <summary>
+        /// Check if assignment has a coverphoto
+        /// </summary>
+        /// <returns>True/False</returns>
         public bool CheckCoverPhoto()
         {
             if (assignment.CoverPhoto != null)
