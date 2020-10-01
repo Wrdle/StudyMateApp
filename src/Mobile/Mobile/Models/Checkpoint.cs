@@ -15,7 +15,20 @@ namespace Mobile.Models
         
         public string Notes { get; set; }
 
+        public DateTime DueDate { get; set; }
+
         public List<User> AssignedUsers { get; set; }
+
+        /// <summary>
+        /// Returns DueDate as a formatted string
+        /// </summary>
+        public string DueDateString
+        {
+            get
+            {
+                return ("Due " + DueDate.ToString("ddd d \\o\\f MMMM yyyy")).ToUpper();
+            }
+        }
 
         public Checkpoint()
         {
