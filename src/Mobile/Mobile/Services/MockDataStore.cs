@@ -33,7 +33,7 @@ namespace Mobile.Services
             checkpoints = new List<Models.Checkpoint>()
             {
                 new Models.Checkpoint { Id = 1, AssignmentId = 1, Title = "Checkpoint 1", Notes = "Hello i am some notes for checkpoint 1" },
-                new Models.Checkpoint { Id = 1, AssignmentId = 1, Title = "Checkpoint 2", Notes = "Hello i am some notes for checkpoint 2" }
+                new Models.Checkpoint { Id = 2, AssignmentId = 1, Title = "Checkpoint 2", Notes = "Hello i am some notes for checkpoint 2" }
             };
         }
 

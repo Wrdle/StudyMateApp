@@ -22,10 +22,18 @@ namespace Mobile.ViewModels.Assignments
         private ImageSource coverPhoto;
         private Assignment assignment;
 
+        private ObservableCollection<Checkpoint> checkpoints;
+
+        private Checkpoint _selectedCheckpoint;
+        
+        public Command<Checkpoint> CheckpointTapped { get; }
+
         public AssignmentViewModel()
         {
             Title = "Assignment";
             Debug.WriteLine("We made it to the assignment page");
+
+            CheckpointTapped = new Command<Checkpoint>(OnCheckpointSelected);
         }
 
         public Assignment Assignment
@@ -79,12 +87,40 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        public ObservableCollection<Checkpoint> Checkpoints { get; set; }
+        public ObservableCollection<Checkpoint> Checkpoints 
+        {
+            get => checkpoints;
+            set
+            {
+                SetProperty(ref checkpoints, value);
+            }
+        }
+
+        public Checkpoint SelectedCheckpoint
+        {
+            get => _selectedCheckpoint;
+            set
+            {
+                SetProperty(ref _selectedCheckpoint, value);
+                OnCheckpointSelected(value);
+            }
+        }
+
+        async void OnCheckpointSelected(Checkpoint checkpoint)
+        {
+            if (checkpoint == null)
+                return;
+
+            // This will push the CheckpointPage onto the navigation stack
+            //await Shell.Current.GoToAsync($"//assignments/checkpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
+        }
 
         public async void LoadAssignmentId(string id)
         {
             try
             {
+                OnPropertyChanged(nameof(Checkpoints));
+
                 long assignmentID = Convert.ToInt64(id);
 
                 assignment = await AssignmentDataStore.GetById(assignmentID);
@@ -97,26 +133,28 @@ namespace Mobile.ViewModels.Assignments
                 LoadCheckpoints(assignmentID);
 
                 Debug.WriteLine("Data loaded successfully.");
-
-                //OnPropertyChanged(nameof(DueDate));
                 //OnPropertyChanged(nameof(Description));
             }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         public async void LoadCheckpoints(long id)
         {
-            var checkpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
+            var requestedCheckpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
 
             Checkpoints = new ObservableCollection<Checkpoint>();
 
-            foreach (Checkpoint checkpoint in checkpoints)
+            foreach (Checkpoint checkpoint in requestedCheckpoints)
             {
                 Checkpoints.Add(checkpoint);
-            }
+            } 
         }
 
         public bool CheckCoverPhoto()

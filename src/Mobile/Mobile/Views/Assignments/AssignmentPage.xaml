@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Mobile.Views.Assignments.AssignmentPage"
-             xmlns:local="clr-namespace:Mobile.ViewModels"
+             xmlns:local="clr-namespace:Mobile.ViewModels.Assignments"
              xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
     <ContentPage.Content>
@@ -24,38 +24,33 @@
                 </Frame>
 
                 <!-- Checkpoints -->
-                <!--<Frame HasShadow="True" Margin="30, 5, 30, 30" IsTabStop="False">
-                    <CollectionView x:Name="AssignmentsListView"
-                        ItemsSource="{Binding Checkpoints}"
-                        SelectionMode="None">
-                        <CollectionView.ItemTemplate>
+                <Frame HasShadow="True" Margin="30,5,30,30">
+                    <StackLayout x:Name="CheckpointsListView"
+                        BindableLayout.ItemsSource="{Binding Checkpoints}">
+                        <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame>
-                                    <Frame CornerRadius="2" Padding="0,0,0,0">
-                                        <AbsoluteLayout BackgroundColor="{Binding CoverBackgroundColour}" x:DataType="model:Assignment" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                            <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
-                                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
-                                                    <Label Text="{Binding Title}" 
+                                <Frame CornerRadius="2" Padding="0,0,0,1" x:DataType="model:Checkpoint">
+                                    <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
+                                            <Label Text="{Binding Title}" 
                                                         LineBreakMode="NoWrap" 
                                                         Style="{DynamicResource ListItemTextStyle}" 
-                                                        FontSize="16" TextColor="{Binding CoverFontColour}">
-                                                    </Label>
-                                                    <StackLayout.GestureRecognizers>
-                                                        <TapGestureRecognizer 
+                                                        FontSize="16">
+                                            </Label>
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer 
                                                             NumberOfTapsRequired="1"
-                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=ItemTapped}"		
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentViewModel}}, Path=CheckpointTapped}"		
                                                             CommandParameter="{Binding .}">
-                                                        </TapGestureRecognizer>
-                                                    </StackLayout.GestureRecognizers>
-                                                </StackLayout>
-                                            </StackLayout>
-                                        </AbsoluteLayout>
-                                    </Frame>
+                                                </TapGestureRecognizer>
+                                            </StackLayout.GestureRecognizers>
+                                        </StackLayout>
+                                    </StackLayout>
                                 </Frame>
                             </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>-->
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </Frame>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
