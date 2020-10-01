@@ -112,7 +112,7 @@ namespace Mobile.ViewModels.Assignments
                 return;
 
             // This will push the CheckpointPage onto the navigation stack
-            //await Shell.Current.GoToAsync($"//assignments/checkpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
+            await Shell.Current.GoToAsync($"//assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
         }
 
         public async void LoadAssignmentId(string id)
