@@ -12,9 +12,17 @@ namespace Mobile.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ProfilePage : ContentPage
     {
+        Mobile.ViewModels.ProfileViewModel _viewModel;
         public ProfilePage()
         {
             InitializeComponent();
+            BindingContext = _viewModel = new ViewModels.ProfileViewModel();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _viewModel.OnAppearing();
         }
     }
 }

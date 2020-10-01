@@ -12,45 +12,50 @@
     </ContentPage.BindingContext>
 
 
-
-    <ContentPage.Content>
-        <StackLayout Padding="20">
+    <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
 
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height ="*"/>
-                    <RowDefinition Height ="*"/>
-                    <RowDefinition Height ="*"/>
-                    <RowDefinition Height ="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Label Text="{Binding DisplayName}" Grid.Row="0" Grid.Column="1"/>
-                <Label Text="{Binding DisplayUniversity}" Grid.Row="1" Grid.Column="1"/>
-
-                
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height ="20"/>
+                <RowDefinition Height ="20"/>
+                <RowDefinition Height ="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Label Text="{Binding DisplayName}" Grid.Row="0" Grid.Column="1"/>
+            <Label Text="{Binding DisplayUniversity}" Grid.Row="1" Grid.Column="1"/>
+        </Grid>
 
 
 
-           
+        
+            <Frame CornerRadius="2" Padding="4,4,4,4" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Grid.Row="3">
 
 
-                <Frame CornerRadius="2" Padding="4,4,4,4" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Grid.Row="2">
 
-                    <Frame CornerRadius="2" Padding="4,4,4,4" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand">
-                        <Label Text="Python"/>
-                    </Frame>
+            <RefreshView x:DataType="local:ProfileViewModel" Command="{Binding LoadProfileSkillsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
 
-                        
+                <CollectionView ItemsSource="{Binding ProfileSkills}" ItemsLayout="HorizontalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:Skill">
 
-                </Frame>
+                                <Frame>
+                                    <Frame CornerRadius="5" Padding="4,4,4,4" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand">
+                                        <Label Text="{Binding Name}"/>
+                                    </Frame>
+                                </Frame>
 
-            </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </RefreshView>
 
-        </StackLayout>
+            </Frame>
 
-    </ContentPage.Content>
+    </StackLayout>    
+    
 </ContentPage>
+    
