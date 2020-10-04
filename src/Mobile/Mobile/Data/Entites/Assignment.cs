@@ -15,11 +15,13 @@ namespace Mobile.Data.Entites
         // Referencing Entities
         public ICollection<UserAssignment> UserAssignments { get; set; }
         public ICollection<GroupAssignment> GroupAssignments { get; set; }
+        public ICollection<Checkpoint> Checkpoints { get; set; }
 
         public Assignment()
         {
             UserAssignments = new List<UserAssignment>();
             GroupAssignments = new List<GroupAssignment>();
+            Checkpoints = new List<Checkpoint>();
         }
 
     }
