@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Mobile.ViewModels
 {
     class ProfileViewModel : BaseViewModel

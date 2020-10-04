@@ -42,6 +42,10 @@ namespace Mobile.Services
                 new Models.Skill(1, "Python"),
                 new Models.Skill(2, "Unity"),
                 new Models.Skill(3, "C#"),
+                new Models.Skill(4, "Visual Studio"),
+                new Models.Skill(4, "Visual Studio"),
+                new Models.Skill(4, "Visual Studio"),
+                new Models.Skill(4, "Visual Studio"),
                 new Models.Skill(4, "Visual Studio")
             };
         }
