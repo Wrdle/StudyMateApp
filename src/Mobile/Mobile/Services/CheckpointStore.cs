@@ -61,7 +61,7 @@ namespace Mobile.Services
                 {
                     AssignmentId = checkpoint.AssignmentId,
                     Title = checkpoint.Title,
-                    Description = checkpoint.Description,
+                    Description = checkpoint.Notes,
                     DateDue = checkpoint.DueDate.ToUniversalTime()
                 };
 
@@ -114,7 +114,7 @@ namespace Mobile.Services
                         Id = c.Id,
                         AssignmentId = c.AssignmentId,
                         Title = c.Title,
-                        Description = c.Description,
+                        Notes = c.Description,
                         DueDate = c.DateDue.ToLocalTime(),
                         AssignedUsers = new List<UserListItem>()
                     })
@@ -218,7 +218,7 @@ namespace Mobile.Services
                         Id = checkpoint.Id,
                         AssignmentId = checkpoint.AssignmentId,
                         Title = checkpoint.Title,
-                        Description = checkpoint.Description,
+                        Notes = checkpoint.Description,
                         DueDate = checkpoint.DateDue.ToLocalTime(),
                         AssignedUsers = assignedUsers
                     };

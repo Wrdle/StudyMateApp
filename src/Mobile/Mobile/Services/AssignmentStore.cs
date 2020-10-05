@@ -139,7 +139,7 @@ namespace Mobile.Services
             }
         }
 
-        public async Task<ICollection<Assignment>> GetByUserIdAsync(long userId)
+        public async Task<ICollection<Assignment>> GetByUserIdAsync(long userId, bool includeGroupAssignments)
         {
             if (!_userStore.IsLoggedIn)
             {
@@ -163,6 +163,32 @@ namespace Mobile.Services
                     })
                     .ToListAsync();
 
+                if (includeGroupAssignments)
+                {
+                    var groupIds = await dbContext.UserGroups
+                        .Where(ug => ug.UserId == _userStore.CurrentUserId)
+                        .Select(ug => ug.GroupId)
+                        .ToListAsync();
+
+                    var groupAssignments = await dbContext.GroupAssignments
+                        .Include(ga => ga.Assignment)
+                        .Where(ga => groupIds.Contains(ga.GroupId))
+                        .Select(ga => new Assignment
+                        {
+                            Id = ga.Assignment.Id,
+                            Title = ga.Assignment.Title,
+                            Description = ga.Assignment.Description,
+                            DateDue = ga.Assignment.Due,
+                            CoverColour = HexToColour(),
+                            CoverPhoto = BytesToImage(ga.Assignment.CoverPhoto),
+                            Skills = new List<Skill>()
+                        })
+                        .ToListAsync();
+
+                    assignments.AddRange(groupAssignments);
+                }
+
+                assignments.OrderByDescending(a => a.DateDue);
                 return assignments;
             }
         }

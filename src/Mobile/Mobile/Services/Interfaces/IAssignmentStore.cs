@@ -14,6 +14,6 @@ namespace Mobile.Services.Interfaces
         // Queries
         Task<ICollection<Assignment>> GetByGroupId(long groupId);
         Task<Assignment> GetById(long id);
-        Task<ICollection<Assignment>> GetByUserIdAsync(long userId);
+        Task<ICollection<Assignment>> GetByUserIdAsync(long userId, bool includeGroupAssignments);
     }
 }
