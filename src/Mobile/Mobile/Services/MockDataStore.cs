@@ -5,6 +5,7 @@ using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -53,6 +54,18 @@ namespace Mobile.Services
             }
 
             return null;
+        }
+
+        public async Task<bool> AddAssignmentAsync(Models.Assignment assignment)
+        {
+            assignments.Add(assignment);
+
+            return await Task.FromResult(true);
+        }
+
+        public Task<long> GenerateNewAssignmentID()
+        {
+            return Task.FromResult(assignments.Last().Id + 1);
         }
 
         public async Task<ICollection<Models.Checkpoint>> GetAllCheckpointsAsync()

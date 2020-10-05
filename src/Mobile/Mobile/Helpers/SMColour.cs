@@ -7,8 +7,8 @@ namespace Mobile.Helpers
 {
     public class SMColour
     {
-        public Color BackgroundColour;
-        public Color FontColour;
+        public Color BackgroundColour { get; set; }
+        public Color FontColour { get; set; }
 
         public SMColour(Color backgroundColour, Color fontColour)
         {

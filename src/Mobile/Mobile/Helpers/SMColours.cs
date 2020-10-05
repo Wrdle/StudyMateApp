@@ -21,6 +21,22 @@ namespace Mobile.Helpers
         public static SMColour Purple = new SMColour("9B51E0", Color.White);
         public static SMColour LightPurple = new SMColour("BB6BD9", Color.White);
 
+        public static List<SMColour> Colours = new List<SMColour>()
+        {
+            DarkGray,
+            LightGray,
+            Red,
+            Orange,
+            Yellow,
+            DarkGreen,
+            Green,
+            LightGreen,
+            DarkBlue,
+            Blue,
+            LightBlue,
+            Purple,
+            LightPurple
+        };
 
         public static SMColour getColourByName(string ColourName)
         {
