@@ -1,6 +1,4 @@
-﻿using Mobile.Data.Entites;
-using Mobile.Helpers;
-using Mobile.Models;
+﻿using Mobile.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +7,7 @@ using Xamarin.Forms;
 
 namespace Mobile.Services
 {
-    public class MockDataStore : IAssignmentStore<Models.Assignment>, ISkillsStore<Models.Skill>, ICheckpointStore<Models.Checkpoint>
+    public class MockDataStore
     {
         ICollection<Models.Assignment> assignments;
 
@@ -53,24 +51,5 @@ namespace Mobile.Services
             return null;
         }
 
-        public async Task<ICollection<Models.Checkpoint>> GetAllCheckpointsAsync()
-        {
-            return await Task.FromResult(checkpoints);
-        }
-
-        public async Task<ICollection<Checkpoint>> GetAllCheckpointsByAssignmentIDAsync(long assignmentID)
-        {
-            List<Checkpoint> filteredCheckpoints = new List<Checkpoint>();
-
-            foreach (Models.Checkpoint checkpoint in checkpoints)
-            {
-                if (checkpoint.AssignmentId == assignmentID)
-                {
-                    filteredCheckpoints.Add(checkpoint);
-                }
-            }
-
-            return await Task.FromResult(filteredCheckpoints);
-        }
     }
 }

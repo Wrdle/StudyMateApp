@@ -13,7 +13,7 @@ using UserCheckpointEntity = Mobile.Data.Entites.UserCheckpoint;
 
 namespace Mobile.Services
 {
-    public class CheckpointStore : ICheckpointstore
+    public class CheckpointStore : ICheckpointStore
     {
         //------------------------------
         //          Fields

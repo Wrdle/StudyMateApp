@@ -10,7 +10,7 @@ using UserEntity = Mobile.Data.Entites.User;
 
 namespace Mobile.Services
 {
-    public class UserStore : IUserStore<User>
+    public class UserStore : IUserStore
     {
         //------------------------------
         //          Fields

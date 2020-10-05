@@ -13,7 +13,7 @@ namespace Mobile.ViewModels
         public IUserStore UserStore { get; }
         public IGroupStore GroupStore { get; }
         public IAssignmentStore AssignmentStore { get; }
-        public ICheckpointstore Checkpointstore { get; }
+        public ICheckpointStore CheckpointStore { get; }
 
         //------------------------------
         //          Constructor
@@ -25,7 +25,7 @@ namespace Mobile.ViewModels
             UserStore = DependencyService.Get<IUserStore>();
             GroupStore = DependencyService.Get<IGroupStore>();
             AssignmentStore = DependencyService.Get<IAssignmentStore>();
-            Checkpointstore = DependencyService.Get<ICheckpointstore>();
+            CheckpointStore = DependencyService.Get<ICheckpointStore>();
         }
 
         //------------------------------

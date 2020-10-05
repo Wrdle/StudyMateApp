@@ -22,7 +22,7 @@ namespace Mobile
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
             DependencyService.Register<IAssignmentStore, AssignmentStore>();
-            DependencyService.Register<ICheckpointstore, CheckpointStore>();
+            DependencyService.Register<ICheckpointStore, CheckpointStore>();
 
             {
                 var userStore = DependencyService.Get<IUserStore>();

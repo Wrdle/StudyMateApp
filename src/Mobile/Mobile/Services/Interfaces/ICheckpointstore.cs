@@ -1,16 +1,19 @@
 ﻿using Mobile.Models;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Mobile.Services.Interfaces
 {
-    public interface ICheckpointStore<T>
+    public interface ICheckpointStore
     {
+        // Commands
+        Task<Checkpoint> Add(Checkpoint checkpoint);
+        Task AssignToUser(long checkpointId, long userId);
+        Task Remove(long checkpointId);
+        Task UnassignUser(long checkpointId, long userId);
 
-        //Queries
-        Task<ICollection<T>> GetAllCheckpointsAsync();
+        // Queries
+        Task<ICollection<Checkpoint>> GetByAssignmentId(long assignmentId);
 
-        Task<ICollection<T>> GetAllCheckpointsByAssignmentIDAsync(long assignmentID);
     }
 }
