@@ -11,21 +11,9 @@ using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
 {
-    [QueryProperty(nameof(AssignmentID), nameof(AssignmentID))]
+    [QueryProperty(nameof(inputAssignmentID), nameof(AssignmentID))]
     class AssignmentViewModel : BaseViewModel
-    {
-        private string assignmentID;
-        private string dueDate;
-        private string description;
-        private bool showCoverPhoto;
-        private Color coverBackgroundColour;
-        private ImageSource coverPhoto;
-        private Assignment assignment;
-
-        private ObservableCollection<Checkpoint> checkpoints;
-
-        private Checkpoint _selectedCheckpoint;
-        
+    {        
         public Command<Checkpoint> CheckpointTapped { get; }
 
         /// <summary>
@@ -39,20 +27,33 @@ namespace Mobile.ViewModels.Assignments
             CheckpointTapped = new Command<Checkpoint>(OnCheckpointSelected);
         }
 
-        public Assignment Assignment
+        // =============================
+        //       ASSIGNMENT DATA
+        // =============================
+
+        private Assignment assignment;
+
+        // ASSIGNMENT ID
+        public string inputAssignmentID
         {
-            get => assignment;
+            set => AssignmentID = Convert.ToInt64(value);
         }
 
-        public string AssignmentID
+        private long assignmentID;
+
+        public long AssignmentID
         {
             get => assignmentID;
             set
             {
-                SetProperty(ref assignmentID, value);
+                SetProperty(ref assignmentID, Convert.ToInt64(value));
                 LoadAssignmentId(value);
             }
         }
+
+
+        // DUE DATE
+        private string dueDate;
 
         public string DueDate
         { 
@@ -60,17 +61,29 @@ namespace Mobile.ViewModels.Assignments
             set => SetProperty(ref dueDate, value);
         }
 
+
+        // DESCRIPTION
+        private string description;
+
         public string Description
         {
                 get => description;
                 set => SetProperty(ref description, value);
         }
-        
+
+
+        // SHOW COVER PHOTO
+        private bool showCoverPhoto;
+
         public bool ShowCoverPhoto
         {
             get => showCoverPhoto;
             set => SetProperty(ref showCoverPhoto, value);
         }
+
+
+        // COVER BACKGROUND COLOUR
+        private Color coverBackgroundColour;
 
         public Color CoverBackgroundColour 
         {
@@ -78,26 +91,32 @@ namespace Mobile.ViewModels.Assignments
             set => SetProperty(ref coverBackgroundColour, value);
         }
 
+        
+
+        // COVER PHOTO
+        private ImageSource coverPhoto;
+
         public ImageSource CoverPhoto
         {
-            get
-            {
-                return coverPhoto;
-            }
-            set
-            {
-                SetProperty(ref coverPhoto, value);
-            }
+            get => coverPhoto;
+            set => SetProperty(ref coverPhoto, value);
         }
+
+
+        // CHECKPOINTS
+        private ObservableCollection<Checkpoint> checkpoints;
 
         public ObservableCollection<Checkpoint> Checkpoints 
         {
             get => checkpoints;
-            set
-            {
-                SetProperty(ref checkpoints, value);
-            }
+            set => SetProperty(ref checkpoints, value);
         }
+
+        // =============================
+        //       TAP CHECKPOINT
+        // =============================
+
+        private Checkpoint _selectedCheckpoint;
 
         public Checkpoint SelectedCheckpoint
         {
@@ -119,32 +138,29 @@ namespace Mobile.ViewModels.Assignments
                 return;
 
             // This will push the CheckpointPage onto the navigation stack
-            await Shell.Current.GoToAsync($"//assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
+            await Shell.Current.GoToAsync($"assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
         }
 
         /// <summary>
         /// Loads a assignment from the datastore given an assignment id
         /// </summary>
         /// <param name="id">Assignment Id</param>
-        public async void LoadAssignmentId(string id)
+        public async void LoadAssignmentId(long id)
         {
             try
             {
-                OnPropertyChanged(nameof(Checkpoints));
+                // Get Assignment
+                assignment = await AssignmentDataStore.GetById(id);
 
-                long assignmentID = Convert.ToInt64(id);
-
-                assignment = await AssignmentStore.GetById(assignmentID);
+                // Extract and store data
                 Title = assignment.Title;
                 DueDate = assignment.DateDue.ToShortDateString();
                 Description = assignment.Description;
                 ShowCoverPhoto = CheckCoverPhoto();
                 CoverBackgroundColour = assignment.CoverColour.BackgroundColour;
 
+                // Load the assignments checkpoints
                 LoadCheckpoints(assignmentID);
-
-                Debug.WriteLine("Data loaded successfully.");
-                //OnPropertyChanged(nameof(Description));
             }
             catch (Exception)
             {
