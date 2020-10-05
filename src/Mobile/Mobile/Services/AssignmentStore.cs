@@ -260,6 +260,18 @@ namespace Mobile.Services
             }
         }
 
+        public Task<long> GenerateNewAssignmentID()
+        {
+            long biggestId;
+            using (var dbContext = new AppDbContext())
+            {
+                biggestId = dbContext.Assignments
+                .Select(assignment => assignment.Id)
+                .Max();
+                return Task.FromResult(biggestId);
+            }
+        }
+
         //------------------------------
         //          Helpers
         //------------------------------

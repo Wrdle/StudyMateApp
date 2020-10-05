@@ -1,7 +1,10 @@
 ﻿using Mobile.Helpers;
+using Mobile.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -51,5 +54,36 @@ namespace Mobile.Services
             return null;
         }
 
+        public async Task<bool> AddAssignmentAsync(Models.Assignment assignment)
+        {
+            assignments.Add(assignment);
+
+            return await Task.FromResult(true);
+        }
+
+        public Task<long> GenerateNewAssignmentID()
+        {
+            return Task.FromResult(assignments.Last().Id + 1);
+        }
+
+        public async Task<ICollection<Models.Checkpoint>> GetAllCheckpointsAsync()
+        {
+            return await Task.FromResult(checkpoints);
+        }
+
+        public async Task<ICollection<Checkpoint>> GetAllCheckpointsByAssignmentIDAsync(long assignmentID)
+        {
+            List<Checkpoint> filteredCheckpoints = new List<Checkpoint>();
+
+            foreach (Models.Checkpoint checkpoint in checkpoints)
+            {
+                if (checkpoint.AssignmentId == assignmentID)
+                {
+                    filteredCheckpoints.Add(checkpoint);
+                }
+            }
+
+            return await Task.FromResult(filteredCheckpoints);
+        }
     }
 }

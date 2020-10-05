@@ -23,7 +23,7 @@
                     <StackLayout>
                         <Label Text="Checkpoints" FontSize="Medium" FontAttributes="Bold"></Label>
                         <StackLayout x:Name="CheckpointsListView"
-                        BindableLayout.ItemsSource="{Binding Checkpoints}">
+                        BindableLayout.ItemsSource="{Binding Checkpoints}" FlowDirection="LeftToRight">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
                                     <Frame CornerRadius="2" x:DataType="model:Checkpoint" HasShadow="False" Padding="5,5,5,2">
