@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
+using Mobile.ViewModels.Assignments;
+
 
 namespace Mobile.ViewModels.Assignments
 {
@@ -21,9 +23,25 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        /// <summary>
+        /// Load the checkpoint ID and due date
+        /// </summary>
+        /// <param name="id"></param>
         private void LoadCheckpointID(string id)
         {
-            // Your loading code here
+            // Grab the checkpoint id add to the title 
+            Title = "Checkpoint" + " " + checkpointID;
+        }
+
+        string dueDay;
+        public string DueDay
+        {
+            get; set;
+        }
+
+        private void LoadDueDay()
+        {
+
         }
     }
 }
