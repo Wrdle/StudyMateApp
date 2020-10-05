@@ -178,7 +178,6 @@ namespace Mobile.Services
             {
                 var assignments = await dbContext.GroupAssignments
                     .Include(ga => ga.Assignment)
-                    .ThenInclude(a => a.Checkpoints)
                     .Where(ga => ga.GroupId == groupId)
                     .Select(ga => new Assignment
                     {
