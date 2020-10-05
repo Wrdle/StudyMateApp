@@ -184,5 +184,48 @@ namespace Mobile.Services
                 }
             }
         }
+
+        public async Task<Checkpoint> GetById(long id)
+        {
+            if (!_userStore.IsLoggedIn)
+            {
+                throw new Exception(Error.NotLoggedIn);
+            }
+
+            using (var dbContext = new AppDbContext())
+            {
+                var userCheckpoints = await dbContext.UserCheckpoints
+                    .Include(uc => uc.User)
+                    .Include(uc => uc.Checkpoint)
+                    .Where(uc => uc.CheckpointId == id)
+                    .ToListAsync();
+
+                if (userCheckpoints.Count > 0)
+                {
+                    var checkpoint = userCheckpoints[0].Checkpoint;
+                    var assignedUsers = userCheckpoints
+                        .Select(uc => new UserListItem
+                        {
+                            Id = uc.User.Id,
+                            Email = uc.User.Email,
+                            FirstName = uc.User.FirstName,
+                            LastName = uc.User.LastName
+                        })
+                        .ToList();
+
+                    return new Checkpoint
+                    {
+                        Id = checkpoint.Id,
+                        AssignmentId = checkpoint.AssignmentId,
+                        Title = checkpoint.Title,
+                        Description = checkpoint.Description,
+                        DueDate = checkpoint.DateDue.ToLocalTime(),
+                        AssignedUsers = assignedUsers
+                    };
+                }
+                else return null;
+            }
+        }
+
     }
 }
