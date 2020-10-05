@@ -15,7 +15,6 @@ namespace Mobile
 
         protected override void OnStart()
         {
-            AppShell.Current.GoToAsync("notifications");
         }
 
         protected override void OnSleep()
