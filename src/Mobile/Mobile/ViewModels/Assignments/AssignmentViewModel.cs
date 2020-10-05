@@ -150,7 +150,7 @@ namespace Mobile.ViewModels.Assignments
             try
             {
                 // Get Assignment
-                assignment = await AssignmentDataStore.GetById(id);
+                assignment = await AssignmentStore.GetById(id);
 
                 // Extract and store data
                 Title = assignment.Title;

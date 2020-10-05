@@ -172,7 +172,7 @@ namespace Mobile.ViewModels.Assignments
             // Create new assignment with variables
             Assignment newAssignment = new Assignment()
             {
-                Id = AssignmentDataStore.GenerateNewAssignmentID().Result,
+                Id = AssignmentStore.GenerateNewAssignmentID().Result,
                 Title = Text,
                 Description = Description,
                 DateDue = SelectedDate,
@@ -180,7 +180,7 @@ namespace Mobile.ViewModels.Assignments
                 CoverColour = SMColours.DarkGreen
             };
 
-            await AssignmentDataStore.AddAssignmentAsync(newAssignment);
+            await AssignmentStore.Create(newAssignment);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("../..");
