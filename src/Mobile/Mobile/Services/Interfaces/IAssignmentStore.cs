@@ -7,13 +7,12 @@ namespace Mobile.Services.Interfaces
     public interface IAssignmentStore
     {
         // Commands
-        Task<long> Create(Assignment assignment, long? groupId = null);
-        Task Update(Assignment assignment);
-        Task Delete(long id);
+        Task<bool> AddAssignmentAsync(T assignment);
 
         // Queries
         Task<ICollection<Assignment>> GetByGroupId(long groupId);
         Task<Assignment> GetById(long id);
-        Task<ICollection<Assignment>> GetByUserIdAsync(long userId, bool includeGroupAssignments);
+        Task<ICollection<T>> GetAllByUserAsync(int userID, bool forceRefresh = false);
+        Task<long> GenerateNewAssignmentID();
     }
 }
