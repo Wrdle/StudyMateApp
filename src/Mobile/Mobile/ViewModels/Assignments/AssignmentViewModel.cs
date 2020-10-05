@@ -22,10 +22,21 @@ namespace Mobile.ViewModels.Assignments
         private ImageSource coverPhoto;
         private Assignment assignment;
 
+        private ObservableCollection<Checkpoint> checkpoints;
+
+        private Checkpoint _selectedCheckpoint;
+        
+        public Command<Checkpoint> CheckpointTapped { get; }
+
+        /// <summary>
+        /// Constructor for AssignmentViewModel. Called on class instantiation
+        /// </summary>
         public AssignmentViewModel()
         {
             Title = "Assignment";
             Debug.WriteLine("We made it to the assignment page");
+
+            CheckpointTapped = new Command<Checkpoint>(OnCheckpointSelected);
         }
 
         public Assignment Assignment
@@ -54,7 +65,7 @@ namespace Mobile.ViewModels.Assignments
                 get => description;
                 set => SetProperty(ref description, value);
         }
-
+        
         public bool ShowCoverPhoto
         {
             get => showCoverPhoto;
@@ -79,12 +90,48 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        public ObservableCollection<Checkpoint> Checkpoints { get; set; }
+        public ObservableCollection<Checkpoint> Checkpoints 
+        {
+            get => checkpoints;
+            set
+            {
+                SetProperty(ref checkpoints, value);
+            }
+        }
 
+        public Checkpoint SelectedCheckpoint
+        {
+            get => _selectedCheckpoint;
+            set
+            {
+                SetProperty(ref _selectedCheckpoint, value);
+                OnCheckpointSelected(value);
+            }
+        }
+
+        /// <summary>
+        /// Navigate to selected checkpoint page
+        /// </summary>
+        /// <param name="checkpoint">Checkpoint to navigate to</param>
+        async void OnCheckpointSelected(Checkpoint checkpoint)
+        {
+            if (checkpoint == null)
+                return;
+
+            // This will push the CheckpointPage onto the navigation stack
+            await Shell.Current.GoToAsync($"//assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
+        }
+
+        /// <summary>
+        /// Loads a assignment from the datastore given an assignment id
+        /// </summary>
+        /// <param name="id">Assignment Id</param>
         public async void LoadAssignmentId(string id)
         {
             try
             {
+                OnPropertyChanged(nameof(Checkpoints));
+
                 long assignmentID = Convert.ToInt64(id);
 
                 assignment = await AssignmentDataStore.GetById(assignmentID);
@@ -97,28 +144,38 @@ namespace Mobile.ViewModels.Assignments
                 LoadCheckpoints(assignmentID);
 
                 Debug.WriteLine("Data loaded successfully.");
-
-                //OnPropertyChanged(nameof(DueDate));
                 //OnPropertyChanged(nameof(Description));
             }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
             }
-        }
-
-        public async void LoadCheckpoints(long id)
-        {
-            var checkpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
-
-            Checkpoints = new ObservableCollection<Checkpoint>();
-
-            foreach (Checkpoint checkpoint in checkpoints)
+            finally
             {
-                Checkpoints.Add(checkpoint);
+                IsBusy = false;
             }
         }
 
+        /// <summary>
+        /// Loads checkpoints from datastore
+        /// </summary>
+        /// <param name="id">id of checkpoint</param>
+        public async void LoadCheckpoints(long id)
+        {
+            var requestedCheckpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
+
+            Checkpoints = new ObservableCollection<Checkpoint>();
+
+            foreach (Checkpoint checkpoint in requestedCheckpoints)
+            {
+                Checkpoints.Add(checkpoint);
+            } 
+        }
+
+        /// <summary>
+        /// Check if assignment has a coverphoto
+        /// </summary>
+        /// <returns>True/False</returns>
         public bool CheckCoverPhoto()
         {
             if (assignment.CoverPhoto != null)
