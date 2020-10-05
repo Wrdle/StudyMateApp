@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Mobile.Services.Interfaces
 {
-    public interface IGroupStore
+    public interface IGroupStore<T>
     {
         // Commands
         Task Create(string name);

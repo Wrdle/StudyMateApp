@@ -40,7 +40,7 @@ namespace Mobile.ViewModels
             try
             {
                 Assignments.Clear();
-                var assignments = await DataStore.GetByUserIdAsync(1);
+                var assignments = await AssignmentDataStore.GetAllByUserAsync(1);
                 foreach (var assignment in assignments)
                 {
                     if (assignment.CoverPhoto != null)
