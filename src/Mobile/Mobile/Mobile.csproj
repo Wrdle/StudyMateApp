@@ -7,6 +7,7 @@
 
   <ItemGroup>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <Compile Remove="Models\NewFolder\**" />
     <EmbeddedResource Remove="Models\NewFolder\**" />
     <None Remove="Models\NewFolder\**" />
@@ -16,6 +17,9 @@
 =======
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
 >>>>>>> b98744c... Implemented data access using EF Core and SQLite. Initial implementation of user store.
+=======
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
+>>>>>>> 59845c298f0a8c0a98bc32478a1bed2fd1de91b7
     <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.5" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />  
