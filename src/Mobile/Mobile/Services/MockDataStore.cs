@@ -1,17 +1,13 @@
-﻿using Mobile.Data.Entites;
-using Mobile.Helpers;
-using Mobile.Models;
-using Mobile.Services.Interfaces;
+﻿using Mobile.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Mobile.Services
 {
-    public class MockDataStore : IAssignmentStore<Models.Assignment>, ISkillsStore<Models.Skill>, ICheckpointStore<Models.Checkpoint>
+    public class MockDataStore
     {
         ICollection<Models.Assignment> assignments;
 

@@ -134,7 +134,7 @@ namespace Mobile.ViewModels.Assignments
 
                 long assignmentID = Convert.ToInt64(id);
 
-                assignment = await AssignmentDataStore.GetById(assignmentID);
+                assignment = await AssignmentStore.GetById(assignmentID);
                 Title = assignment.Title;
                 DueDate = assignment.DateDue.ToShortDateString();
                 Description = assignment.Description;
@@ -162,7 +162,7 @@ namespace Mobile.ViewModels.Assignments
         /// <param name="id">id of checkpoint</param>
         public async void LoadCheckpoints(long id)
         {
-            var requestedCheckpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
+            var requestedCheckpoints = await CheckpointStore.GetByAssignmentId(id);
 
             Checkpoints = new ObservableCollection<Checkpoint>();
 

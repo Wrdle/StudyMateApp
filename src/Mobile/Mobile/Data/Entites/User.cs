@@ -15,12 +15,14 @@ namespace Mobile.Data.Entites
         public ICollection<UserSkill> UserSkills { get; set; }
         public ICollection<UserGroup> UserGroups { get; set; }
         public ICollection<UserAssignment> UserAssignments { get; set; }
+        public ICollection<UserCheckpoint> UserCheckpoints { get; set; }
 
         public User()
         {
             UserSkills = new List<UserSkill>();
             UserGroups = new List<UserGroup>();
             UserAssignments = new List<UserAssignment>();
+            UserCheckpoints = new List<UserCheckpoint>();
         }
 
     }

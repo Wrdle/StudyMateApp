@@ -1,21 +1,36 @@
-﻿using Mobile.Models;
-using Mobile.Services;
+﻿using Mobile.Services.Interfaces;
 using Xamarin.Forms;
-using Mobile.Services.Interfaces;
 
 namespace Mobile.ViewModels
 {
     public class BaseViewModel : MvvmHelpers.BaseViewModel
     {
-        public IAssignmentStore<Assignment> AssignmentDataStore;
-        public ISkillsStore<Skill> SkillDataStore;
-        public ICheckpointStore<Checkpoint> CheckpointDataStore;
+        //------------------------------
+        //          Fields
+        //------------------------------
+
+        public IAssignmentStore DataStore { get; }
+        public IUserStore UserStore { get; }
+        public IGroupStore GroupStore { get; }
+        public IAssignmentStore AssignmentStore { get; }
+        public ICheckpointStore CheckpointStore { get; }
+
+        //------------------------------
+        //          Constructor
+        //------------------------------
 
         public BaseViewModel()
         {
-            AssignmentDataStore = DependencyService.Get<IAssignmentStore<Assignment>>();
-            SkillDataStore = DependencyService.Get<ISkillsStore<Skill>>();
-            CheckpointDataStore = DependencyService.Get<ICheckpointStore<Checkpoint>>();
+            DataStore = DependencyService.Get<IAssignmentStore>();
+            UserStore = DependencyService.Get<IUserStore>();
+            GroupStore = DependencyService.Get<IGroupStore>();
+            AssignmentStore = DependencyService.Get<IAssignmentStore>();
+            CheckpointStore = DependencyService.Get<ICheckpointStore>();
         }
+
+        //------------------------------
+        //          Methods
+        //------------------------------
+
     }
 } 
