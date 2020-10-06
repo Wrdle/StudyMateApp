@@ -1,4 +1,6 @@
-﻿using Mobile.Services.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using Mobile.Data.Entites;
+using Mobile.Services.Interfaces;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels
@@ -16,6 +18,7 @@ namespace Mobile.ViewModels
         public IAssignmentStore AssignmentStore { get; }
         public ICheckpointStore CheckpointStore { get; }
 
+        public Models.User LoggedInUser { get; private set; }
         //------------------------------
         //          Constructor
         //------------------------------
@@ -28,11 +31,19 @@ namespace Mobile.ViewModels
             GroupStore = DependencyService.Get<IGroupStore>();
             AssignmentStore = DependencyService.Get<IAssignmentStore>();
             CheckpointStore = DependencyService.Get<ICheckpointStore>();
+            
+            // Temp
+            UserStore.Login("test-user@studymate.com", "fake-password");
+            SetLoggedInUser(UserStore.GetProfile().Result);
         }
 
         //------------------------------
         //          Methods
         //------------------------------
 
+        public void SetLoggedInUser(Models.User user)
+        {
+            LoggedInUser = user;
+        }
     }
 } 

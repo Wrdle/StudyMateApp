@@ -70,8 +70,9 @@ namespace Mobile.Data
                 await dbContext.SaveChangesAsync();
 
                 // USER ASSIGNMENT
-                var assignment = new Assignment
+                var assignment1 = new Assignment
                 {
+                    Id = 1,
                     Title = "Test Assignment",
                     Description = "blah blah blah",
                     Due = DateTime.UtcNow,
@@ -82,7 +83,22 @@ namespace Mobile.Data
                         new UserAssignment { UserId = TestUser.Id }
                     }
                 };
-                await dbContext.Assignments.AddAsync(assignment);
+
+                var assignment2 = new Assignment
+                {
+                    Id = 2,
+                    Title = "CAB303 Assignment 2",
+                    Description = "Networking is cool and fundemental to the human survival.",
+                    Due = DateTime.UtcNow,
+                    CoverColour = "444444",
+                    UserAssignments = new List<UserAssignment>
+                    {
+                        new UserAssignment { UserId = TestUser.Id }
+                    }
+                };
+
+                await dbContext.Assignments.AddAsync(assignment1);
+                await dbContext.Assignments.AddAsync(assignment2);
 
                 // GROUP ASSIGNMENT
                 var groupAssignment = new Assignment
