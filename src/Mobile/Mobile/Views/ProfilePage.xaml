@@ -11,25 +11,59 @@
         <vm:ProfileViewModel />
     </ContentPage.BindingContext>
 
+    <RefreshView x:DataType="local:ProfileViewModel" Command="{Binding LoadProfileSkillsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
 
-    <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height ="20"/>
+                    <RowDefinition Height ="20"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="{Binding DisplayName}" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding DisplayUniversity}" Grid.Row="1" Grid.Column="1"/>
+            </Grid>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height ="20"/>
-                <RowDefinition Height ="20"/>
-                <RowDefinition Height ="*"/>
-                <RowDefinition Height ="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
-            <Label Text="{Binding DisplayName}" Grid.Row="0" Grid.Column="1"/>
-            <Label Text="{Binding DisplayUniversity}" Grid.Row="1" Grid.Column="1"/>
-        </Grid>
 
-        <!--<Frame CornerRadius="2" Padding="4,4,4,4" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Grid.Row="3">
+            <Frame HasShadow="True">
+                <!--Margin="30,5,30,5">-->
+
+                <StackLayout>
+                    <Label Text="Skills" FontSize="Medium" FontAttributes="Bold"></Label>
+                    <FlexLayout x:Name="SkillsListView" Wrap="Wrap" 
+                        
+                        BindableLayout.ItemsSource="{Binding ProfileSkills }">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="5" x:DataType="model:Skill" 
+                                       BackgroundColor="#F0F0F0" HasShadow="False" 
+                                       Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
+                                       VerticalOptions="FillAndExpand"
+                                       Margin="8,0,0,0"
+                                       HeightRequest="30">
+                                    <StackLayout AbsoluteLayout.LayoutFlags="All">
+                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                                                <Label Text="{Binding Name}">
+
+                                                </Label>
+
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </StackLayout>
+            </Frame>
+
+
+            <!--<Frame CornerRadius="2" Padding="4,4,4,4" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Grid.Row="3">
                 <RefreshView x:DataType="local:ProfileViewModel" Command="{Binding LoadProfileSkillsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
                 <CollectionView ItemsSource="{Binding ProfileSkills}" ItemsLayout="HorizontalGrid, 4">
                     <CollectionView.ItemTemplate>
@@ -45,7 +79,7 @@
                 </RefreshView>
             </Frame>-->
 
-        <!--<Frame CornerRadius="2" Padding="4,4,4,4" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Grid.Row="3">
+            <!--<Frame CornerRadius="2" Padding="4,4,4,4" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Grid.Row="3">
             <CollectionView ItemsSource="{Binding ProfileSkills}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Skill">
@@ -58,7 +92,8 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Frame>-->
-        
-    </StackLayout>      
+
+        </StackLayout>
+    </RefreshView>
 </ContentPage>
     
