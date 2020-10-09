@@ -4,7 +4,7 @@
              x:Class="Mobile.Views.Assignments.AddAssignmentPage"
              xmlns:vm="clr-namespace:Mobile.ViewModels.Assignments"
              xmlns:local="clr-namespace:Mobile.ViewModels.Assignments"
-             xmlns:model="clr-namespace:Mobile.Helpers"
+             xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
 
     <ContentPage.BindingContext>
@@ -15,18 +15,18 @@
         <ScrollView>
             <StackLayout Spacing="3" Padding="15">
                 <Frame CornerRadius="2" Padding="0,0,0,0" Margin="0,8,0,8">
-                    <AbsoluteLayout BackgroundColor="{Binding SelectedColour.BackgroundColour}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <AbsoluteLayout BackgroundColor="{Binding SelectedColor.BackgroundColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
                         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
                             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
                                 <Label Text="{Binding Text}" 
                                             LineBreakMode="NoWrap" 
                                             Style="{DynamicResource ListItemTextStyle}" 
-                                            FontSize="16" TextColor="{Binding SelectedColour.FontColour}"/>
+                                            FontSize="16" TextColor="{Binding SelectedColor.FontColor}"/>
                                 <Label Text="{Binding Description}" 
                                             LineBreakMode="NoWrap"
                                             Style="{DynamicResource ListItemDetailTextStyle}"
-                                            FontSize="13" TextColor="{Binding SelectedColour.FontColour}"/>
+                                            FontSize="13" TextColor="{Binding SelectedColor.FontColor}"/>
                             </StackLayout>
                         </StackLayout>
                     </AbsoluteLayout>
@@ -53,14 +53,14 @@
 
                 <Frame x:DataType="local:AddAssignmentViewModel" Margin="0,8,0,8">
                     <FlexLayout  x:Name="ColourListView"
-                         BindableLayout.ItemsSource="{Binding ColourChoices}" JustifyContent="SpaceAround" Wrap="Wrap">
+                         BindableLayout.ItemsSource="{Binding ColorChoices}" JustifyContent="SpaceAround" Wrap="Wrap">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame x:DataType="model:SMColour" WidthRequest="35" HeightRequest="35" CornerRadius="18" Margin="5,5,5,5" Padding="0,0,0,0" BackgroundColor="{Binding BackgroundColour}" HorizontalOptions="Start">
+                                <Frame x:DataType="model:CoverColor" WidthRequest="35" HeightRequest="35" CornerRadius="18" Margin="5,5,5,5" Padding="0,0,0,0" BackgroundColor="{Binding BackgroundColor}" HorizontalOptions="Start">
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer 
                                             NumberOfTapsRequired="1"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AddAssignmentViewModel}}, Path=ColourTappedCommand}"		
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AddAssignmentViewModel}}, Path=ColorTappedCommand}"		
                                             CommandParameter="{Binding .}">
                                         </TapGestureRecognizer>
                                     </Frame.GestureRecognizers>

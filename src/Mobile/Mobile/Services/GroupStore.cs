@@ -5,6 +5,7 @@ using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -111,7 +112,22 @@ namespace Mobile.Services
 
         public async Task<Group> GetById(long id)
         {
-            throw new System.NotImplementedException();
+            if (!_userStore.IsLoggedIn)
+            {
+                throw new Exception(Error.NotLoggedIn);
+            }
+
+            using (var dbContext = new AppDbContext())
+            {
+                var group = await dbContext.Groups.FindAsync(id);
+                return new Group
+                {
+                    Id = group.Id,
+                    Name = group.Name,
+                    CoverPhoto = BytesToImage(group.CoverPhoto),
+                    CoverColorId = group.CoverColorId
+                };
+            }
         }
 
         public async Task<ICollection<GroupListItem>> MyGroups()
@@ -129,7 +145,9 @@ namespace Mobile.Services
                     .Select(ug => new GroupListItem
                     {
                         Id = ug.Group.Id,
-                        Name = ug.Group.Name
+                        Name = ug.Group.Name,
+                        CoverPhoto = BytesToImage(ug.Group.CoverPhoto),
+                        CoverColorId = ug.Group.CoverColorId
                     })
                     .ToListAsync();
 
@@ -158,6 +176,29 @@ namespace Mobile.Services
                     .ToListAsync();
 
                 return groups;
+            }
+        }
+
+        //------------------------------
+        //          Helpers
+        //------------------------------
+
+        private async Task<byte[]> ImageToBytes(ImageSource imageSource)
+        {
+            var cancellationToken = System.Threading.CancellationToken.None;
+            using (var imageStream = await ((StreamImageSource)imageSource).Stream(cancellationToken))
+            using (var byteStream = new MemoryStream())
+            {
+                await imageStream.CopyToAsync(byteStream);
+                return byteStream.ToArray();
+            }
+        }
+
+        private ImageSource BytesToImage(byte[] bytes)
+        {
+            using (var stream = new MemoryStream(bytes))
+            {
+                return ImageSource.FromStream(() => { return stream; });
             }
         }
 

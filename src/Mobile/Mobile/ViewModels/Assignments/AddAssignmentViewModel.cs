@@ -1,15 +1,14 @@
-﻿using Mobile.Helpers;
-using Mobile.Models;
+﻿using Mobile.Models;
+using Mobile.Services.Interfaces;
+using MvvmHelpers;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
@@ -55,9 +54,9 @@ namespace Mobile.ViewModels.Assignments
                 SetProperty(ref coverPhoto, value);
                 if (CoverPhoto != null)
                 {
-                    SelectedColour = SMColours.DarkGray;
                     ShowRemoveImageButton = true;
-                } else
+                }
+                else
                 {
                     ShowRemoveImageButton = false;
                 }
@@ -122,31 +121,31 @@ namespace Mobile.ViewModels.Assignments
 
 
         public Command RemoveImageCommand { get; }
-        private async void OnRemoveImageTapped()
+        private void OnRemoveImageTapped()
         {
             CoverPhoto = null;
         }
 
 
-        public ObservableCollection<SMColour> ColourChoices { get; set; }
+        public ObservableCollection<CoverColor> ColorChoices { get; set; }
 
 
-        private SMColour selectedColour = SMColours.LightGray; // Default Colour
-        public SMColour SelectedColour
+        private CoverColor selectedColor; // Default Colour
+        public CoverColor SelectedColor
         {
-            get => selectedColour;
-            set => SetProperty(ref selectedColour, value);
+            get => selectedColor;
+            set => SetProperty(ref selectedColor, value);
         }
 
 
-        public Command ColourTappedCommand { get; }
+        public Command ColorTappedCommand { get; }
         /// <summary>
         /// Set the selected colour
         /// </summary>
         /// <param name="colourTapped"></param>
-        private async void OnColourTapped(SMColour colourTapped)
+        private void OnColorTapped(CoverColor colourTapped)
         {
-            SelectedColour = colourTapped;
+            SelectedColor = colourTapped;
         }
 
 
@@ -177,7 +176,7 @@ namespace Mobile.ViewModels.Assignments
                 Description = Description,
                 DateDue = SelectedDate,
                 CoverPhoto = CoverPhoto != null ? CoverPhoto : null,
-                CoverColour = SMColours.DarkGreen
+                CoverColor = selectedColor
             };
 
             await AssignmentStore.Create(newAssignment);
@@ -191,17 +190,27 @@ namespace Mobile.ViewModels.Assignments
         /// </summary>
         public AddAssignmentViewModel()
         {
-            ColourChoices = Helpers.Helpers.convertListToObservableCollection<SMColour>(SMColours.Colours);
-
+            LoadColors().SafeFireAndForget();
             Title = "Add Assignment";
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
             PickImageCommand = new Command(OnPickImageTapped);
-            ColourTappedCommand = new Command<SMColour>(OnColourTapped);
+            ColorTappedCommand = new Command<CoverColor>(OnColorTapped);
             RemoveImageCommand = new Command(OnRemoveImageTapped);
 
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
+        }
+
+        public async Task LoadColors()
+        {
+            var coverColors = await CoverColorStore.GetAll();
+            SelectedColor = coverColors.SingleOrDefault(cc => cc.Id == 1);
+            ColorChoices = new ObservableCollection<CoverColor>();
+            foreach (var cc in coverColors)
+            {
+                ColorChoices.Add(cc);
+            }
         }
 
         /// <summary>

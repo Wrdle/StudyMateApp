@@ -44,10 +44,6 @@ namespace Mobile.ViewModels
                 var assignments = await AssignmentStore.GetByUserIdAsync(1, true);
                 foreach (var assignment in assignments)
                 {
-                    if (assignment.CoverPhoto != null)
-                    {
-                        assignment.CoverColour = SMColours.DarkGray;
-                    }
                     Assignments.Add(assignment);
                 }
             }

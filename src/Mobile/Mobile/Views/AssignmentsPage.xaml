@@ -18,18 +18,18 @@
                 <DataTemplate>
                     <Frame>
                         <Frame CornerRadius="2" Padding="0,0,0,0">
-                            <AbsoluteLayout BackgroundColor="{Binding CoverBackgroundColour}" x:DataType="model:Assignment" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <AbsoluteLayout BackgroundColor="{Binding CoverColor.BackgroundColor}" x:DataType="model:Assignment" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                 <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
                                 <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
                                     <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
                                         <Label Text="{Binding Title}" 
                                             LineBreakMode="NoWrap" 
                                             Style="{DynamicResource ListItemTextStyle}" 
-                                            FontSize="16" TextColor="{Binding CoverFontColour}"/>
+                                            FontSize="16" TextColor="{Binding CoverColor.FontColor}"/>
                                         <Label Text="{Binding Description}" 
                                             LineBreakMode="NoWrap"
                                             Style="{DynamicResource ListItemDetailTextStyle}"
-                                            FontSize="13" TextColor="{Binding CoverFontColour}"/>
+                                            FontSize="13" TextColor="{Binding CoverColor.FontColor}"/>
                                         <StackLayout.GestureRecognizers>
                                             <TapGestureRecognizer 
                                                 NumberOfTapsRequired="1"

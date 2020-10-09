@@ -10,7 +10,10 @@ namespace Mobile.Data.Entites
         public string Description { get; set; }
         public DateTime Due { get; set; }
         public byte[] CoverPhoto { get; set; }
-        public string CoverColour { get; set; }
+        public int CoverColorId { get; set; }
+
+        // Referenced Entities
+        public CoverColor CoverColor { get; set; }
 
         // Referencing Entities
         public ICollection<UserAssignment> UserAssignments { get; set; }

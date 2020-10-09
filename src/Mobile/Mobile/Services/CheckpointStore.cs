@@ -120,9 +120,11 @@ namespace Mobile.Services
                     })
                     .ToListAsync();
 
+                var checkpointIds = checkpoints.Select(c => c.Id).ToList();
+
                 var userCheckpoints = await dbContext.UserCheckpoints
                     .Include(uc => uc.User)
-                    .Where(uc => checkpoints.Any(c => c.Id == uc.CheckpointId))
+                    .Where(uc => checkpointIds.Contains(uc.CheckpointId))
                     .Select(uc => new
                     {
                         CheckpointId = uc.CheckpointId,
