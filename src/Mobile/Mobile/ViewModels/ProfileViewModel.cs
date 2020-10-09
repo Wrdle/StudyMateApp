@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 
 namespace Mobile.ViewModels
 {
@@ -15,15 +15,29 @@ namespace Mobile.ViewModels
     {
         public ObservableCollection<Models.Skill> ProfileSkills { get; }
 
+        public ObservableCollection<Models.Subject> CurrentSubjects { get; }
+        public ObservableCollection<Models.Subject> PastSubjects { get; }
+
         public Command LoadProfileSkillsCommand { get; }
+
+        public Command LoadSubjectsCommand { get; }
+
+      
 
         public ProfileViewModel()
         {
             Title = "Profile";
+
             ProfileSkills = new ObservableCollection<Models.Skill>();
+            CurrentSubjects = new ObservableCollection<Models.Subject>();
+            PastSubjects = new ObservableCollection<Models.Subject>();
+
             LoadProfileSkillsCommand = new Command(async () => await ExecuteLoadProfileSkillsCommand());
+            LoadSubjectsCommand = new Command(async () => await ExecuteLoadSubjectsCommand());
         }
 
+        
+        
         string name = "Felix";
 
         public String Name
@@ -82,6 +96,37 @@ namespace Mobile.ViewModels
             }
         }
 
+        async Task ExecuteLoadSubjectsCommand()
+        {
+            IsBusy = true;
+
+            try
+            {
+                CurrentSubjects.Clear();
+                var subjects = await SubjectDataStore.GetAllSubjectsByUserAsync(1);
+                foreach (var subject in subjects)
+                {
+                    if (subject.Current)
+                    {
+                        CurrentSubjects.Add(subject);
+                    }
+                    else
+                    {
+                        PastSubjects.Add(subject);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+       
         public void OnAppearing()
         {
             IsBusy = true;

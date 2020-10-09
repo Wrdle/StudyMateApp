@@ -11,10 +11,12 @@ using Xamarin.Forms;
 
 namespace Mobile.Services
 {
-    public class MockDataStore : IAssignmentStore<Models.Assignment>, ISkillsStore<Models.Skill>, ICheckpointStore<Models.Checkpoint>
+    public class MockDataStore : IAssignmentStore<Models.Assignment>, ISkillsStore<Models.Skill>, ICheckpointStore<Models.Checkpoint>, ISubjectStore<Models.Subject>
     {
         ICollection<Models.Assignment> assignments;
         ICollection<Models.Skill> skills;
+        ICollection<Models.Subject> subjects;
+
 
         ICollection<Models.Checkpoint> checkpoints;
 
@@ -43,10 +45,22 @@ namespace Mobile.Services
                 new Models.Skill(2, "Unity"),
                 new Models.Skill(3, "C#"),
                 new Models.Skill(4, "Visual Studio"),
-                new Models.Skill(4, "Visual Studio"),
-                new Models.Skill(4, "Visual Studio"),
-                new Models.Skill(4, "Visual Studio"),
-                new Models.Skill(4, "Visual Studio")
+                new Models.Skill(5, "Blender"),
+                new Models.Skill(6, "Unreal Engine"),
+                new Models.Skill(7, "Maya"),
+                new Models.Skill(8, "C++")
+            };
+
+            subjects = new List<Models.Subject>()
+            {
+                new Models.Subject(1, "CAB210", true),
+                new Models.Subject(2, "IAB330", true),
+                new Models.Subject(3, "IGB400", true),
+                new Models.Subject(4, "IGB301", true),
+                new Models.Subject(5, "IGB300", false),
+                new Models.Subject(6, "IGB381", false),
+                new Models.Subject(7, "IGB321", false),
+                new Models.Subject(8, "IGB100", false)
             };
         }
 
@@ -92,6 +106,11 @@ namespace Mobile.Services
         public async Task<ICollection<Models.Skill>> GetAllSkillsByUserAsync(int userID, bool forceRefresh = false)
         {
             return await Task.FromResult(skills);
+        }
+
+        public async Task<ICollection<Models.Subject>> GetAllSubjectsByUserAsync(int userID, bool forceRefresh = false)
+        {
+            return await Task.FromResult(subjects);
         }
     }
 }

@@ -23,6 +23,8 @@ namespace Mobile.Views
         {
             base.OnAppearing();
             _viewModel.OnAppearing();
+            _viewModel.LoadProfileSkillsCommand.Execute(null);
+            _viewModel.LoadSubjectsCommand.Execute(null);
         }
     }
 }

@@ -10,12 +10,14 @@ namespace Mobile.ViewModels
         public IAssignmentStore<Assignment> AssignmentDataStore;
         public ISkillsStore<Skill> SkillDataStore;
         public ICheckpointStore<Checkpoint> CheckpointDataStore;
+        public ISubjectStore<Subject> SubjectDataStore;
 
         public BaseViewModel()
         {
             AssignmentDataStore = DependencyService.Get<IAssignmentStore<Assignment>>();
             SkillDataStore = DependencyService.Get<ISkillsStore<Skill>>();
             CheckpointDataStore = DependencyService.Get<ICheckpointStore<Checkpoint>>();
+            SubjectDataStore = DependencyService.Get<ISubjectStore<Subject>>();
         }
     }
 } 
