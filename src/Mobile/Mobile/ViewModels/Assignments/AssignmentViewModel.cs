@@ -1,19 +1,15 @@
-﻿using Mobile.Helpers;
-using Mobile.Models;
-using Mobile.Services;
+﻿using Mobile.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
 {
     [QueryProperty(nameof(inputAssignmentID), nameof(AssignmentID))]
     class AssignmentViewModel : BaseViewModel
-    {        
+    {
         public Command<Checkpoint> CheckpointTapped { get; }
 
         /// <summary>
@@ -56,7 +52,7 @@ namespace Mobile.ViewModels.Assignments
         private string dueDate;
 
         public string DueDate
-        { 
+        {
             get => "Final Due: " + dueDate;
             set => SetProperty(ref dueDate, value);
         }
@@ -67,8 +63,8 @@ namespace Mobile.ViewModels.Assignments
 
         public string Description
         {
-                get => description;
-                set => SetProperty(ref description, value);
+            get => description;
+            set => SetProperty(ref description, value);
         }
 
 
@@ -85,13 +81,13 @@ namespace Mobile.ViewModels.Assignments
         // COVER BACKGROUND COLOUR
         private Color coverBackgroundColour;
 
-        public Color CoverBackgroundColour 
+        public Color CoverBackgroundColor
         {
             get => coverBackgroundColour;
             set => SetProperty(ref coverBackgroundColour, value);
         }
 
-        
+
 
         // COVER PHOTO
         private ImageSource coverPhoto;
@@ -106,7 +102,7 @@ namespace Mobile.ViewModels.Assignments
         // CHECKPOINTS
         private ObservableCollection<Checkpoint> checkpoints;
 
-        public ObservableCollection<Checkpoint> Checkpoints 
+        public ObservableCollection<Checkpoint> Checkpoints
         {
             get => checkpoints;
             set => SetProperty(ref checkpoints, value);
@@ -157,7 +153,9 @@ namespace Mobile.ViewModels.Assignments
                 DueDate = assignment.DateDue.ToShortDateString();
                 Description = assignment.Description;
                 ShowCoverPhoto = CheckCoverPhoto();
-                CoverBackgroundColour = assignment.CoverColour.BackgroundColour;
+
+                var coverColors = await CoverColorStore.GetAll();
+                CoverBackgroundColor = coverColors.SingleOrDefault(cc => cc.Id == assignment.CoverColor.Id).BackgroundColor;
 
                 // Load the assignments checkpoints
                 LoadCheckpoints(assignmentID);
@@ -185,7 +183,7 @@ namespace Mobile.ViewModels.Assignments
             foreach (Checkpoint checkpoint in requestedCheckpoints)
             {
                 Checkpoints.Add(checkpoint);
-            } 
+            }
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace Mobile.Helpers
 {
     public class Helpers
     {
-        public static ObservableCollection<T> convertListToObservableCollection<T>(List<T> list)
+        public static ObservableCollection<T> ConvertListToObservableCollection<T>(List<T> list)
         {
             var oc = new ObservableCollection<T>();
             foreach (var item in list)

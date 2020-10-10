@@ -9,6 +9,7 @@ namespace Mobile.ViewModels
         //          Fields
         //------------------------------
 
+        public ICoverColorStore CoverColorStore { get; set; }
         public IAssignmentStore DataStore { get; }
         public IUserStore UserStore { get; }
         public IGroupStore GroupStore { get; }
@@ -21,6 +22,7 @@ namespace Mobile.ViewModels
 
         public BaseViewModel()
         {
+            CoverColorStore = DependencyService.Get<ICoverColorStore>();
             DataStore = DependencyService.Get<IAssignmentStore>();
             UserStore = DependencyService.Get<IUserStore>();
             GroupStore = DependencyService.Get<IGroupStore>();
