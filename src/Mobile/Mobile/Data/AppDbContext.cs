@@ -13,6 +13,7 @@ namespace Mobile.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Skill> Skills { get; set; }
+        public DbSet<CoverColor> CoverColors { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Checkpoint> Checkpoints { get; set; }

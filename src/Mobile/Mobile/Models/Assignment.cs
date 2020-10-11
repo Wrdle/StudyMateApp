@@ -1,9 +1,6 @@
-﻿using Mobile.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Xamarin.Forms;
-using Color = Xamarin.Forms.Color;
 
 namespace Mobile.Models
 {
@@ -15,21 +12,24 @@ namespace Mobile.Models
         public ICollection<Skill> Skills { get; set; }
         public DateTime DateDue { get; set; }
         public ImageSource CoverPhoto { get; set; }
-        public SMColour CoverColour { get; set; }
+        public CoverColor CoverColor { get; set; }
 
-        public Color CoverBackgroundColour 
+        /// <summary>
+        /// Returns DueDate as a formatted string
+        /// </summary>
+        public string DateDueString
         {
             get
             {
-                return CoverColour.BackgroundColour;
+                return ("Due " + DateDue.ToString("ddd d \\o\\f MMMM yyyy")).ToUpper();
             }
         }
 
-        public Color CoverFontColour
+        public string DateDueSlashNotation
         {
             get
             {
-                return CoverColour.FontColour;
+                return "Due: " + DateDue.ToString("d/M/yyyy");
             }
         }
 

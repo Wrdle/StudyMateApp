@@ -5,16 +5,30 @@
              xmlns:local="clr-namespace:Mobile.ViewModels.Assignments"
              xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Settings"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">
                 <!-- Cover Photo -->
-                <Frame Padding="0" Margin="0" BackgroundColor="{Binding CoverBackgroundColour}">
-                    <Image Source="{Binding CoverPhoto}" HeightRequest="200" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
+                <Frame Padding="0" Margin="0" BackgroundColor="{Binding Assignment.CoverColor.BackgroundColor}">
+                    <Image Source="{Binding Assignment.CoverPhoto}" HeightRequest="200" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
                 </Frame>
 
                 <!-- Due Date -->
                 <Frame HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
+                    <Label Text="{Binding Assignment.DateDueSlashNotation}" FontSize="Medium" FontAttributes="Bold"></Label>
+                </Frame>
+
+                <!-- Checkpoints -->
+                <Frame HasShadow="True" Margin="30,5,30,5">
+                    <StackLayout>
+                        <Label Text="Checkpoints" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <StackLayout x:Name="CheckpointsListView"
+                        BindableLayout.ItemsSource="{Binding Checkpoints}" FlowDirection="LeftToRight">
                     <Label Text="{Binding DueDate}" FontSize="Medium"></Label>
                 </Frame>
 
@@ -49,6 +63,14 @@
                                 </Frame>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Description -->
+                <Frame HasShadow="True" Margin="30,5,30,5" IsTabStop="False">
+                    <StackLayout>
+                        <Label Text="Description" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <Label Text="{Binding Assignment.Description}" FontSize="Small"></Label>
                     </StackLayout>
                 </Frame>
             </StackLayout>

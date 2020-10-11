@@ -20,6 +20,7 @@ namespace Mobile.Services
         //------------------------------
 
         private readonly IUserStore _userStore;
+        private readonly IAssignmentStore _assignmentStore;
 
         //------------------------------
         //          Constructors
@@ -28,6 +29,7 @@ namespace Mobile.Services
         public CheckpointStore()
         {
             _userStore = DependencyService.Get<IUserStore>();
+            _assignmentStore = DependencyService.Get<IAssignmentStore>();
         }
 
         //------------------------------
@@ -120,9 +122,11 @@ namespace Mobile.Services
                     })
                     .ToListAsync();
 
+                var checkpointIds = checkpoints.Select(c => c.Id).ToList();
+
                 var userCheckpoints = await dbContext.UserCheckpoints
                     .Include(uc => uc.User)
-                    .Where(uc => checkpoints.Any(c => c.Id == uc.CheckpointId))
+                    .Where(uc => checkpointIds.Contains(uc.CheckpointId))
                     .Select(uc => new
                     {
                         CheckpointId = uc.CheckpointId,
@@ -147,6 +151,45 @@ namespace Mobile.Services
                 }
 
                 return checkpoints;
+            }
+        }
+
+        public async Task<ICollection<Checkpoint>> GetByUserId(long userId)
+        {
+            if (!_userStore.IsLoggedIn)
+            {
+                throw new Exception(Error.NotLoggedIn);
+            }
+
+            using (var dbContext = new AppDbContext())
+            {
+                // Get all assignment id's associated with user
+                var assignments = await _assignmentStore.GetByUserIdAsync(userId, true);
+                var assignmentsIds = assignments.Select(c => c.Id).ToList();
+
+                List<Checkpoint> allAssociatedCheckpoints = new List<Checkpoint>();
+
+                // Get all checkpoints associated with assignments and add to allAssociatedCheckpoints
+                foreach (long currentAssignmentId in assignmentsIds)
+                {
+                    var currentCheckpoints = await dbContext.Checkpoints
+                    .Where(c => c.AssignmentId == currentAssignmentId)
+                    .Select(c => new Checkpoint
+                    {
+                        Id = c.Id,
+                        AssignmentId = c.AssignmentId,
+                        Title = c.Title,
+                        Notes = c.Description,
+                        DueDate = c.DateDue.ToLocalTime(),
+                        AssignedUsers = new List<UserListItem>()
+                    })
+                    .ToListAsync();
+
+                    // Combine the two lists
+                    allAssociatedCheckpoints.AddRange(currentCheckpoints);
+                }
+
+                return allAssociatedCheckpoints;
             }
         }
 

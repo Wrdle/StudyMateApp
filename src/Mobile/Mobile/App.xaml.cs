@@ -14,15 +14,16 @@ namespace Mobile
             // Initialize app
             InitializeComponent();
 
-            // Seed database
-            new AppDbSeeder().Seed().SafeFireAndForget();
-
             // Register services
+            DependencyService.Register<ICoverColorStore, CoverColorStore>();
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
             DependencyService.Register<IAssignmentStore, AssignmentStore>();
             DependencyService.Register<ICheckpointStore, CheckpointStore>();
+
+            // Seed database
+            new AppDbSeeder().Seed().SafeFireAndForget();
 
             {
                 var userStore = DependencyService.Get<IUserStore>();
