@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Mobile.Data.Entites;
-using Mobile.Services.Interfaces;
+﻿using Mobile.Services.Interfaces;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels

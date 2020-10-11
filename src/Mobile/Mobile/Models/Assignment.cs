@@ -14,6 +14,25 @@ namespace Mobile.Models
         public ImageSource CoverPhoto { get; set; }
         public CoverColor CoverColor { get; set; }
 
+        /// <summary>
+        /// Returns DueDate as a formatted string
+        /// </summary>
+        public string DateDueString
+        {
+            get
+            {
+                return ("Due " + DateDue.ToString("ddd d \\o\\f MMMM yyyy")).ToUpper();
+            }
+        }
+
+        public string DateDueSlashNotation
+        {
+            get
+            {
+                return "Due: " + DateDue.ToString("d/M/yyyy");
+            }
+        }
+
         public Assignment()
         {
             Skills = new List<Skill>();
