@@ -1,6 +1,6 @@
 ﻿using Mobile.Helpers;
-using Mobile.Models;
 using Mobile.ViewModels.Assignments;
+using Mobile.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -11,44 +11,47 @@ namespace Mobile.ViewModels
 {
     public class AssignmentsViewModel : Mobile.ViewModels.BaseViewModel
     {
-        private Assignment _selectedItem;
+        private Assignment _selectedAssignment;
 
         public ObservableCollection<Assignment> Assignments { get; }
         public Command LoadAssignmentsCommand { get; }
-        //public Command AddItemCommand { get; }
-        public Command<Assignment> ItemTapped { get; }
+        
+        public Command AddAssignmentCommand { get; }
+        public Command<Assignment> AssignmentTapped { get; }
 
         public AssignmentsViewModel()
         {
             Title = "Assignments";
             Assignments = new ObservableCollection<Assignment>();
-            LoadAssignmentsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            LoadAssignmentsCommand = new Command(async () => await ExecuteLoadAssignmentsCommand());
 
-            ItemTapped = new Command<Assignment>(OnItemSelected);
+            AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
 
-            //AddItemCommand = new Command(OnAddItem);
+            AddAssignmentCommand = new Command(OnAddAssignmentTapped);
         }
 
-        async Task ExecuteLoadItemsCommand()
+        /// <summary>
+        /// Load Assignments from datastore
+        /// </summary>
+        /// <returns>Task type</returns>
+        async Task ExecuteLoadAssignmentsCommand()
         {
             IsBusy = true;
 
             try
             {
                 Assignments.Clear();
-                var assignments = await AssignmentStore.GetByUserIdAsync(1, true);
+                var assignments = await AssignmentStore.GetByUserIdAsync(LoggedInUser.Id, true);
                 foreach (var assignment in assignments)
                 {
-                    if (assignment.CoverPhoto != null)
-                    {
-                        assignment.CoverColour = SMColours.DarkGray;
-                    }
                     Assignments.Add(assignment);
                 }
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("\n===================================================");
                 Debug.WriteLine(ex);
+                Debug.WriteLine("===================================================\n");
             }
             finally
             {
@@ -56,34 +59,41 @@ namespace Mobile.ViewModels
             }
         }
 
+        /// <summary>
+        /// Runs before page appears, resetting variables and sets IsBusy to true
+        /// </summary>
         public void OnAppearing()
         {
             IsBusy = true;
-            SelectedItem = null;
+            SelectedAssignment = null;
         }
 
-        public Assignment SelectedItem
+        public Assignment SelectedAssignment
         {
-            get => _selectedItem;
+            get => _selectedAssignment;
             set
             {
-                SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
+                SetProperty(ref _selectedAssignment, value);
+                OnAssignmentSelected(value);
             }
         }
 
-        /*private async void OnAddItem(object obj)
-        {
-            await Shell.Current.GoToAsync(nameof(NewItemPage));
-        }*/
-
-        async void OnItemSelected(Assignment assignment)
+        /// <summary>
+        /// Runs when assignment selected, navigating to assignment page of given assignment
+        /// </summary>
+        /// <param name="assignment">Assignment to navigate to</param>
+        async void OnAssignmentSelected(Assignment assignment)
         {
             if (assignment == null)
                 return;
 
             // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"//assignments/assignment?{nameof(AssignmentViewModel.AssignmentID)}={assignment.Id}");
+            await Shell.Current.GoToAsync($"assignments/assignment?{nameof(AssignmentViewModel.AssignmentID)}={assignment.Id}");
+        }
+
+        async void OnAddAssignmentTapped()
+        {
+            await Shell.Current.GoToAsync($"assignments/addAssignment");
         }
     }
 }

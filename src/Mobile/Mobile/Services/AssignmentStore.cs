@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mobile.Constants;
 using Mobile.Data;
-using Mobile.Helpers;
 using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
@@ -23,6 +22,7 @@ namespace Mobile.Services
         //------------------------------
 
         private readonly IUserStore _userStore;
+        private readonly ICoverColorStore _coverColorStore;
 
         //------------------------------
         //          Constructor
@@ -31,6 +31,7 @@ namespace Mobile.Services
         public AssignmentStore()
         {
             _userStore = DependencyService.Get<IUserStore>();
+            _coverColorStore = DependencyService.Get<ICoverColorStore>();
         }
 
         //------------------------------
@@ -60,7 +61,7 @@ namespace Mobile.Services
                         {
                             Title = assignment.Title,
                             Description = assignment.Description,
-                            CoverColour = ColourToHex(assignment.CoverColour),
+                            CoverColorId = assignment.CoverColor.Id,
                             CoverPhoto = await ImageToBytes(assignment.CoverPhoto),
                             Due = assignment.DateDue
                         };
@@ -150,6 +151,7 @@ namespace Mobile.Services
             {
                 var assignments = await dbContext.UserAssignments
                     .Include(ua => ua.Assignment)
+                    .ThenInclude(a => a.CoverColor)
                     .Where(ua => ua.UserId == _userStore.CurrentUserId)
                     .Select(ua => new Assignment
                     {
@@ -157,7 +159,12 @@ namespace Mobile.Services
                         Title = ua.Assignment.Title,
                         Description = ua.Assignment.Description,
                         DateDue = ua.Assignment.Due,
-                        CoverColour = HexToColour(),
+                        CoverColor = new CoverColor
+                        {
+                            Id = ua.Assignment.CoverColor.Id,
+                            BackgroundColor = ua.Assignment.CoverColor.BackgroundColorFromHex,
+                            FontColor = ua.Assignment.CoverColor.FontColorFromHex
+                        },
                         CoverPhoto = BytesToImage(ua.Assignment.CoverPhoto),
                         Skills = new List<Skill>()
                     })
@@ -179,7 +186,12 @@ namespace Mobile.Services
                             Title = ga.Assignment.Title,
                             Description = ga.Assignment.Description,
                             DateDue = ga.Assignment.Due,
-                            CoverColour = HexToColour(),
+                            CoverColor = new CoverColor
+                            {
+                                Id = ga.Assignment.CoverColor.Id,
+                                BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex,
+                                FontColor = ga.Assignment.CoverColor.FontColorFromHex
+                            },
                             CoverPhoto = BytesToImage(ga.Assignment.CoverPhoto),
                             Skills = new List<Skill>()
                         })
@@ -220,7 +232,10 @@ namespace Mobile.Services
         {
             using (var dbContext = new AppDbContext())
             {
-                var assignment = await dbContext.Assignments.FindAsync(id);
+                var assignment = await dbContext.Assignments
+                    .Include(a => a.CoverColor)
+                    .SingleOrDefaultAsync(a => a.Id == id);
+
                 if (assignment == null)
                 {
                     throw new Exception(Error.AssignmentDoesNotExist);
@@ -232,7 +247,12 @@ namespace Mobile.Services
                     Title = assignment.Title,
                     Description = assignment.Description,
                     DateDue = assignment.Due,
-                    CoverColour = HexToColour(),
+                    CoverColor = new CoverColor
+                    {
+                        Id = assignment.CoverColor.Id,
+                        BackgroundColor = assignment.CoverColor.BackgroundColorFromHex,
+                        FontColor = assignment.CoverColor.FontColorFromHex
+                    },
                     CoverPhoto = BytesToImage(assignment.CoverPhoto),
                     Skills = new List<Skill>()
                 };
@@ -252,7 +272,7 @@ namespace Mobile.Services
                 dbAssignment.Title = assignment.Title;
                 dbAssignment.Description = assignment.Description;
                 dbAssignment.Due = assignment.DateDue;
-                dbAssignment.CoverColour = ColourToHex(assignment.CoverColour);
+                dbAssignment.CoverColorId = assignment.CoverColor.Id;
                 dbAssignment.CoverPhoto = await ImageToBytes(assignment.CoverPhoto);
 
                 dbContext.Assignments.Update(dbAssignment);
@@ -260,12 +280,29 @@ namespace Mobile.Services
             }
         }
 
+        public Task<long> GenerateNewAssignmentID()
+        {
+            long biggestId;
+            using (var dbContext = new AppDbContext())
+            {
+                biggestId = dbContext.Assignments
+                .Select(assignment => assignment.Id)
+                .Max();
+                return Task.FromResult(biggestId);
+            }
+        }
+
         //------------------------------
         //          Helpers
         //------------------------------
 
-        private async Task<byte[]> ImageToBytes(ImageSource imageSource)
+        public static async Task<byte[]> ImageToBytes(ImageSource imageSource)
         {
+            if (imageSource == null)
+            {
+                return new byte[] { };
+            }
+
             var cancellationToken = System.Threading.CancellationToken.None;
             using (var imageStream = await ((StreamImageSource)imageSource).Stream(cancellationToken))
             using (var byteStream = new MemoryStream())
@@ -275,22 +312,22 @@ namespace Mobile.Services
             }
         }
 
-        private ImageSource BytesToImage(byte[] bytes)
+        public static ImageSource BytesToImage(byte[] bytes)
         {
-            using (var stream = new MemoryStream(bytes))
+            if (bytes.Length < 1)
             {
+                return null;
+            }
+
+            try
+            {
+                Stream stream = new MemoryStream(bytes);
                 return ImageSource.FromStream(() => { return stream; });
             }
-        }
-
-        private string ColourToHex(SMColour colour)
-        {
-            return colour.BackgroundColour.ToHex();
-        }
-
-        private SMColour HexToColour()
-        {
-            return SMColours.Blue;
+            catch
+            {
+                return null;
+            }
         }
 
     }

@@ -14,7 +14,15 @@ namespace Mobile.Services.Interfaces
 
         // Queries
         Task<ICollection<Checkpoint>> GetByAssignmentId(long assignmentId);
+    
         Task<Checkpoint> GetById(long id);
+
+        /// <summary>
+        /// Get all checkpoints associated with a user
+        /// </summary>
+        /// <param name="userId">ID of user</param>
+        /// <returns>List of checkpoints</returns>
+        Task<ICollection<Checkpoint>> GetByUserId(long userId);
 
     }
 }
