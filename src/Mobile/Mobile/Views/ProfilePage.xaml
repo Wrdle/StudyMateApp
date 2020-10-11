@@ -58,6 +58,7 @@
 
             <Frame HasShadow="True">
                 <StackLayout>
+                    <!--Current Subjects-->
                     <Label Text="Current Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
                     <FlexLayout x:Name="CurrentSubjectsList" Wrap="Wrap"                      
                         BindableLayout.ItemsSource="{Binding CurrentSubjects}">
@@ -79,6 +80,8 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
+                    
+                    <!--Past Subjects-->
                     <Label Text="Past Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
                     <FlexLayout x:Name="PastSubjectsList" Wrap="Wrap"                      
                         BindableLayout.ItemsSource="{Binding PastSubjects}">
