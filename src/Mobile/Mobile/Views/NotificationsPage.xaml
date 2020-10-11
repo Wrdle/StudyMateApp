@@ -12,9 +12,28 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
-                <Label Text="Hey Champion! Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                <Label Text="Invitiations"></Label>
+                <Frame>
+                    <StackLayout Orientation="Horizontal">
+                        <Image></Image>
+                        <StackLayout Orientation="Vertical">
+                            <Label>
+                                
+                            </Label>
+                            <Label>
+                                
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+                <Label Text="Reminders and Checkpoints"></Label>
+                <Frame>
+                    
+                </Frame>
+                <Frame>
+                    
+                </Frame>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
