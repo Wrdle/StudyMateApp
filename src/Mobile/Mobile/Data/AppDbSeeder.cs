@@ -99,8 +99,45 @@ namespace Mobile.Data
                 };
                 await dbContext.Assignments.AddAsync(groupAssignment);
                 await dbContext.SaveChangesAsync();
+
+                // CHECKPOINT
+                var checkpoint = new Checkpoint
+                {
+                    Title = "Checkpoint 1",
+                    Description = "This is the description/notes for checkpoint 1",
+                    DateDue = DateTime.Now.AddDays(2),
+                    Assignment = assignment
+                };
+                await dbContext.Checkpoints.AddAsync(checkpoint);
+
+                // CHECKPOINT WITH USERS
+                var checkpoint2 = new Checkpoint
+                {
+                    Title = "Checkpoint 2",
+                    Description = "This is the description/notes for checkpoint 2",
+                    DateDue = DateTime.Now.AddDays(3),
+                    Assignment = assignment,
+                    UserCheckpoints = new List<UserCheckpoint> { 
+                        new UserCheckpoint { UserId = TestUser.Id }
+                    }
+                };
+                await dbContext.Checkpoints.AddAsync(checkpoint2);
+
+                // CHECKPOINT WITH USERS OUTSIDE NEXT 7 DAYS
+                var checkpoint3 = new Checkpoint
+                {
+                    Title = "Checkpoint 3",
+                    Description = "This is the description/notes for checkpoint 3",
+                    DateDue = DateTime.Now.AddDays(10),
+                    Assignment = groupAssignment,
+                    UserCheckpoints = new List<UserCheckpoint> {
+                        new UserCheckpoint { UserId = TestUser.Id }
+                    }
+                };
+                await dbContext.Checkpoints.AddAsync(checkpoint3);
+                await dbContext.SaveChangesAsync();
+
             }
         }
-
     }
 }

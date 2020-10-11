@@ -29,6 +29,12 @@ namespace Mobile.ViewModels.Assignments
 
         private Assignment assignment;
 
+        public Assignment Assignment
+        {
+            get => assignment;
+            set => SetProperty(ref assignment, value);
+        }
+
         // ASSIGNMENT ID
         public string inputAssignmentID
         {
@@ -48,26 +54,6 @@ namespace Mobile.ViewModels.Assignments
         }
 
 
-        // DUE DATE
-        private string dueDate;
-
-        public string DueDate
-        {
-            get => "Final Due: " + dueDate;
-            set => SetProperty(ref dueDate, value);
-        }
-
-
-        // DESCRIPTION
-        private string description;
-
-        public string Description
-        {
-            get => description;
-            set => SetProperty(ref description, value);
-        }
-
-
         // SHOW COVER PHOTO
         private bool showCoverPhoto;
 
@@ -75,27 +61,6 @@ namespace Mobile.ViewModels.Assignments
         {
             get => showCoverPhoto;
             set => SetProperty(ref showCoverPhoto, value);
-        }
-
-
-        // COVER BACKGROUND COLOUR
-        private Color coverBackgroundColour;
-
-        public Color CoverBackgroundColor
-        {
-            get => coverBackgroundColour;
-            set => SetProperty(ref coverBackgroundColour, value);
-        }
-
-
-
-        // COVER PHOTO
-        private ImageSource coverPhoto;
-
-        public ImageSource CoverPhoto
-        {
-            get => coverPhoto;
-            set => SetProperty(ref coverPhoto, value);
         }
 
 
@@ -146,19 +111,17 @@ namespace Mobile.ViewModels.Assignments
             try
             {
                 // Get Assignment
-                assignment = await AssignmentStore.GetById(id);
+                Assignment = await AssignmentStore.GetById(id);
 
                 // Extract and store data
                 Title = assignment.Title;
-                DueDate = assignment.DateDue.ToShortDateString();
-                Description = assignment.Description;
                 ShowCoverPhoto = CheckCoverPhoto();
 
                 var coverColors = await CoverColorStore.GetAll();
-                CoverBackgroundColor = coverColors.SingleOrDefault(cc => cc.Id == assignment.CoverColor.Id).BackgroundColor;
+                //CoverBackgroundColor = coverColors.SingleOrDefault(cc => cc.Id == assignment.CoverColor.Id).BackgroundColor;
 
                 // Load the assignments checkpoints
-                LoadCheckpoints(assignmentID);
+                LoadCheckpoints(Assignment.Id);
             }
             catch (Exception)
             {
@@ -194,7 +157,6 @@ namespace Mobile.ViewModels.Assignments
         {
             if (assignment.CoverPhoto != null)
             {
-                CoverPhoto = assignment.CoverPhoto;
                 return true;
             }
             return false;
