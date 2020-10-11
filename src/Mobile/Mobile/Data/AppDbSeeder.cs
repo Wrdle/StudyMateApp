@@ -70,9 +70,8 @@ namespace Mobile.Data
                 await dbContext.SaveChangesAsync();
 
                 // USER ASSIGNMENT
-                var assignment1 = new Assignment
+                var assignment = new Assignment
                 {
-                    Id = 1,
                     Title = "Test Assignment",
                     Description = "blah blah blah",
                     Due = DateTime.UtcNow,
@@ -83,22 +82,7 @@ namespace Mobile.Data
                         new UserAssignment { UserId = TestUser.Id }
                     }
                 };
-
-                var assignment2 = new Assignment
-                {
-                    Id = 2,
-                    Title = "CAB303 Assignment 2",
-                    Description = "Networking is cool and fundemental to the human survival.",
-                    Due = DateTime.UtcNow,
-                    CoverColour = "444444",
-                    UserAssignments = new List<UserAssignment>
-                    {
-                        new UserAssignment { UserId = TestUser.Id }
-                    }
-                };
-
-                await dbContext.Assignments.AddAsync(assignment1);
-                await dbContext.Assignments.AddAsync(assignment2);
+                await dbContext.Assignments.AddAsync(assignment);
 
                 // GROUP ASSIGNMENT
                 var groupAssignment = new Assignment
@@ -115,8 +99,45 @@ namespace Mobile.Data
                 };
                 await dbContext.Assignments.AddAsync(groupAssignment);
                 await dbContext.SaveChangesAsync();
+
+                // CHECKPOINT
+                var checkpoint = new Checkpoint
+                {
+                    Title = "Checkpoint 1",
+                    Description = "This is the description/notes for checkpoint 1",
+                    DateDue = DateTime.Now.AddDays(2),
+                    Assignment = assignment
+                };
+                await dbContext.Checkpoints.AddAsync(checkpoint);
+
+                // CHECKPOINT WITH USERS
+                var checkpoint2 = new Checkpoint
+                {
+                    Title = "Checkpoint 2",
+                    Description = "This is the description/notes for checkpoint 2",
+                    DateDue = DateTime.Now.AddDays(3),
+                    Assignment = assignment,
+                    UserCheckpoints = new List<UserCheckpoint> { 
+                        new UserCheckpoint { UserId = TestUser.Id }
+                    }
+                };
+                await dbContext.Checkpoints.AddAsync(checkpoint2);
+
+                // CHECKPOINT WITH USERS OUTSIDE NEXT 7 DAYS
+                var checkpoint3 = new Checkpoint
+                {
+                    Title = "Checkpoint 3",
+                    Description = "This is the description/notes for checkpoint 3",
+                    DateDue = DateTime.Now.AddDays(10),
+                    Assignment = groupAssignment,
+                    UserCheckpoints = new List<UserCheckpoint> {
+                        new UserCheckpoint { UserId = TestUser.Id }
+                    }
+                };
+                await dbContext.Checkpoints.AddAsync(checkpoint3);
+                await dbContext.SaveChangesAsync();
+
             }
         }
-
     }
 }

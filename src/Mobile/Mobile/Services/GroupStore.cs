@@ -151,7 +151,8 @@ namespace Mobile.Services
                     })
                     .ToListAsync();
 
-                return groups;
+                return new List<GroupListItem>() { };
+                //return groups;
             }
         }
 
@@ -194,13 +195,22 @@ namespace Mobile.Services
             }
         }
 
-        private ImageSource BytesToImage(byte[] bytes)
+        public static ImageSource BytesToImage(byte[] bytes)
         {
-            using (var stream = new MemoryStream(bytes))
+            if (bytes != null && bytes.Length < 1)
             {
+                return null;
+            }
+
+            try
+            {
+                Stream stream = new MemoryStream(bytes);
                 return ImageSource.FromStream(() => { return stream; });
             }
+            catch
+            {
+                return null;
+            }
         }
-
     }
 }
