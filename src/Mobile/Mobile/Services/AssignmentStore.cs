@@ -319,9 +319,14 @@ namespace Mobile.Services
                 return null;
             }
 
-            using (var stream = new MemoryStream(bytes))
+            try
             {
+                Stream stream = new MemoryStream(bytes);
                 return ImageSource.FromStream(() => { return stream; });
+            }
+            catch
+            {
+                return null;
             }
         }
 
