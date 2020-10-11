@@ -182,7 +182,7 @@ namespace Mobile.Services
                         Title = c.Title,
                         Notes = c.Description,
                         DueDate = c.DateDue.ToLocalTime(),
-                        AssignedUsers = new List<UserListItem>()
+                        AssignedUsers = new List<CheckpointUserListItem>()
                     })
                     .ToListAsync();
 
