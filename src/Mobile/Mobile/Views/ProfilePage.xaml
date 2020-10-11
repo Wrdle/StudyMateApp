@@ -1,12 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Mobile.Views.ProfilePage">
+             x:Class="Mobile.Views.ProfilePage"
+             xmlns:vm="clr-namespace:Mobile.ViewModels"
+             Title="{Binding Title}">
+
+    <ContentPage.BindingContext>
+        <vm:ProfileViewModel />
+    </ContentPage.BindingContext>
+
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="{Binding DisplayName}" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding DisplayUniversity}" Grid.Row="1" Grid.Column="1"/>
+            </Grid>
+
+            <Frame CornerRadius="2" Padding="0,0,0,0" VerticalOptions="StartAndExpand">
+                <Label Text="{Binding SkillsTitle}"/>
+                
+
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
+
+<!--<Frame>
+    <Frame CornerRadius="2" Padding="0,0,0,0" VerticalOptions="StartAndExpand">
+    </Frame>
+</Frame>-->

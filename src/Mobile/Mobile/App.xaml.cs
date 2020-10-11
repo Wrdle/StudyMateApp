@@ -1,8 +1,8 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Mobile.Data;
 using Mobile.Services;
-using Mobile.Views;
+using Mobile.Services.Interfaces;
+using MvvmHelpers;
+using Xamarin.Forms;
 
 namespace Mobile
 {
@@ -11,15 +11,31 @@ namespace Mobile
 
         public App()
         {
+            // Initialize app
             InitializeComponent();
 
+            // Register services
+            DependencyService.Register<ICoverColorStore, CoverColorStore>();
             DependencyService.Register<MockDataStore>();
+            DependencyService.Register<IUserStore, UserStore>();
+            DependencyService.Register<IGroupStore, GroupStore>();
+            DependencyService.Register<IAssignmentStore, AssignmentStore>();
+            DependencyService.Register<ICheckpointStore, CheckpointStore>();
+
+            // Seed database
+            new AppDbSeeder().Seed().SafeFireAndForget();
+
+            {
+                var userStore = DependencyService.Get<IUserStore>();
+                userStore.Login(AppDbSeeder.TestUser.Email, "").SafeFireAndForget();
+            }
+
+            // Set main page
             MainPage = new AppShell();
         }
 
         protected override void OnStart()
         {
-            AppShell.Current.GoToAsync("//home");
         }
 
         protected override void OnSleep()
