@@ -116,7 +116,7 @@ namespace Mobile.Services
                         Title = c.Title,
                         Notes = c.Description,
                         DueDate = c.DateDue.ToLocalTime(),
-                        AssignedUsers = new List<UserListItem>()
+                        AssignedUsers = new List<CheckpointUserListItem>()
                     })
                     .ToListAsync();
 
@@ -128,12 +128,13 @@ namespace Mobile.Services
                     .Select(uc => new
                     {
                         CheckpointId = uc.CheckpointId,
-                        User = new UserListItem
+                        User = new CheckpointUserListItem
                         {
                             Id = uc.User.Id,
                             Email = uc.User.Email,
                             FirstName = uc.User.FirstName,
-                            LastName = uc.User.LastName
+                            LastName = uc.User.LastName,
+                            IsDone = uc.IsDone
                         }
                     })
                     .ToListAsync();
@@ -206,12 +207,13 @@ namespace Mobile.Services
                 {
                     var checkpoint = userCheckpoints[0].Checkpoint;
                     var assignedUsers = userCheckpoints
-                        .Select(uc => new UserListItem
+                        .Select(uc => new CheckpointUserListItem
                         {
                             Id = uc.User.Id,
                             Email = uc.User.Email,
                             FirstName = uc.User.FirstName,
-                            LastName = uc.User.LastName
+                            LastName = uc.User.LastName,
+                            IsDone = uc.IsDone
                         })
                         .ToList();
 
