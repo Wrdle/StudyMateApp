@@ -8,6 +8,8 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="" Text="Add Assignment" Command="{Binding AddAssignmentCommand}" />
+
+        <ToolbarItem Text="Show Archived" Order="Secondary"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <RefreshView x:DataType="local:AssignmentsViewModel" Command="{Binding LoadAssignmentsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">

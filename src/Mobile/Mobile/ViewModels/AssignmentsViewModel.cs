@@ -1,6 +1,6 @@
 ﻿using Mobile.Helpers;
-using Mobile.Models;
 using Mobile.ViewModels.Assignments;
+using Mobile.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -41,7 +41,7 @@ namespace Mobile.ViewModels
             try
             {
                 Assignments.Clear();
-                var assignments = await AssignmentStore.GetByUserIdAsync(1, true);
+                var assignments = await AssignmentStore.GetByUserIdAsync(LoggedInUser.Id, true);
                 foreach (var assignment in assignments)
                 {
                     Assignments.Add(assignment);
@@ -49,7 +49,9 @@ namespace Mobile.ViewModels
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("\n===================================================");
                 Debug.WriteLine(ex);
+                Debug.WriteLine("===================================================\n");
             }
             finally
             {

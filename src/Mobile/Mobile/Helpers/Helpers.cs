@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Mobile.Helpers
 {
-    public class Helpers
+    public static class Helpers
     {
         public static ObservableCollection<T> ConvertListToObservableCollection<T>(List<T> list)
         {

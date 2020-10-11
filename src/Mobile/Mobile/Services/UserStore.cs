@@ -120,12 +120,16 @@ namespace Mobile.Services
                     .Where(us => us.UserId == _currentUserId.Value)
                     .ToListAsync();
 
-                if (userSkills.Count < 1)
+                // This is probably not a good idea. A user may have just not added skills yet.
+                /*if (userSkills.Count < 1)
                 {
                     throw new Exception(Error.AccountDoesNotExist);
                 }
 
-                var user = userSkills[0].User;
+                var user = userSkills[0].User;*/
+
+                var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == CurrentUserId);
+
                 var skills = userSkills.Select(us => new Skill(us.Skill.Id, us.Skill.Name)).ToList();
 
                 return new User
