@@ -9,7 +9,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Settings"></ToolbarItem>
     </ContentPage.ToolbarItems>
-    
+
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">
@@ -29,7 +29,9 @@
                         <Label Text="Checkpoints" FontSize="Medium" FontAttributes="Bold"></Label>
                         <StackLayout x:Name="CheckpointsListView"
                         BindableLayout.ItemsSource="{Binding Checkpoints}" FlowDirection="LeftToRight">
-                    <Label Text="{Binding DueDate}" FontSize="Medium"></Label>
+                            <Label Text="{Binding DueDate}" FontSize="Medium"></Label>
+                        </StackLayout>
+                    </StackLayout>
                 </Frame>
 
                 <!-- Description -->
