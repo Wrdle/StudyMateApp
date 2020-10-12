@@ -17,7 +17,7 @@
                 <Frame Padding="0" Margin="0" BackgroundColor="{Binding Assignment.CoverColor.BackgroundColor}">
                     <Image Source="{Binding Assignment.CoverPhoto}" HeightRequest="200" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
                 </Frame>
-                
+
                 <!-- Due Date -->
                 <Frame HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
                     <Label Text="{Binding Assignment.DateDueSlashNotation}" FontSize="Medium" FontAttributes="Bold"></Label>
@@ -29,8 +29,8 @@
                         <Label Text="Checkpoints" FontSize="Medium" FontAttributes="Bold"></Label>
                         <StackLayout x:Name="CheckpointsListView"
                         BindableLayout.ItemsSource="{Binding Checkpoints}" FlowDirection="LeftToRight">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
                                     <Frame CornerRadius="2" x:DataType="model:Checkpoint" HasShadow="False" Padding="5,5,5,2">
                                         <Frame BackgroundColor="#F0F0F0">
                                             <StackLayout AbsoluteLayout.LayoutFlags="All">
@@ -56,9 +56,9 @@
                                             </StackLayout>
                                         </Frame>
                                     </Frame>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </StackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
                     </StackLayout>
                 </Frame>
 

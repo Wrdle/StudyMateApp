@@ -83,5 +83,18 @@ namespace Mobile.Services
 
             return await Task.FromResult(filteredCheckpoints);
         }
+
+        public async Task<Checkpoint> GetCheckpointByID(long checkpointID)
+        {
+            foreach (Checkpoint checkpoint in checkpoints)
+            {
+                if (checkpoint.Id == checkpointID)
+                {
+                    return await Task.FromResult(checkpoint);
+                }
+            }
+
+            return null;
+        }
     }
 }
