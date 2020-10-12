@@ -34,7 +34,8 @@ namespace Mobile.ViewModels.Assignments
             // Grab the checkpoint id add to the title 
             Title = "Checkpoint" + " " + checkpointID;
 
-            var checkpoint = CheckpointDataStore.GetCheckpointByID(Convert.ToInt64(id));
+            // This needs to be converted to use the new CheckpointStore
+            //var checkpoint = CheckpointDataStore.GetCheckpointByID(Convert.ToInt64(id));
         }
 
         //string checkpointDueDay;
