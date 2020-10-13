@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Mobile.Views.NotificationsPage"
              xmlns:vm="clr-namespace:Mobile.ViewModels"
-             Title="{Binding Title}">
+             Title="Notifications">
 
     <ContentPage.BindingContext>
         <vm:NotificationViewModel />
@@ -17,11 +17,11 @@
                     <StackLayout Orientation="Horizontal">
                         <Image></Image>
                         <StackLayout Orientation="Vertical">
-                            <Label>
-                                
+                            <Label TextColor="Black">
+                                Invite to join IAB330 Group 52
                             </Label>
-                            <Label>
-                                
+                            <Label TextColor="Gray">
+                                Invite from @Wrdle
                             </Label>
                         </StackLayout>
                     </StackLayout>
@@ -29,7 +29,12 @@
 
                 <Label Text="Reminders and Checkpoints"></Label>
                 <Frame>
-                    
+                    <StackLayout Orientation="Horizontal">
+                        <Image></Image>
+                        <StackLayout Orientation="Vertical">
+                            
+                        </StackLayout>
+                    </StackLayout>
                 </Frame>
                 <Frame>
                     
