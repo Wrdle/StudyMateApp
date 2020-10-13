@@ -72,7 +72,7 @@ namespace Mobile.Services
             }
         }
 
-        public async Task Logout()
+        public void Logout()
         {
             _currentUserId = null;
         }

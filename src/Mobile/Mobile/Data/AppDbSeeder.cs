@@ -41,19 +41,19 @@ namespace Mobile.Data
                 // COVER COLORS
                 var colors = new List<CoverColor>
                 {
-                    new CoverColor { BackgroundColorHex = "4F4F4F", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "828282", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "EB5757", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "F2994A", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "F2C94C", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "219653", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "27AE60", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "6FCF97", FontColorHex = "4F4F4F" },
-                    new CoverColor { BackgroundColorHex = "2F80ED", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "2D9CDB", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "56CCF2", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "9B51E0", FontColorHex = "FFFFFF" },
-                    new CoverColor { BackgroundColorHex = "BB6BD9", FontColorHex = "FFFFFF" }
+                    new CoverColor { BackgroundColorHex = "4F4F4F", FontColorHex = "FFFFFF" }, // Dark Gray
+                    new CoverColor { BackgroundColorHex = "828282", FontColorHex = "FFFFFF" }, // Light Gray
+                    new CoverColor { BackgroundColorHex = "EB5757", FontColorHex = "FFFFFF" }, // Red
+                    new CoverColor { BackgroundColorHex = "F2994A", FontColorHex = "FFFFFF" }, // Orange
+                    new CoverColor { BackgroundColorHex = "F2C94C", FontColorHex = "FFFFFF" }, // Yellow
+                    new CoverColor { BackgroundColorHex = "219653", FontColorHex = "FFFFFF" }, // Dark Green
+                    new CoverColor { BackgroundColorHex = "27AE60", FontColorHex = "FFFFFF" }, // Green
+                    new CoverColor { BackgroundColorHex = "6FCF97", FontColorHex = "4F4F4F" }, // Light Green
+                    new CoverColor { BackgroundColorHex = "2F80ED", FontColorHex = "FFFFFF" }, // Dark Blue
+                    new CoverColor { BackgroundColorHex = "2D9CDB", FontColorHex = "FFFFFF" }, // Blue
+                    new CoverColor { BackgroundColorHex = "56CCF2", FontColorHex = "FFFFFF" }, // Light Blue
+                    new CoverColor { BackgroundColorHex = "9B51E0", FontColorHex = "FFFFFF" }, // Purple
+                    new CoverColor { BackgroundColorHex = "BB6BD9", FontColorHex = "FFFFFF" }  // Light Purple
                 };
 
                 await dbContext.CoverColors.AddRangeAsync(colors);
@@ -75,6 +75,7 @@ namespace Mobile.Data
                     Title = "Test Assignment",
                     Description = "blah blah blah",
                     Due = DateTime.UtcNow,
+                    IsArchived = false,
                     CoverPhoto = await AssignmentStore.ImageToBytes(null),
                     CoverColorId = 1,
                     UserAssignments = new List<UserAssignment>
@@ -90,6 +91,7 @@ namespace Mobile.Data
                     Title = "Test Group Assignment",
                     Description = "blafadagsflah",
                     Due = DateTime.UtcNow,
+                    IsArchived = false,
                     CoverPhoto = await AssignmentStore.ImageToBytes(null),
                     CoverColorId = 8,
                     GroupAssignments = new List<GroupAssignment>
@@ -98,6 +100,23 @@ namespace Mobile.Data
                     }
                 };
                 await dbContext.Assignments.AddAsync(groupAssignment);
+
+                // ARCHIVED USER ASSIGNMENT
+                var archivedAssignment = new Assignment
+                {
+                    Title = "Archived Assignment",
+                    Description = "This is a test for the arhived assignment",
+                    Due = DateTime.UtcNow,
+                    IsArchived = true,
+                    CoverPhoto = await AssignmentStore.ImageToBytes(null),
+                    CoverColorId = 1,
+                    UserAssignments = new List<UserAssignment>
+                    {
+                        new UserAssignment { UserId = TestUser.Id }
+                    }
+                };
+                await dbContext.Assignments.AddAsync(archivedAssignment);
+
                 await dbContext.SaveChangesAsync();
 
                 // CHECKPOINT
