@@ -7,45 +7,48 @@
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="" Text="Add Assignment" Command="{Binding AddAssignmentCommand}" />
+        <ToolbarItem IconImageSource="add.png" Command="{Binding AddAssignmentCommand}" />
 
-        <ToolbarItem Text="Show Archived" Order="Secondary"></ToolbarItem>
+        <ToolbarItem Text="{Binding ShowArchivedButtonText}" Command="{Binding ShowArchivedCommand}" Order="Secondary"/>
     </ContentPage.ToolbarItems>
-
+    
     <RefreshView x:DataType="local:AssignmentsViewModel" Command="{Binding LoadAssignmentsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-        <CollectionView x:Name="AssignmentsListView"
+        <StackLayout>
+            <Label Text="{Binding AssignmentsHeading}" FontSize="Large" FontAttributes="Bold" Margin="20,15,0,-5"></Label>
+            <CollectionView x:Name="AssignmentsListView"
                 ItemsSource="{Binding Assignments}"
                 SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame>
-                        <Frame CornerRadius="2" Padding="0,0,0,0">
-                            <AbsoluteLayout BackgroundColor="{Binding CoverColor.BackgroundColor}" x:DataType="model:Assignment" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
-                                <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
-                                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
-                                        <Label Text="{Binding Title}" 
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame>
+                            <Frame CornerRadius="2" Padding="0,0,0,0">
+                                <AbsoluteLayout BackgroundColor="{Binding CoverColor.BackgroundColor}" x:DataType="model:Assignment" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
+                                    <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
+                                            <Label Text="{Binding Title}" 
                                             LineBreakMode="NoWrap" 
                                             Style="{DynamicResource ListItemTextStyle}" 
                                             FontSize="16" TextColor="{Binding CoverColor.FontColor}"/>
-                                        <Label Text="{Binding Description}" 
+                                            <Label Text="{Binding Description}" 
                                             LineBreakMode="NoWrap"
                                             Style="{DynamicResource ListItemDetailTextStyle}"
                                             FontSize="13" TextColor="{Binding CoverColor.FontColor}"/>
-                                        <StackLayout.GestureRecognizers>
-                                            <TapGestureRecognizer 
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer 
                                                 NumberOfTapsRequired="1"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=AssignmentTapped}"		
                                                 CommandParameter="{Binding .}">
-                                            </TapGestureRecognizer>
-                                        </StackLayout.GestureRecognizers>
+                                                </TapGestureRecognizer>
+                                            </StackLayout.GestureRecognizers>
+                                        </StackLayout>
                                     </StackLayout>
-                                </StackLayout>
-                            </AbsoluteLayout>
+                                </AbsoluteLayout>
+                            </Frame>
                         </Frame>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
     </RefreshView>
 </ContentPage>
