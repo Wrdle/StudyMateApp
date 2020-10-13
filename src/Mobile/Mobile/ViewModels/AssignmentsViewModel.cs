@@ -6,66 +6,50 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
+
+// Helpers
+using static Mobile.Helpers.Helpers;
+using System.Collections.Generic;
 
 namespace Mobile.ViewModels
 {
     public class AssignmentsViewModel : Mobile.ViewModels.BaseViewModel
     {
-        private Assignment _selectedAssignment;
+        //------------------------------
+        //          Fields
+        //------------------------------
 
-        public ObservableCollection<Assignment> Assignments { get; }
+        private Assignment _selectedAssignment;
+        private bool showArchived = false;
+
+        public ObservableCollection<Assignment> Assignments { get; set; }
+        public ObservableCollection<Assignment> AssignmentsWithArchived { get; set; }
+        public ObservableCollection<Assignment> AssignmentsWithoutArchived { get; set; }
+
         public Command LoadAssignmentsCommand { get; }
-        
+        public Command ShowArchivedCommand { get; }
         public Command AddAssignmentCommand { get; }
         public Command<Assignment> AssignmentTapped { get; }
 
-        public AssignmentsViewModel()
+        public string AssignmentsHeading
         {
-            Title = "Assignments";
-            Assignments = new ObservableCollection<Assignment>();
-            LoadAssignmentsCommand = new Command(async () => await ExecuteLoadAssignmentsCommand());
-
-            AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
-
-            AddAssignmentCommand = new Command(OnAddAssignmentTapped);
-        }
-
-        /// <summary>
-        /// Load Assignments from datastore
-        /// </summary>
-        /// <returns>Task type</returns>
-        async Task ExecuteLoadAssignmentsCommand()
-        {
-            IsBusy = true;
-
-            try
+            get
             {
-                Assignments.Clear();
-                var assignments = await AssignmentStore.GetByUserIdAsync(LoggedInUser.Id, true);
-                foreach (var assignment in assignments)
-                {
-                    Assignments.Add(assignment);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("\n===================================================");
-                Debug.WriteLine(ex);
-                Debug.WriteLine("===================================================\n");
-            }
-            finally
-            {
-                IsBusy = false;
+                if (showArchived == false)
+                    return "Current Assignments";
+                return "Archived Assignments";
             }
         }
 
-        /// <summary>
-        /// Runs before page appears, resetting variables and sets IsBusy to true
-        /// </summary>
-        public void OnAppearing()
+        public string ShowArchivedButtonText
         {
-            IsBusy = true;
-            SelectedAssignment = null;
+            get
+            {
+                if (showArchived == false)
+                    return "Show Archived";
+                return "Show Current";
+            }
         }
 
         public Assignment SelectedAssignment
@@ -76,6 +60,95 @@ namespace Mobile.ViewModels
                 SetProperty(ref _selectedAssignment, value);
                 OnAssignmentSelected(value);
             }
+        }
+
+        //------------------------------
+        //          Constructors
+        //------------------------------
+
+        public AssignmentsViewModel()
+        {
+            Title = "Assignments";
+
+            Assignments = new ObservableCollection<Assignment>();
+            AssignmentsWithArchived = new ObservableCollection<Assignment>();
+            AssignmentsWithoutArchived = new ObservableCollection<Assignment>();
+
+            LoadAssignmentsCommand = new Command(async () => await ExecuteLoadAssignmentsCommand());
+            ShowArchivedCommand = new Command(OnShowArchivedSelected);
+            AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
+            AddAssignmentCommand = new Command(OnAddAssignmentTapped);
+
+            OnPropertyChanged(nameof(ShowArchivedButtonText));
+        }
+
+        //------------------------------
+        //          Methods
+        //------------------------------
+
+        /// <summary>
+        /// Runs before page appears, resetting variables and sets IsBusy to true
+        /// </summary>
+        public void OnAppearing()
+        {
+            IsBusy = true;
+            SelectedAssignment = null;
+        }
+
+        /// <summary>
+        /// Load Assignments from datastore
+        /// </summary>
+        /// <returns>Task type</returns>
+        async Task  ExecuteLoadAssignmentsCommand()
+        {
+            IsBusy = true;
+
+            try
+            {
+                // Start clear
+                Assignments.Clear();
+                AssignmentsWithoutArchived.Clear();
+                AssignmentsWithArchived.Clear();
+
+                // Get data from db
+                var assignmentsWithoutArchived = await AssignmentStore.GetByUserIdAsync(userId: LoggedInUser.Id, includeGroupAssignments: true);
+                var assignmentsWithArchived = await AssignmentStore.GetByUserIdAsync(userId: LoggedInUser.Id, includeGroupAssignments: true, includeArchived: true);
+
+                // Assign without archived data
+                AssignmentsWithoutArchived = ConvertListToObservableCollection(assignmentsWithoutArchived.ToList());
+                Assignments = AssignmentsWithoutArchived;
+
+                AssignmentsWithArchived = ConvertListToObservableCollection<Assignment>(RemoveNotArchived(assignmentsWithArchived.ToList()));
+
+                OnPropertyChanged(nameof(Assignments));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public void OnShowArchivedSelected()
+        {
+            if (showArchived == false)
+            {
+                Assignments = AssignmentsWithArchived;
+                showArchived = true;
+            }
+            else
+            {
+                Assignments = AssignmentsWithoutArchived;
+                showArchived = false;
+            }
+
+            // Update variables on switch
+            OnPropertyChanged(nameof(Assignments));
+            OnPropertyChanged(nameof(AssignmentsHeading));
+            OnPropertyChanged(nameof(ShowArchivedButtonText));
         }
 
         /// <summary>
@@ -94,6 +167,22 @@ namespace Mobile.ViewModels
         async void OnAddAssignmentTapped()
         {
             await Shell.Current.GoToAsync($"assignments/addAssignment");
+        }
+
+
+        public List<Assignment> RemoveNotArchived(List<Assignment> assignments)
+        {
+            List<Assignment> filtered = new List<Assignment>();
+
+            foreach (Assignment a in assignments)
+            {
+                if (a.IsArchived == true)
+                {
+                    filtered.Add(a);
+                }
+            }
+
+            return filtered;
         }
     }
 }

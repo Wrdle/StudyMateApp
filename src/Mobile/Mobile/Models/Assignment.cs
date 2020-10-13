@@ -9,8 +9,10 @@ namespace Mobile.Models
         public long Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Notes { get; set; }
         public ICollection<Skill> Skills { get; set; }
         public DateTime DateDue { get; set; }
+        public bool IsArchived { get; set; }
         public ImageSource CoverPhoto { get; set; }
         public CoverColor CoverColor { get; set; }
 

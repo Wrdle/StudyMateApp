@@ -8,7 +8,7 @@ namespace Mobile.Services.Interfaces
         long CurrentUserId { get; }
         bool IsLoggedIn { get; }
         Task Login(string email, string password);
-        Task Logout();
+        void Logout();
         Task CreateAccount(string email, string firstName, string lastName);
 
         Task<User> GetProfile();

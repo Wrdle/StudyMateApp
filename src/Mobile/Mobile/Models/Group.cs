@@ -11,12 +11,10 @@ namespace Mobile.Models
         public int? CoverColorId { get; set; }
         public ICollection<UserListItem> Members { get; private set; }
         public ICollection<AssignmentListItem> Assignments { get; private set; }
-
         public Group()
         {
             Members = new List<UserListItem>();
             Assignments = new List<AssignmentListItem>();
         }
-
     }
 }
