@@ -103,6 +103,7 @@ namespace Mobile.ViewModels
             try
             {
                 CurrentSubjects.Clear();
+                PastSubjects.Clear();
                 var subjects = await SubjectDataStore.GetAllSubjectsByUserAsync(1);
                 foreach (var subject in subjects)
                 {
