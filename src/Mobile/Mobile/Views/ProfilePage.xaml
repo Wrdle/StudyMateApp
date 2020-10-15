@@ -105,6 +105,17 @@
                     </FlexLayout>
                 </StackLayout>
             </Frame>
+
+            <Button Text="PoPuP"
+                    BackgroundColor="DodgerBlue" HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center"
+                    CornerRadius="20"
+                    TextColor="White"
+                    Clicked="AddSkillPopupCommand"
+                    />
+            <!--Clicked="AddSkillPopupCommand"-->
+            
+
         </StackLayout>
     </RefreshView>
 </ContentPage>
