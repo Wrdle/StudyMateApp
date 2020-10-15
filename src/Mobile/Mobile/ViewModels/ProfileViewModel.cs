@@ -1,9 +1,6 @@
 ﻿using Mobile.Data.Entites;
 using Mobile.Models;
-using Mobile.Views.Profile;
 using MvvmHelpers.Commands;
-using Rg.Plugins.Popup.Contracts;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,7 +22,7 @@ namespace Mobile.ViewModels
 
         public Command LoadSubjectsCommand { get; }
 
-        //public Command AddSkillPopupCommand { get; }
+      
 
         public ProfileViewModel()
         {
@@ -37,7 +34,6 @@ namespace Mobile.ViewModels
 
             LoadProfileSkillsCommand = new Command(async () => await ExecuteLoadProfileSkillsCommand());
             LoadSubjectsCommand = new Command(async () => await ExecuteLoadSubjectsCommand());
-            //AddSkillPopupCommand = new Command(async () => await AddSkillPopup());
         }
 
         
@@ -136,11 +132,6 @@ namespace Mobile.ViewModels
         {
             IsBusy = true;
             
-        }
-
-        protected void AddSkillPopupCommand(object sender, EventArgs e)
-        {
-            PopupNavigation.Instance.PushAsync(new AddSkillPopup());//PopupNavigation.PushAsync(new AddSkillPopup());
         }
     }  
 }
