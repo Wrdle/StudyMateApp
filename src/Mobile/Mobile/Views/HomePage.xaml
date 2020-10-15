@@ -8,48 +8,13 @@
     <ContentPage.BindingContext>
         <vm:HomeViewModel />
     </ContentPage.BindingContext>
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="notification_bell.png"/>
-        
-        <ToolbarItem Text="Help and Feedback" Order="Secondary"/>
-        <ToolbarItem Text="Logout" Order="Secondary"/>
-    </ContentPage.ToolbarItems>
-
+    
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
-                <Frame Margin="20,20,20,20" Padding="20,20,20,20">
-                    <StackLayout>
-                        <Label FontSize="18" FontAttributes="Bold">
-                            Next Assignment Due
-                        </Label>
-                        <Frame CornerRadius="2" Padding="0,0,0,0">
-                            <AbsoluteLayout BackgroundColor="{Binding Assignment.CoverColor.BackgroundColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                <Image Source="{Binding Assignment.CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
-                                <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
-                                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
-                                        <Label Text="{Binding Assignment.Title}" 
-                                            LineBreakMode="NoWrap" 
-                                            Style="{DynamicResource ListItemTextStyle}" 
-                                            FontSize="16" TextColor="{Binding Assignment.CoverColor.FontColor}"/>
-                                        <Label Text="{Binding Assignment.DateDueString}" 
-                                            LineBreakMode="NoWrap"
-                                            Style="{DynamicResource ListItemDetailTextStyle}"
-                                            FontSize="13" TextColor="{Binding Assignment.CoverColor.FontColor}"/>
-                                        <StackLayout.GestureRecognizers>
-                                            <TapGestureRecognizer 
-                                                NumberOfTapsRequired="1"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=AssignmentTapped}"		
-                                                CommandParameter="{Binding Assignment}">
-                                            </TapGestureRecognizer>
-                                        </StackLayout.GestureRecognizers>
-                                    </StackLayout>
-                                </StackLayout>
-                            </AbsoluteLayout>
-                        </Frame>
-                    </StackLayout>
-                </Frame>
+                <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
