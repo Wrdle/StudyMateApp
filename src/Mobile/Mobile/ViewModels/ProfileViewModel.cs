@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Mobile.Views.Profile;
 
 namespace Mobile.ViewModels
 {
@@ -133,5 +134,7 @@ namespace Mobile.ViewModels
             IsBusy = true;
             
         }
+
+        
     }  
 }
