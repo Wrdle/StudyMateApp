@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Mobile.Constants;
 using Mobile.Data;
 using Mobile.Models;
 using Mobile.Services.Interfaces;
@@ -10,31 +9,13 @@ using UserEntity = Mobile.Data.Entites.User;
 
 namespace Mobile.Services
 {
-    public class UserStore : IUserStore
+    public class UserStore : IUserStore<User>
     {
         //------------------------------
         //          Fields
         //------------------------------
 
         private static long? _currentUserId = null;
-
-        /// <summary>
-        /// Gets the ID of the currently logged in user. Returns 0 if there is no currently logged in user.
-        /// </summary>
-        public long CurrentUserId
-        {
-            get
-            {
-                try
-                {
-                    return _currentUserId.Value;
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
-            }
-        }
 
         public bool IsLoggedIn
         {
@@ -65,14 +46,14 @@ namespace Mobile.Services
                 var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == normalizedEmail);
                 if (user == null)
                 {
-                    throw new Exception(Error.IncorrectEmailPassword);
+                    throw new Exception("Incorrect username/password.");
                 }
 
                 _currentUserId = user.Id;
             }
         }
 
-        public void Logout()
+        public async Task Logout()
         {
             _currentUserId = null;
         }
@@ -90,7 +71,7 @@ namespace Mobile.Services
             {
                 if (await dbContext.Users.AnyAsync(u => u.Email == user.Email))
                 {
-                    throw new Exception(Error.AccountWithEmailExists);
+                    throw new Exception("An account with this email already exists.");
                 }
 
                 try
@@ -100,7 +81,7 @@ namespace Mobile.Services
                 }
                 catch (Exception)
                 {
-                    throw new Exception(Error.ServerFailure);
+                    throw new Exception("Something went wrong when trying to create your account. Please try again later.");
                 }
             }
         }
@@ -109,7 +90,7 @@ namespace Mobile.Services
         {
             if (_currentUserId == null)
             {
-                throw new Exception(Error.NotLoggedIn);
+                throw new Exception("Please log in to continue.");
             }
 
             using (var dbContext = new AppDbContext())
@@ -120,16 +101,12 @@ namespace Mobile.Services
                     .Where(us => us.UserId == _currentUserId.Value)
                     .ToListAsync();
 
-                // This is probably not a good idea. A user may have just not added skills yet.
-                /*if (userSkills.Count < 1)
+                if (userSkills.Count < 1)
                 {
-                    throw new Exception(Error.AccountDoesNotExist);
+                    throw new Exception("Account does not exist.");
                 }
 
-                var user = userSkills[0].User;*/
-
-                var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == CurrentUserId);
-
+                var user = userSkills[0].User;
                 var skills = userSkills.Select(us => new Skill(us.Skill.Id, us.Skill.Name)).ToList();
 
                 return new User
@@ -149,7 +126,7 @@ namespace Mobile.Services
         {
             if (_currentUserId == null)
             {
-                throw new Exception(Error.NotLoggedIn);
+                throw new Exception("Please log in to continue.");
             }
 
             using (var dbContext = new AppDbContext())
@@ -157,7 +134,7 @@ namespace Mobile.Services
                 var savedUser = await dbContext.Users.SingleAsync(u => u.Id == _currentUserId.Value);
                 if (savedUser == null)
                 {
-                    throw new Exception(Error.AccountDoesNotExist);
+                    throw new Exception("Account does not exist.");
                 }
 
                 savedUser.FirstName = user.FirstName;
@@ -173,10 +150,9 @@ namespace Mobile.Services
                 }
                 catch (Exception)
                 {
-                    throw new Exception(Error.ServerFailure);
+                    throw new Exception("Something went wrong when trying to updat your account. Please try again later.");
                 }
             }
         }
-
     }
 }

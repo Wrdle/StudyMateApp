@@ -13,17 +13,14 @@ namespace Mobile.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Skill> Skills { get; set; }
-        public DbSet<CoverColor> CoverColors { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
-        public DbSet<Checkpoint> Checkpoints { get; set; }
 
         // Many to Many / Join Tables
         public DbSet<UserSkill> UserSkills { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<UserAssignment> UserAssignments { get; set; }
         public DbSet<GroupAssignment> GroupAssignments { get; set; }
-        public DbSet<UserCheckpoint> UserCheckpoints { get; set; }
 
         //------------------------------
         //          Constructors
@@ -58,9 +55,6 @@ namespace Mobile.Data
 
             // GroupAssigments - Composite Key
             modelBuilder.Entity<GroupAssignment>().HasKey(ga => new { ga.GroupId, ga.AssignmentId });
-
-            // UserCheckPoints - Composite Key
-            modelBuilder.Entity<UserCheckpoint>().HasKey(uc => new { uc.UserId, uc.CheckpointId });
         }
 
     }

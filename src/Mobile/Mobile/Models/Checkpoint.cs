@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Mobile.Models
 {
@@ -8,14 +10,14 @@ namespace Mobile.Models
         public long Id { get; set; }
 
         public long AssignmentId { get; set; }
-
+        
         public string Title { get; set; }
-
+        
         public string Notes { get; set; }
 
         public DateTime DueDate { get; set; }
 
-        public List<UserListItem> AssignedUsers { get; set; }
+        public List<User> AssignedUsers { get; set; }
 
         /// <summary>
         /// Returns DueDate as a formatted string

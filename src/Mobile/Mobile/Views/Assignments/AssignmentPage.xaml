@@ -5,30 +5,17 @@
              xmlns:local="clr-namespace:Mobile.ViewModels.Assignments"
              xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
-    </ContentPage.ToolbarItems>
-    
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">
                 <!-- Cover Photo -->
-                <Frame Padding="0" Margin="0" HeightRequest="200" BackgroundColor="{Binding Assignment.CoverColor.BackgroundColor}">
-                    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                        <Image AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill" Source="{Binding Assignment.CoverPhoto}" IsVisible="{Binding ShowCoverPhoto}"></Image>
-                        <Frame BackgroundColor="#D9FFFFFF" CornerRadius="5" Margin="20,20,20,20" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1">
-                            <StackLayout>
-                                <Label HorizontalTextAlignment="Center" FontSize="16" FontAttributes="Bold">Notes</Label>
-                                <Editor Text="{Binding AssignmentNotes, Mode=TwoWay}" AutoSize="TextChanges" MaxLength="110" Keyboard="Text" HorizontalOptions="CenterAndExpand"></Editor>
-                            </StackLayout>
-                        </Frame>
-                    </AbsoluteLayout>
+                <Frame Padding="0" Margin="0" BackgroundColor="{Binding CoverBackgroundColour}">
+                    <Image Source="{Binding CoverPhoto}" HeightRequest="200" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
                 </Frame>
-
+                
                 <!-- Due Date -->
                 <Frame HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
-                    <Label Text="{Binding Assignment.DateDueSlashNotation}" FontSize="Medium" FontAttributes="Bold"></Label>
+                    <Label Text="{Binding DueDate}" FontSize="Medium" FontAttributes="Bold"></Label>
                 </Frame>
 
                 <!-- Checkpoints -->
@@ -36,9 +23,9 @@
                     <StackLayout>
                         <Label Text="Checkpoints" FontSize="Medium" FontAttributes="Bold"></Label>
                         <StackLayout x:Name="CheckpointsListView"
-                        BindableLayout.ItemsSource="{Binding Checkpoints}" FlowDirection="LeftToRight">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                        BindableLayout.ItemsSource="{Binding Checkpoints}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
                                     <Frame CornerRadius="2" x:DataType="model:Checkpoint" HasShadow="False" Padding="5,5,5,2">
                                         <Frame BackgroundColor="#F0F0F0">
                                             <StackLayout AbsoluteLayout.LayoutFlags="All">
@@ -64,9 +51,9 @@
                                             </StackLayout>
                                         </Frame>
                                     </Frame>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
                     </StackLayout>
                 </Frame>
 
@@ -74,7 +61,7 @@
                 <Frame HasShadow="True" Margin="30,5,30,5" IsTabStop="False">
                     <StackLayout>
                         <Label Text="Description" FontSize="Medium" FontAttributes="Bold"></Label>
-                        <Label Text="{Binding Assignment.Description}" FontSize="Small"></Label>
+                        <Label Text="{Binding Description}" FontSize="Small"></Label>
                     </StackLayout>
                 </Frame>
             </StackLayout>
