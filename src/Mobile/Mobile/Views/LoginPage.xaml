@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mobile.Views.LoginPage"
+             xmlns:vm="clr-namespace:Mobile.ViewModels"
+             Title="StudyMate Login">
+
+    <ContentPage.BindingContext>
+        <vm:LoginViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center">
+            <Frame Margin="20,5,20,80">
+                <StackLayout >
+                    <!-- Logo -->
+                    <Image Source="logo.png" Margin="0,0,0,15"></Image>
+                    
+                    <!-- Email -->
+                    <Label FontSize="Subtitle" FontAttributes="Bold">Email</Label>
+                    <Entry></Entry>
+
+                    <!-- Password -->
+                    <Label FontSize="Subtitle" FontAttributes="Bold">Password</Label>
+                    <Entry></Entry>
+                    
+                    <Button Text="Login"></Button>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
