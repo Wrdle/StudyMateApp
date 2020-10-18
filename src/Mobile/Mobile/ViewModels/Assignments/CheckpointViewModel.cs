@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
 using Mobile.ViewModels.Assignments;
-
-
-// Issues: Back button nevg to Assignments page instead of Assignment page
+using System.Diagnostics;
+using Mobile.Models;
 
 namespace Mobile.ViewModels.Assignments
 {
@@ -13,7 +12,18 @@ namespace Mobile.ViewModels.Assignments
     [QueryProperty(nameof(CheckpointID), nameof(CheckpointID))]
     class CheckpointViewModel : BaseViewModel
     {
-        string checkpointID;
+
+        private Checkpoint checkpoint;
+
+        public Checkpoint Checkpoint
+        {
+            get => checkpoint;
+            set => SetProperty(ref checkpoint, value);
+        }
+
+
+
+        private string checkpointID;
 
         public string CheckpointID
         {
@@ -31,11 +41,12 @@ namespace Mobile.ViewModels.Assignments
         /// <param name="id"></param>
         private void LoadCheckpointID(string id)
         {
-            // Grab the checkpoint id add to the title 
-            Title = "Checkpoint" + " " + checkpointID;
+            //var checkpoint = CheckpointStore.GetCheckpointByID(Convert.ToInt64(id));
+            Checkpoint = CheckpointStore.GetById(Convert.ToInt64(id)).Result;
 
-            // This needs to be converted to use the new CheckpointStore
-            //var checkpoint = CheckpointDataStore.GetCheckpointByID(Convert.ToInt64(id));
+
+            // Grab the checkpoint id add to the title 
+            Title = Checkpoint.Title;
         }
 
         //string checkpointDueDay;

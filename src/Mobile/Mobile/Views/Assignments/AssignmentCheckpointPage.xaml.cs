@@ -18,8 +18,6 @@ namespace Mobile.Views.Assignments
             InitializeComponent();
             // Binding the title dased on the checkpointID
             BindingContext = new CheckpointViewModel();
-
-
         }
     }
 }

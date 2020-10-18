@@ -24,7 +24,15 @@ namespace Mobile.Models
         {
             get
             {
-                return ("Due " + DueDate.ToString("ddd d \\o\\f MMMM yyyy")).ToUpper();
+                return ("Due: " + DueDate.ToString("ddd d \\o\\f MMMM yyyy"));
+            }
+        }
+
+        public string AssignedMembers
+        {
+            get
+            {
+                return (AssignedUsers.ToString());
             }
         }
 
