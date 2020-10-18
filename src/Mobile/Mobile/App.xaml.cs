@@ -12,11 +12,7 @@ namespace Mobile
 
         public App()
         {
-            // Initialize app
             InitializeComponent();
-
-            // Register services
-            DependencyService.Register<ICoverColorStore, CoverColorStore>();
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
@@ -33,10 +29,12 @@ namespace Mobile
 
             // Load the login page on app startup
             MainPage = new NavigationPage(new LoginPage());
+            MainPage = new AppShell();
         }
 
         protected override void OnStart()
         {
+            AppShell.Current.GoToAsync("notifications");
         }
 
         protected override void OnSleep()

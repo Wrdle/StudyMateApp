@@ -1,68 +1,24 @@
 ﻿using Mobile.Models;
-using Mobile.Services.Interfaces;
-using MvvmHelpers;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace Mobile.ViewModels
 {
     class GroupsViewModel : BaseViewModel
     {
-        //------------------------------
-        //          Fields
-        //------------------------------
-
-        // Services
-        private IGroupStore _groupStore;
-
-        // Data
-        private ICollection<GroupListItem> _groups;
-
-        // Public
-        public string Error { get; set; }
-        public ICollection<GroupListItem> Groups
-        {
-            get => _groups;
-
-            set
-            {
-                _groups = value;
-                OnPropertyChanged(nameof(Groups));
-            }
-        }
-
-        //------------------------------
-        //          Constructors
-        //------------------------------
+        public ICollection<GroupListItem> Groups { get; set; }
 
         public GroupsViewModel()
         {
             Title = "Groups";
-            Error = null;
-
-            _groupStore = DependencyService.Get<IGroupStore>();
-
-            _groups = new List<GroupListItem>();
-            LoadGroups().SafeFireAndForget();
-        }
-
-        //------------------------------
-        //          Methods
-        //------------------------------
-
-        public async Task LoadGroups()
-        {
-            try
+            Groups = new List<GroupListItem> 
             {
-                _groups = await _groupStore.MyGroups();
-            }
-            catch (Exception e)
-            {
-                Error = e.Message;
-            }
+                new GroupListItem { Id = 1, Name = "Group1"},
+                new GroupListItem { Id = 2, Name = "Group2"},
+                new GroupListItem { Id = 3, Name = "Group3"},
+                new GroupListItem { Id = 4, Name = "Group4"},
+                new GroupListItem { Id = 5, Name = "Group5"},
+                new GroupListItem { Id = 6, Name = "Group6"}
+            };
         }
-
     }
 }

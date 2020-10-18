@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Xamarin.Forms;
 
 namespace Mobile.Models
 {
@@ -7,14 +6,16 @@ namespace Mobile.Models
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public ImageSource CoverPhoto { get; set; }
-        public int? CoverColorId { get; set; }
+        public string CoverPhoto { get; set; }
+        public string CoverColour { get; set; }
         public ICollection<UserListItem> Members { get; private set; }
         public ICollection<AssignmentListItem> Assignments { get; private set; }
+
         public Group()
         {
             Members = new List<UserListItem>();
             Assignments = new List<AssignmentListItem>();
         }
+
     }
 }

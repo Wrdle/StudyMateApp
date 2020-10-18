@@ -14,5 +14,6 @@ namespace Mobile.Data.Entites
         {
             UserSkills = new List<UserSkill>();
         }
+
     }
 }
