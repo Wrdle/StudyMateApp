@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using MvvmHelpers.Commands;
 using System.Threading.Tasks;
 
 namespace Mobile.ViewModels.Groups
@@ -12,6 +9,10 @@ namespace Mobile.ViewModels.Groups
         //          Fields
         //------------------------------
 
+        public string GroupName { get; set; }
+
+        // Commands
+        public Command MyProperty { get; set; }
 
         //------------------------------
         //          Constructors
@@ -19,13 +20,28 @@ namespace Mobile.ViewModels.Groups
 
         public AddGroupViewModel()
         {
-
         }
 
         //------------------------------
         //          Methods
         //------------------------------
 
+        /// <summary>
+        /// Runs before page appears, resetting variables and sets IsBusy to true
+        /// </summary>
+        public void OnAppearing()
+        {
+            IsBusy = true;
+            GroupName = "";
+        }
+
+        public async Task CreateGroup()
+        {
+            if (!string.IsNullOrEmpty(GroupName))
+            {
+                await GroupStore.Create(GroupName);
+            }
+        }
 
     }
 }

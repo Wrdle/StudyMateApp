@@ -1,6 +1,5 @@
-﻿using Mobile.Helpers;
+﻿using Mobile.Models;
 using Mobile.ViewModels.Assignments;
-using Mobile.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -9,7 +8,7 @@ using Xamarin.Forms;
 
 namespace Mobile.ViewModels
 {
-    public class AssignmentsViewModel : Mobile.ViewModels.BaseViewModel
+    public class AssignmentsViewModel : BaseViewModel
     {
         private Assignment _selectedAssignment;
 

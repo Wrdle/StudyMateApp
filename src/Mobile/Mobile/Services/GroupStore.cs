@@ -53,7 +53,15 @@ namespace Mobile.Services
                             new UserGroupEntity { UserId = _userStore.CurrentUserId }
                         };
 
-                        await dbContext.Groups.AddAsync(new GroupEntity { Name = name, UserGroups = userGroups });
+                        var group = new GroupEntity
+                        {
+                            Name = name,
+                            CoverPhoto = await ImageToBytes(null),
+                            CoverColorId = 1,
+                            UserGroups = userGroups
+                        };
+
+                        await dbContext.Groups.AddAsync(group);
                         await dbContext.SaveChangesAsync();
                         await transaction.CommitAsync();
                     }
@@ -141,18 +149,18 @@ namespace Mobile.Services
             {
                 var groups = await dbContext.UserGroups
                     .Include(ug => ug.Group)
+                    .ThenInclude(g => g.CoverColor)
                     .Where(ug => ug.UserId == _userStore.CurrentUserId)
                     .Select(ug => new GroupListItem
                     {
                         Id = ug.Group.Id,
                         Name = ug.Group.Name,
                         CoverPhoto = BytesToImage(ug.Group.CoverPhoto),
-                        CoverColorId = ug.Group.CoverColorId
+                        CoverColor = new CoverColor { Id = ug.Group.CoverColor.Id, BackgroundColor = ug.Group.CoverColor.BackgroundColorFromHex, FontColor = ug.Group.CoverColor.FontColorFromHex }
                     })
                     .ToListAsync();
 
-                return new List<GroupListItem>() { };
-                //return groups;
+                return groups;
             }
         }
 
@@ -184,8 +192,13 @@ namespace Mobile.Services
         //          Helpers
         //------------------------------
 
-        private async Task<byte[]> ImageToBytes(ImageSource imageSource)
+        public static async Task<byte[]> ImageToBytes(ImageSource imageSource)
         {
+            if (imageSource == null)
+            {
+                return new byte[] { };
+            }
+
             var cancellationToken = System.Threading.CancellationToken.None;
             using (var imageStream = await ((StreamImageSource)imageSource).Stream(cancellationToken))
             using (var byteStream = new MemoryStream())

@@ -3,6 +3,7 @@ using Mobile.Services;
 using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -65,7 +66,17 @@ namespace Mobile.Data
                 await dbContext.SaveChangesAsync();
 
                 // GROUP
-                var group = new Group { Name = "Test Group", UserGroups = new List<UserGroup> { new UserGroup { UserId = TestUser.Id } } };
+                var group = new Group
+                {
+                    Name = "Test Group",
+                    CoverPhoto = await GroupStore.ImageToBytes(null),
+                    CoverColorId = 6,
+                    UserGroups = new List<UserGroup>
+                    {
+                        new UserGroup { UserId = TestUser.Id }
+                    }
+                };
+
                 await dbContext.Groups.AddAsync(group);
                 await dbContext.SaveChangesAsync();
 
@@ -117,7 +128,7 @@ namespace Mobile.Data
                     Description = "This is the description/notes for checkpoint 2",
                     DateDue = DateTime.Now.AddDays(3),
                     Assignment = assignment,
-                    UserCheckpoints = new List<UserCheckpoint> { 
+                    UserCheckpoints = new List<UserCheckpoint> {
                         new UserCheckpoint { UserId = TestUser.Id }
                     }
                 };
