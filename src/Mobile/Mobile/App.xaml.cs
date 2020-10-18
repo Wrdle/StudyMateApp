@@ -1,6 +1,7 @@
 ﻿using Mobile.Data;
 using Mobile.Services;
 using Mobile.Services.Interfaces;
+using Mobile.Views;
 using MvvmHelpers;
 using Xamarin.Forms;
 
@@ -30,8 +31,8 @@ namespace Mobile
                 userStore.Login(AppDbSeeder.TestUser.Email, "").SafeFireAndForget();
             }
 
-            // Set main page
-            MainPage = new AppShell();
+            // Load the login page on app startup
+            MainPage = new NavigationPage(new LoginPage());
         }
 
         protected override void OnStart()

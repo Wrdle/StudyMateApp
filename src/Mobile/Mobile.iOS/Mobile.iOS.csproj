@@ -169,4 +169,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\notification_bell.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\logo.png" />
+  </ItemGroup>
 </Project>
