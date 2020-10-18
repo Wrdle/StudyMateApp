@@ -17,6 +17,13 @@ namespace Mobile.Models
 
         public List<UserListItem> AssignedUsers { get; set; }
 
+        // Checklist tasks
+        public string Filename { get; set; }
+
+        public string Text { get; set; }
+
+        public DateTime Date { get; set; }
+
         /// <summary>
         /// Returns DueDate as a formatted string
         /// </summary>
@@ -25,14 +32,6 @@ namespace Mobile.Models
             get
             {
                 return ("Due: " + DueDate.ToString("ddd d \\o\\f MMMM yyyy"));
-            }
-        }
-
-        public string AssignedMembers
-        {
-            get
-            {
-                return (AssignedUsers.ToString());
             }
         }
 

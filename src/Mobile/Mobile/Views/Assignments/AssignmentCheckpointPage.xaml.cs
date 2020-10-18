@@ -19,5 +19,13 @@ namespace Mobile.Views.Assignments
             // Binding the title dased on the checkpointID
             BindingContext = new CheckpointViewModel();
         }
+
+        //async void Setting_Clicked(object sender, EventArgs e)
+        //{
+        //    await Navigation.PushAsync(new ChecklistPage
+        //    {
+        //        BindingContext = new Tasks()
+        //    });
+        //}
     }
 }
