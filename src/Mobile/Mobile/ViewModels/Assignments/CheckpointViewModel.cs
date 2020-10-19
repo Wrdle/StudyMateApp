@@ -35,7 +35,7 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        private void LoadCheckpointID(string id)
+        public void LoadCheckpointID(string id)
         {
             //var checkpoint = CheckpointStore.GetCheckpointByID(Convert.ToInt64(id));
             Checkpoint = CheckpointStore.GetById(Convert.ToInt64(id)).Result;

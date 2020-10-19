@@ -19,5 +19,11 @@ namespace Mobile.Views.Assignments
             BindingContext = _viewModel = new AddTaskViewModel();
             _parentViewModel = parentViewModel;
         }
+
+        public async void OnClick_addTask(object sender, System.EventArgs e)
+        {
+            await ((AddTaskViewModel)BindingContext).AddTask(_parentViewModel.Checkpoint.Id);
+            //await _parentViewModel.LoadCheckpointID
+        }
     }
 }
