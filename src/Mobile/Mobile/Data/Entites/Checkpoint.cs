@@ -16,10 +16,12 @@ namespace Mobile.Data.Entites
 
         // Referencing Entities
         public ICollection<UserCheckpoint> UserCheckpoints { get; set; }
+        public ICollection<ChecklistItem> ChecklistItems { get; set; }
 
         public Checkpoint()
         {
             UserCheckpoints = new List<UserCheckpoint>();
+            ChecklistItems = new List<ChecklistItem>();
         }
 
     }
