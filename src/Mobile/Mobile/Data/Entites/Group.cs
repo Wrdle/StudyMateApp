@@ -7,7 +7,10 @@ namespace Mobile.Data.Entites
         public long Id { get; set; }
         public string Name { get; set; }
         public byte[] CoverPhoto { get; set; }
-        public string CoverColour { get; set; }
+        public int CoverColorId { get; set; }
+
+        // Referenced Entities
+        public CoverColor CoverColor { get; set; }
 
         // Referencing Entities
         public ICollection<UserGroup> UserGroups { get; set; }

@@ -1,12 +1,7 @@
-﻿using Mobile.Helpers;
-using Mobile.Models;
-using Mobile.Services;
+﻿using Mobile.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
@@ -134,12 +129,12 @@ namespace Mobile.ViewModels.Assignments
 
                 long assignmentID = Convert.ToInt64(id);
 
-                assignment = await AssignmentDataStore.GetById(assignmentID);
+                assignment = await AssignmentStore.GetById(assignmentID);
                 Title = assignment.Title;
                 DueDate = assignment.DateDue.ToShortDateString();
                 Description = assignment.Description;
                 ShowCoverPhoto = CheckCoverPhoto();
-                CoverBackgroundColour = assignment.CoverColour.BackgroundColour;
+                CoverBackgroundColour = assignment.CoverColor.BackgroundColor;
 
                 LoadCheckpoints(assignmentID);
 
@@ -157,12 +152,12 @@ namespace Mobile.ViewModels.Assignments
         }
 
         /// <summary>
-        /// Loads checkpoints from datastore
+        /// Loads checkpoints from datastore by assignment
         /// </summary>
-        /// <param name="id">id of checkpoint</param>
+        /// <param name="id">id of assignment</param>
         public async void LoadCheckpoints(long id)
         {
-            var requestedCheckpoints = await CheckpointDataStore.GetAllCheckpointsByAssignmentIDAsync(id);
+            var requestedCheckpoints = await CheckpointStore.GetByAssignmentId(id);
 
             Checkpoints = new ObservableCollection<Checkpoint>();
 

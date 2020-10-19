@@ -1,19 +1,14 @@
-﻿using Mobile.Helpers;
 using Mobile.Models;
-using Mobile.Services;
 using Mobile.ViewModels.Assignments;
-using Mobile.Views.Assignments;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels
 {
-    public class AssignmentsViewModel : Mobile.ViewModels.BaseViewModel
+    public class AssignmentsViewModel : BaseViewModel
     {
         private Assignment _selectedItem;
 
@@ -40,13 +35,9 @@ namespace Mobile.ViewModels
             try
             {
                 Assignments.Clear();
-                var assignments = await AssignmentDataStore.GetAllByUserAsync(1);
+                var assignments = await AssignmentStore.GetByUserIdAsync(1, true);
                 foreach (var assignment in assignments)
                 {
-                    if (assignment.CoverPhoto != null)
-                    {
-                        assignment.CoverColour = SMColours.DarkGray;
-                    }
                     Assignments.Add(assignment);
                 }
             }

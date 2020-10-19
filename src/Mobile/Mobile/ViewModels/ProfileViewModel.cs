@@ -80,7 +80,8 @@ namespace Mobile.ViewModels
             try
             {
                 ProfileSkills.Clear();
-                var skills = await SkillDataStore.GetAllSkillsByUserAsync(1);
+                //var skills = await SkillsStore.GetAllSkillsByUserAsync(1);
+                var skills = new List<Mobile.Models.Skill>();
                 foreach (var skill in skills)
                 {
                     
@@ -105,7 +106,8 @@ namespace Mobile.ViewModels
             {
                 CurrentSubjects.Clear();
                 PastSubjects.Clear();
-                var subjects = await SubjectDataStore.GetAllSubjectsByUserAsync(1);
+                //var subjects = await SubjectStore.GetAllSubjectsByUserAsync(1);
+                var subjects = new List<Subject>();
                 foreach (var subject in subjects)
                 {
                     if (subject.Current)

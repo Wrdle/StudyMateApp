@@ -17,7 +17,23 @@ namespace Mobile.Models
 
         public DateTime DueDate { get; set; }
 
-        public List<User> AssignedUsers { get; set; }
+        public List<CheckpointUserListItem> AssignedUsers { get; set; }
+
+        public bool IsDone
+        {
+            get
+            {
+                for (int i = 0; i < AssignedUsers.Count; i++)
+                {
+                    if (!AssignedUsers[i].IsDone)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
 
         /// <summary>
         /// Returns DueDate as a formatted string
@@ -32,7 +48,7 @@ namespace Mobile.Models
 
         public Checkpoint()
         {
-
+            new List<CheckpointUserListItem>();
         }
     }
 }
