@@ -19,7 +19,5 @@ namespace Mobile.Views.Assignments
             BindingContext = _viewModel = new AddTaskViewModel();
             _parentViewModel = parentViewModel;
         }
-
-
     }
 }

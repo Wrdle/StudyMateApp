@@ -9,9 +9,9 @@
     <StackLayout
         VerticalOptions="CenterAndExpand"
         HorizontalOptions="CenterAndExpand"
-        Padding="16"
+        Padding="9"
         Margin="2"
-        WidthRequest="300"
+        WidthRequest="330"
         BackgroundColor="White"
         Orientation="Vertical">
 
