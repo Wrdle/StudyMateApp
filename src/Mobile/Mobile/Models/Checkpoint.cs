@@ -19,13 +19,15 @@ namespace Mobile.Models
 
         public List<CheckpointUserListItem> AssignedUsers { get; set; }
 
+        public List<ChecklistItem> ChecklistItems { get; set; }
+
         public bool IsDone
         {
             get
             {
-                for (int i = 0; i < AssignedUsers.Count; i++)
+                for (int i = 0; i < ChecklistItems.Count; i++)
                 {
-                    if (!AssignedUsers[i].IsDone)
+                    if (!ChecklistItems[i].IsDone)
                     {
                         return false;
                     }
