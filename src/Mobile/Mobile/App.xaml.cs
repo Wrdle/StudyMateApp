@@ -13,6 +13,7 @@ namespace Mobile
         public App()
         {
             InitializeComponent();
+            DependencyService.Register<ICoverColorStore, CoverColorStore>();    
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
@@ -34,7 +35,6 @@ namespace Mobile
 
         protected override void OnStart()
         {
-            AppShell.Current.GoToAsync("notifications");
         }
 
         protected override void OnSleep()
