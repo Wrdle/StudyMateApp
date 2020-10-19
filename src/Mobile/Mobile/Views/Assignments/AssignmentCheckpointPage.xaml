@@ -19,7 +19,7 @@
         <StackLayout VerticalOptions="Fill" Orientation="Vertical">
 
             <!-- Due Day -->
-            <Frame CornerRadius="2"  HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
+            <Frame CornerRadius="2" HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
                 <Label Text="{Binding Checkpoint.DueDateString}" FontSize="Medium" FontAttributes="Bold" TextColor="Black"></Label>
             </Frame>
 
@@ -30,7 +30,15 @@
 
             <!-- Assigned member: NOT WORKING -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
-                <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small"></Label>
+                <StackLayout>
+                    <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small"></Label>
+                    <Button Text="Add member"
+                            BackgroundColor="Gray"
+                            HeightRequest="46"
+                            BorderRadius="9"
+                            BorderWidth="2"/>
+
+                </StackLayout>
             </Frame>
 
             <!-- Check list: BINDING LATER -->
@@ -56,15 +64,17 @@
                         </Label>
                     </StackLayout>
 
-                    <!-- Add task and Done button -->
+                    <!-- Add task button -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <!--<ColumnDefinition Width="*" />-->
                         </Grid.ColumnDefinitions>
                         <Button Text="Add task"
-                                 CornerRadius="9"
-                                 BackgroundColor="Gray" Clicked="AddTaskPopup"/>
+                                CornerRadius="9"
+                                BackgroundColor="Gray"
+                                HeightRequest="46"
+                                Clicked="AddTaskPopup"/>
                     </Grid>
                 </StackLayout>
             </Frame>

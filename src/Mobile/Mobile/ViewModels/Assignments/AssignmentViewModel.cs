@@ -20,7 +20,7 @@ namespace Mobile.ViewModels.Assignments
         private ObservableCollection<Checkpoint> checkpoints;
 
         private Checkpoint _selectedCheckpoint;
-        
+
         public Command<Checkpoint> CheckpointTapped { get; }
 
         /// <summary>
@@ -50,24 +50,24 @@ namespace Mobile.ViewModels.Assignments
         }
 
         public string DueDate
-        { 
+        {
             get => "Final Due: " + dueDate;
             set => SetProperty(ref dueDate, value);
         }
 
         public string Description
         {
-                get => description;
-                set => SetProperty(ref description, value);
+            get => description;
+            set => SetProperty(ref description, value);
         }
-        
+
         public bool ShowCoverPhoto
         {
             get => showCoverPhoto;
             set => SetProperty(ref showCoverPhoto, value);
         }
 
-        public Color CoverBackgroundColour 
+        public Color CoverBackgroundColour
         {
             get => coverBackgroundColour;
             set => SetProperty(ref coverBackgroundColour, value);
@@ -85,7 +85,7 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        public ObservableCollection<Checkpoint> Checkpoints 
+        public ObservableCollection<Checkpoint> Checkpoints
         {
             get => checkpoints;
             set
@@ -114,7 +114,7 @@ namespace Mobile.ViewModels.Assignments
                 return;
 
             // This will push the CheckpointPage onto the navigation stack
-            await Shell.Current.GoToAsync($"//assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
+            await Shell.Current.GoToAsync($"assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Mobile.ViewModels.Assignments
             foreach (Checkpoint checkpoint in requestedCheckpoints)
             {
                 Checkpoints.Add(checkpoint);
-            } 
+            }
         }
 
         /// <summary>
