@@ -10,7 +10,7 @@ namespace Mobile.ViewModels.Assignments
 {
     // Pass to the view model which checkpoint been clicked
     [QueryProperty(nameof(CheckpointID), nameof(CheckpointID))]
-    class CheckpointViewModel : BaseViewModel
+    public class CheckpointViewModel : BaseViewModel
     {
 
         private Checkpoint checkpoint;

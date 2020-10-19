@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mobile.ViewModels.Assignments;
-
+using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -20,12 +20,9 @@ namespace Mobile.Views.Assignments
             BindingContext = new CheckpointViewModel();
         }
 
-        //async void Setting_Clicked(object sender, EventArgs e)
-        //{
-        //    await Navigation.PushAsync(new ChecklistPage
-        //    {
-        //        BindingContext = new Tasks()
-        //    });
-        //}
+        async void AddTaskPopup(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.PushAsync(new AddTask((CheckpointViewModel)BindingContext));
+        }
     }
 }

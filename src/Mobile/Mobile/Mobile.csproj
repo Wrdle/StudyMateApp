@@ -71,4 +71,9 @@
     <Folder Include="Data\Repositories\" />
     <Folder Include="ViewModels\Groups\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\Assignments\AddTask.xaml.cs">
+      <DependentUpon>AddTask.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
