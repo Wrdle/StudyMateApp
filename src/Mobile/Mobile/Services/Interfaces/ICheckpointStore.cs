@@ -11,6 +11,9 @@ namespace Mobile.Services.Interfaces
         Task AssignToUser(long checkpointId, long userId);
         Task Remove(long checkpointId);
         Task UnassignUser(long checkpointId, long userId);
+        Task<ChecklistItem> AddTaskToCheckpoint(long checkpointId, string task);
+        Task<ChecklistItem> UpdateTaskFromCheckpoint(long checkpointId, ChecklistItem task);
+        Task RemoveTaskFromCheckpoint(long checkpointId, long taskId);
 
         // Queries
         Task<ICollection<Checkpoint>> GetByAssignmentId(long assignmentId);
