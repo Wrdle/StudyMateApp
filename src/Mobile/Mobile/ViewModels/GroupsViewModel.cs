@@ -83,7 +83,7 @@ namespace Mobile.ViewModels
                 return;
 
             // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"//groups/group?{nameof(GroupViewModel.GroupID)}={group.Id}");
+            await Shell.Current.GoToAsync($"groups/group?{nameof(GroupViewModel.GroupID)}={group.Id}");
         }
 
     }
