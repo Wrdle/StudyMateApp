@@ -9,7 +9,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
     </ContentPage.ToolbarItems>
-    
+
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">

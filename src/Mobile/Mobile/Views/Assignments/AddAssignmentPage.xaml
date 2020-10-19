@@ -48,8 +48,8 @@
                 <Frame Margin="0,8,0,8">
                     <StackLayout>
                         <Label Text="Cover Photo" FontSize="Medium" FontAttributes="Bold"></Label>
-                        <Button Text="Pick Cover Photo" Command="{Binding PickImageCommand}" HorizontalOptions="FillAndExpand"></Button>
-                        <Button Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
+                        <Button CornerRadius="9" Text="Pick Cover Photo" Command="{Binding PickImageCommand}" HorizontalOptions="FillAndExpand"></Button>
+                        <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
                     </StackLayout>
                 </Frame>
 
@@ -74,10 +74,10 @@
                         </FlexLayout>
                     </StackLayout>
                 </Frame>
-                
+
                 <StackLayout Orientation="Horizontal">
-                    <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
-                    <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+                    <Button CornerRadius="9" Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
+                    <Button CornerRadius="9" Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

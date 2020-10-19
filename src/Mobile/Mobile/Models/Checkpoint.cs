@@ -35,6 +35,13 @@ namespace Mobile.Models
             }
         }
 
+        // Checklist tasks
+        public string Filename { get; set; }
+
+        public string Text { get; set; }
+
+        public DateTime Date { get; set; }
+
         /// <summary>
         /// Returns DueDate as a formatted string
         /// </summary>
@@ -42,7 +49,7 @@ namespace Mobile.Models
         {
             get
             {
-                return ("Due " + DueDate.ToString("ddd d \\o\\f MMMM yyyy")).ToUpper();
+                return ("Due: " + DueDate.ToString("ddd d \\o\\f MMMM yyyy"));
             }
         }
 
