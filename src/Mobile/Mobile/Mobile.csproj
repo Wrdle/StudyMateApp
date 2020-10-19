@@ -6,8 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Converters\**" />
+    <Compile Remove="Data\Mappings\**" />
+    <Compile Remove="Data\Repositories\**" />
     <Compile Remove="Models\NewFolder\**" />
+    <EmbeddedResource Remove="Converters\**" />
+    <EmbeddedResource Remove="Data\Mappings\**" />
+    <EmbeddedResource Remove="Data\Repositories\**" />
     <EmbeddedResource Remove="Models\NewFolder\**" />
+    <None Remove="Converters\**" />
+    <None Remove="Data\Mappings\**" />
+    <None Remove="Data\Repositories\**" />
     <None Remove="Models\NewFolder\**" />
     <EmbeddedResource Remove="Views\Assignments\Checklist.xaml" />
   </ItemGroup>
@@ -57,23 +66,27 @@
     <EmbeddedResource Update="Views\HomePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\LoginPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\NotificationsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ProfilePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\Profile\AddSkillPopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Data\Mappings\" />
-    <Folder Include="Data\Repositories\" />
     <Folder Include="ViewModels\Groups\" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Update="Views\Assignments\AddTask.xaml.cs">
-      <DependentUpon>AddTask.xaml</DependentUpon>
+    <Compile Update="Views\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ namespace Mobile.Services.Interfaces
 
         // Queries
         Task<ICollection<Checkpoint>> GetByAssignmentId(long assignmentId);
-    
+
         Task<Checkpoint> GetById(long id);
 
         /// <summary>

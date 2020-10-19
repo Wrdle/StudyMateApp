@@ -30,16 +30,16 @@
     </Shell.Resources>
 
     <TabBar>
-        <Tab  Title="Home" Icon="tab_feed.png">
+        <Tab  Title="Home" Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate local:HomePage}" />
         </Tab>
-        <Tab  Title="Groups" Icon="tab_feed.png">
+        <Tab  Title="Groups" Icon="group.png">
             <ShellContent Icon="tab_feed.png" ContentTemplate="{DataTemplate local:GroupsPage}" />
         </Tab>
-        <Tab Title="Assignments" Icon="tab_feed.png">
+        <Tab Title="Assignments" Icon="assignment.png">
             <ShellContent Icon="tab_feed.png" ContentTemplate="{DataTemplate local:AssignmentsPage}" />
         </Tab>
-        <Tab  Title="Profiles" Icon="tab_feed.png">
+        <Tab  Title="Profile" Icon="profile.png">
             <ShellContent Icon="tab_feed.png" ContentTemplate="{DataTemplate local:ProfilePage}" />
         </Tab>
     </TabBar>

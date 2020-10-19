@@ -1,21 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
              x:Class="Mobile.Views.Groups.AddGroupPage">
-    <ContentPage.Content>
 
-        <StackLayout
-            VerticalOptions="Center"
-            HorizontalOptions="Center"
-            Padding="5"
-            Margin="2"
-            BackgroundColor="White"
-            Orientation="Vertical">
+    <!--Animation-->
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation 
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="1.2"
+            ScaleOut="0.8"
+            DurationIn="400"
+            DurationOut="300"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"/>
+    </pages:PopupPage.Animation>
 
-            <Label Text="Very nais!" />
+    <!--Contnt-->
+    <StackLayout
+        VerticalOptions="CenterAndExpand"
+        HorizontalOptions="CenterAndExpand"
+        Padding="16"
+        Margin="2"
+        WidthRequest="300"
+        BackgroundColor="White"
+        Orientation="Vertical">
 
+        <!--Group Name Input-->
+        <Entry x:Name="InnerEntry" Text="{Binding GroupName}" Placeholder="Group Name" Margin="0,0,0,8"/>
+
+        <!--Buttons-->
+        <StackLayout Orientation="Horizontal">
+
+            <!--Cancel Button-->
+            <Button Text="Cancel" Margin="0,0,8,0" HorizontalOptions="EndAndExpand" Clicked="OnClick_Cancel" />
+
+            <!--Create Button-->
+            <Button Text="Create" Clicked="OnClick_Create" />
         </StackLayout>
+    </StackLayout>
 
 
-    </ContentPage.Content>
-</ContentPage>
+</pages:PopupPage>

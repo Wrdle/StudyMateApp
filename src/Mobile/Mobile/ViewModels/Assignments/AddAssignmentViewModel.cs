@@ -1,5 +1,4 @@
 ﻿using Mobile.Models;
-using Mobile.Services.Interfaces;
 using MvvmHelpers;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -15,11 +14,11 @@ namespace Mobile.ViewModels.Assignments
 {
     public class AddAssignmentViewModel : Mobile.ViewModels.BaseViewModel
     {
-        private string text;
-        public string Text
+        private string name = "";
+        public string Name
         {
-            get => text;
-            set => SetProperty(ref text, value);
+            get => name;
+            set => SetProperty(ref name, value);
         }
 
 
@@ -92,11 +91,14 @@ namespace Mobile.ViewModels.Assignments
                     if (CrossMedia.Current.IsPickPhotoSupported)
                     {
                         MediaFile mediaFileCoverPhoto = await CrossMedia.Current.PickPhotoAsync();
-                        CoverPhoto = ImageSource.FromStream(() =>
+
+                        if (mediaFileCoverPhoto != null)
                         {
-                            var stream = mediaFileCoverPhoto.GetStream();
-                            return stream;
-                        });
+                            CoverPhoto = ImageSource.FromStream(() =>
+                            {
+                                return mediaFileCoverPhoto.GetStream();
+                            });
+                        }
                     }
                 }
                 else if (status != PermissionStatus.Unknown)
@@ -172,7 +174,7 @@ namespace Mobile.ViewModels.Assignments
             Assignment newAssignment = new Assignment()
             {
                 Id = AssignmentStore.GenerateNewAssignmentID().Result,
-                Title = Text,
+                Title = Name,
                 Description = Description,
                 DateDue = SelectedDate,
                 CoverPhoto = CoverPhoto != null ? CoverPhoto : null,
@@ -182,8 +184,11 @@ namespace Mobile.ViewModels.Assignments
             await AssignmentStore.Create(newAssignment);
 
             // This will pop the current page off the navigation stack
-            await Shell.Current.GoToAsync("../..");
+            //await Shell.Current.GoToAsync("");
+
+            await Shell.Current.Navigation.PopAsync();
         }
+
 
         /// <summary>
         /// Defult constructor
@@ -219,7 +224,7 @@ namespace Mobile.ViewModels.Assignments
         /// <returns>True/False</returns>
         private bool ValidateSave()
         {
-            return !String.IsNullOrWhiteSpace(text)
+            return !String.IsNullOrWhiteSpace(Name)
                 && !String.IsNullOrWhiteSpace(description);
         }
     }

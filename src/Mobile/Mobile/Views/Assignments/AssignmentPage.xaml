@@ -7,15 +7,23 @@
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Settings"></ToolbarItem>
+        <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">
                 <!-- Cover Photo -->
-                <Frame Padding="0" Margin="0" BackgroundColor="{Binding Assignment.CoverColor.BackgroundColor}">
-                    <Image Source="{Binding Assignment.CoverPhoto}" HeightRequest="200" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
+                <Frame Padding="0" Margin="0" HeightRequest="200" BackgroundColor="{Binding Assignment.CoverColor.BackgroundColor}">
+                    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Image AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill" Source="{Binding Assignment.CoverPhoto}" IsVisible="{Binding ShowCoverPhoto}"></Image>
+                        <Frame BackgroundColor="#D9FFFFFF" CornerRadius="5" Margin="20,20,20,20" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1">
+                            <StackLayout>
+                                <Label HorizontalTextAlignment="Center" FontSize="16" FontAttributes="Bold">Notes</Label>
+                                <Editor Text="{Binding AssignmentNotes, Mode=TwoWay}" AutoSize="TextChanges" MaxLength="110" Keyboard="Text" HorizontalOptions="CenterAndExpand"></Editor>
+                            </StackLayout>
+                        </Frame>
+                    </AbsoluteLayout>
                 </Frame>
 
                 <!-- Due Date -->

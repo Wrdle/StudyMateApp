@@ -125,7 +125,6 @@ namespace Mobile.Services
                 {
                     throw new Exception(Error.AccountDoesNotExist);
                 }
-
                 var user = userSkills[0].User;*/
 
                 var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == CurrentUserId);

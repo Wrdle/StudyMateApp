@@ -8,7 +8,7 @@ using Mobile.Models;
 
 namespace Mobile.ViewModels.Assignments
 {
-    // Pass to the view model which checkpoint been clicked
+
     [QueryProperty(nameof(CheckpointID), nameof(CheckpointID))]
     public class CheckpointViewModel : BaseViewModel
     {
@@ -35,10 +35,6 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        /// <summary>
-        /// Load the checkpoint ID and due date
-        /// </summary>
-        /// <param name="id"></param>
         private void LoadCheckpointID(string id)
         {
             //var checkpoint = CheckpointStore.GetCheckpointByID(Convert.ToInt64(id));
@@ -48,21 +44,5 @@ namespace Mobile.ViewModels.Assignments
             // Grab the checkpoint id add to the title 
             Title = Checkpoint.Title;
         }
-
-        //string checkpointDueDay;
-        //public string DueDay
-        //{
-        //    get => checkpointDueDay;
-        //    set
-        //    {
-        //        SetProperty(ref checkpointDueDay, value);
-        //        LoadCpDueDay();
-        //    }
-        //}
-
-        //private void LoadCpDueDay()
-        //{
-        //    //DueDate = checkpointDueDay;
-        //}
     }
 }

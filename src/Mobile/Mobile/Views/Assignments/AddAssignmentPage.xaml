@@ -19,7 +19,7 @@
                         <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
                         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
                             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
-                                <Label Text="{Binding Text}" 
+                                <Label Text="{Binding Name}" 
                                             LineBreakMode="NoWrap" 
                                             Style="{DynamicResource ListItemTextStyle}" 
                                             FontSize="16" TextColor="{Binding SelectedColor.FontColor}"/>
@@ -34,10 +34,11 @@
 
                 <Frame Margin="0,8,0,8">
                     <StackLayout>
-                        <Label Text="Text" FontSize="Medium" />
-                        <Entry Text="{Binding Text, Mode=TwoWay}" FontSize="Medium" />
-                        <Label Text="Description" FontSize="Medium" />
+                        <Label Text="Assignment Name" FontSize="Medium" FontAttributes="Bold"/>
+                        <Entry Text="{Binding Name, Mode=TwoWay}" FontSize="Medium" />
+                        <Label Text="Description" FontSize="Medium" FontAttributes="Bold"/>
                         <Editor Text="{Binding Description, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
+                        <Label Text="Due Date" FontSize="Medium" FontAttributes="Bold"></Label>
                         <DatePicker MinimumDate="{Binding MinDate}"
                         Date="{Binding SelectedDate}">
                         </DatePicker>
@@ -46,28 +47,32 @@
 
                 <Frame Margin="0,8,0,8">
                     <StackLayout>
+                        <Label Text="Cover Photo" FontSize="Medium" FontAttributes="Bold"></Label>
                         <Button CornerRadius="9" Text="Pick Cover Photo" Command="{Binding PickImageCommand}" HorizontalOptions="FillAndExpand"></Button>
-                        <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}"></Button>
+                        <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
                     </StackLayout>
                 </Frame>
 
                 <Frame x:DataType="local:AddAssignmentViewModel" Margin="0,8,0,8">
-                    <FlexLayout  x:Name="ColourListView"
+                    <StackLayout>
+                        <Label Text="Banner Colours" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <FlexLayout  x:Name="ColourListView"
                          BindableLayout.ItemsSource="{Binding ColorChoices}" JustifyContent="SpaceAround" Wrap="Wrap">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Frame x:DataType="model:CoverColor" WidthRequest="35" HeightRequest="35" CornerRadius="18" Margin="5,5,5,5" Padding="0,0,0,0" BackgroundColor="{Binding BackgroundColor}" HorizontalOptions="Start">
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer 
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame x:DataType="model:CoverColor" WidthRequest="35" HeightRequest="35" CornerRadius="18" Margin="5,5,5,5" Padding="0,0,0,0" BackgroundColor="{Binding BackgroundColor}" HorizontalOptions="Start">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer 
                                             NumberOfTapsRequired="1"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type local:AddAssignmentViewModel}}, Path=ColorTappedCommand}"		
                                             CommandParameter="{Binding .}">
-                                        </TapGestureRecognizer>
-                                    </Frame.GestureRecognizers>
-                                </Frame>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </FlexLayout>
+                                            </TapGestureRecognizer>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </StackLayout>
                 </Frame>
 
                 <StackLayout Orientation="Horizontal">

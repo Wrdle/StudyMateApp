@@ -10,7 +10,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Notifications"/>
+        <ToolbarItem IconImageSource="notification_bell.png"/>
         
         <ToolbarItem Text="Help and Feedback" Order="Secondary"/>
         <ToolbarItem Text="Logout" Order="Secondary"/>
