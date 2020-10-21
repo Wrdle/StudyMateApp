@@ -17,7 +17,32 @@ namespace Mobile.Models
 
         public DateTime DueDate { get; set; }
 
-        public List<User> AssignedUsers { get; set; }
+        public List<CheckpointUserListItem> AssignedUsers { get; set; }
+
+        public List<ChecklistItem> ChecklistItems { get; set; }
+
+        public bool IsDone
+        {
+            get
+            {
+                for (int i = 0; i < ChecklistItems.Count; i++)
+                {
+                    if (!ChecklistItems[i].IsDone)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        // Checklist tasks
+        public string Filename { get; set; }
+
+        public string Text { get; set; }
+
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Returns DueDate as a formatted string
@@ -26,13 +51,13 @@ namespace Mobile.Models
         {
             get
             {
-                return ("Due " + DueDate.ToString("ddd d \\o\\f MMMM yyyy")).ToUpper();
+                return ("Due: " + DueDate.ToString("ddd d \\o\\f MMMM yyyy"));
             }
         }
 
         public Checkpoint()
         {
-
+            new List<CheckpointUserListItem>();
         }
     }
 }

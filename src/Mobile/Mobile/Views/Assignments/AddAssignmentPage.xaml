@@ -1,13 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Mobile.Views.Assignments.AddAssignmentPage">
+             x:Class="Mobile.Views.Assignments.AddAssignmentPage"
+             xmlns:vm="clr-namespace:Mobile.ViewModels.Assignments"
+             xmlns:local="clr-namespace:Mobile.ViewModels.Assignments"
+             xmlns:model="clr-namespace:Mobile.Models"
+             Title="{Binding Title}">
+
+    <ContentPage.BindingContext>
+        <vm:AddAssignmentViewModel />
+    </ContentPage.BindingContext>
+
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
-                <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <StackLayout Spacing="3" Padding="15">
+                <Frame CornerRadius="2" Padding="0,0,0,0" Margin="0,8,0,8">
+                    <AbsoluteLayout BackgroundColor="{Binding SelectedColor.BackgroundColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
+                        <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
+                                <Label Text="{Binding Name}" 
+                                            LineBreakMode="NoWrap" 
+                                            Style="{DynamicResource ListItemTextStyle}" 
+                                            FontSize="16" TextColor="{Binding SelectedColor.FontColor}"/>
+                                <Label Text="{Binding Description}" 
+                                            LineBreakMode="NoWrap"
+                                            Style="{DynamicResource ListItemDetailTextStyle}"
+                                            FontSize="13" TextColor="{Binding SelectedColor.FontColor}"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </AbsoluteLayout>
+                </Frame>
+
+                <Frame Margin="0,8,0,8">
+                    <StackLayout>
+                        <Label Text="Assignment Name" FontSize="Medium" FontAttributes="Bold"/>
+                        <Entry Text="{Binding Name, Mode=TwoWay}" FontSize="Medium" />
+                        <Label Text="Description" FontSize="Medium" FontAttributes="Bold"/>
+                        <Editor Text="{Binding Description, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
+                        <Label Text="Due Date" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <DatePicker MinimumDate="{Binding MinDate}"
+                        Date="{Binding SelectedDate}">
+                        </DatePicker>
+                    </StackLayout>
+                </Frame>
+
+                <Frame Margin="0,8,0,8">
+                    <StackLayout>
+                        <Label Text="Cover Photo" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <Button CornerRadius="9" Text="Pick Cover Photo" Command="{Binding PickImageCommand}" HorizontalOptions="FillAndExpand"></Button>
+                        <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:DataType="local:AddAssignmentViewModel" Margin="0,8,0,8">
+                    <StackLayout>
+                        <Label Text="Banner Colours" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <FlexLayout  x:Name="ColourListView"
+                         BindableLayout.ItemsSource="{Binding ColorChoices}" JustifyContent="SpaceAround" Wrap="Wrap">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame x:DataType="model:CoverColor" WidthRequest="35" HeightRequest="35" CornerRadius="18" Margin="5,5,5,5" Padding="0,0,0,0" BackgroundColor="{Binding BackgroundColor}" HorizontalOptions="Start">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                            NumberOfTapsRequired="1"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AddAssignmentViewModel}}, Path=ColorTappedCommand}"		
+                                            CommandParameter="{Binding .}">
+                                            </TapGestureRecognizer>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </StackLayout>
+                </Frame>
+
+                <StackLayout Orientation="Horizontal">
+                    <Button CornerRadius="9" Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
+                    <Button CornerRadius="9" Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
