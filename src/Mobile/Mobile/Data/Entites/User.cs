@@ -10,6 +10,7 @@ namespace Mobile.Data.Entites
         public string LastName { get; set; }
         public string Institution { get; set; }
         public string Major { get; set; }
+        public byte[] ProfilePicture { get; set; }
 
         // Referencing Entities
         public ICollection<UserSkill> UserSkills { get; set; }
