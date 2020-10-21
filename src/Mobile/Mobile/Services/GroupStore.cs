@@ -21,6 +21,7 @@ namespace Mobile.Services
         //------------------------------
 
         private readonly IUserStore _userStore;
+        private readonly ImageConverter _imageConverter;
 
         //------------------------------
         //          Constructor
@@ -29,6 +30,7 @@ namespace Mobile.Services
         public GroupStore()
         {
             _userStore = DependencyService.Get<IUserStore>();
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -56,7 +58,7 @@ namespace Mobile.Services
                         var group = new GroupEntity
                         {
                             Name = name,
-                            CoverPhoto = await ImageToBytes(null),
+                            CoverPhoto = await _imageConverter.ImageToBytes(null),
                             CoverColorId = 1,
                             UserGroups = userGroups
                         };
@@ -127,13 +129,15 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
-                var group = await dbContext.Groups.FindAsync(id);
+                var group = await dbContext.Groups
+                    .Include(g => g.CoverColor)
+                    .SingleOrDefaultAsync(g => g.Id == id);
                 return new Group
                 {
                     Id = group.Id,
                     Name = group.Name,
-                    CoverPhoto = BytesToImage(group.CoverPhoto),
-                    CoverColorId = group.CoverColorId
+                    CoverPhoto = _imageConverter.BytesToImage(group.CoverPhoto),
+                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex }
                 };
             }
         }
@@ -155,7 +159,7 @@ namespace Mobile.Services
                     {
                         Id = ug.Group.Id,
                         Name = ug.Group.Name,
-                        CoverPhoto = BytesToImage(ug.Group.CoverPhoto),
+                        CoverPhoto = _imageConverter.BytesToImage(ug.Group.CoverPhoto),
                         CoverColor = new CoverColor { Id = ug.Group.CoverColor.Id, BackgroundColor = ug.Group.CoverColor.BackgroundColorFromHex, FontColor = ug.Group.CoverColor.FontColorFromHex }
                     })
                     .ToListAsync();
@@ -188,42 +192,5 @@ namespace Mobile.Services
             }
         }
 
-        //------------------------------
-        //          Helpers
-        //------------------------------
-
-        public static async Task<byte[]> ImageToBytes(ImageSource imageSource)
-        {
-            if (imageSource == null)
-            {
-                return new byte[] { };
-            }
-
-            var cancellationToken = System.Threading.CancellationToken.None;
-            using (var imageStream = await ((StreamImageSource)imageSource).Stream(cancellationToken))
-            using (var byteStream = new MemoryStream())
-            {
-                await imageStream.CopyToAsync(byteStream);
-                return byteStream.ToArray();
-            }
-        }
-
-        public static ImageSource BytesToImage(byte[] bytes)
-        {
-            if (bytes != null && bytes.Length < 1)
-            {
-                return null;
-            }
-
-            try
-            {
-                Stream stream = new MemoryStream(bytes);
-                return ImageSource.FromStream(() => { return stream; });
-            }
-            catch
-            {
-                return null;
-            }
-        }
     }
 }

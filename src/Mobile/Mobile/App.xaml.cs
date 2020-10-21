@@ -13,8 +13,8 @@ namespace Mobile
         public App()
         {
             InitializeComponent();
+            DependencyService.Register<ImageConverter>();
             DependencyService.Register<ICoverColorStore, CoverColorStore>();    
-            DependencyService.Register<MockDataStore>();
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
             DependencyService.Register<IAssignmentStore, AssignmentStore>();

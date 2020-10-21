@@ -15,7 +15,9 @@ namespace Mobile.Data
         //          Fields
         //------------------------------
 
-        private IAssignmentStore _assignmentStore;
+        private readonly IAssignmentStore _assignmentStore;
+        private readonly ImageConverter _imageConverter;
+
 
         public static User TestUser = new User { Email = "test-user@studymate.com", FirstName = "Test", LastName = "User" };
 
@@ -26,6 +28,7 @@ namespace Mobile.Data
         public AppDbSeeder()
         {
             _assignmentStore = DependencyService.Get<IAssignmentStore>();
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -69,7 +72,7 @@ namespace Mobile.Data
                 var group = new Group
                 {
                     Name = "Test Group",
-                    CoverPhoto = await GroupStore.ImageToBytes(null),
+                    CoverPhoto = await _imageConverter.ImageToBytes(null),
                     CoverColorId = 6,
                     UserGroups = new List<UserGroup>
                     {
@@ -86,7 +89,7 @@ namespace Mobile.Data
                     Title = "Test Assignment",
                     Description = "blah blah blah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = await AssignmentStore.ImageToBytes(null),
+                    CoverPhoto = await _imageConverter.ImageToBytes(null),
                     CoverColorId = 1,
                     UserAssignments = new List<UserAssignment>
                     {
@@ -101,7 +104,7 @@ namespace Mobile.Data
                     Title = "Test Group Assignment",
                     Description = "blafadagsflah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = await AssignmentStore.ImageToBytes(null),
+                    CoverPhoto = await _imageConverter.ImageToBytes(null),
                     CoverColorId = 8,
                     GroupAssignments = new List<GroupAssignment>
                     {

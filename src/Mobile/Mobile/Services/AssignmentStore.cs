@@ -5,7 +5,6 @@ using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -23,6 +22,7 @@ namespace Mobile.Services
 
         private readonly IUserStore _userStore;
         private readonly ICoverColorStore _coverColorStore;
+        private readonly ImageConverter _imageConverter;
 
         //------------------------------
         //          Constructor
@@ -32,6 +32,7 @@ namespace Mobile.Services
         {
             _userStore = DependencyService.Get<IUserStore>();
             _coverColorStore = DependencyService.Get<ICoverColorStore>();
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -63,8 +64,7 @@ namespace Mobile.Services
                             Description = assignment.Description,
                             IsArchived = false,
                             CoverColorId = assignment.CoverColor.Id,
-                            Notes = "",
-                            CoverPhoto = await ImageToBytes(assignment.CoverPhoto),
+                            CoverPhoto = await _imageConverter.ImageToBytes(assignment.CoverPhoto),
                             Due = assignment.DateDue
                         };
 
@@ -178,7 +178,7 @@ namespace Mobile.Services
                             BackgroundColor = ua.Assignment.CoverColor.BackgroundColorFromHex,
                             FontColor = ua.Assignment.CoverColor.FontColorFromHex
                         },
-                        CoverPhoto = BytesToImage(ua.Assignment.CoverPhoto),
+                        CoverPhoto = _imageConverter.BytesToImage(ua.Assignment.CoverPhoto),
                         Skills = new List<Skill>()
                     })
                     .ToListAsync();
@@ -207,7 +207,7 @@ namespace Mobile.Services
                                 BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex,
                                 FontColor = ga.Assignment.CoverColor.FontColorFromHex
                             },
-                            CoverPhoto = BytesToImage(ga.Assignment.CoverPhoto),
+                            CoverPhoto = _imageConverter.BytesToImage(ga.Assignment.CoverPhoto),
                             Skills = new List<Skill>()
                         })
                         .ToListAsync();
@@ -282,7 +282,7 @@ namespace Mobile.Services
                         BackgroundColor = assignment.CoverColor.BackgroundColorFromHex,
                         FontColor = assignment.CoverColor.FontColorFromHex
                     },
-                    CoverPhoto = BytesToImage(assignment.CoverPhoto),
+                    CoverPhoto = _imageConverter.BytesToImage(assignment.CoverPhoto),
                     Skills = new List<Skill>()
                 };
             }
@@ -304,7 +304,7 @@ namespace Mobile.Services
                 dbAssignment.Due = assignment.DateDue;
                 dbAssignment.IsArchived = assignment.IsArchived;
                 dbAssignment.CoverColorId = assignment.CoverColor.Id;
-                dbAssignment.CoverPhoto = await ImageToBytes(assignment.CoverPhoto);
+                dbAssignment.CoverPhoto = await _imageConverter.ImageToBytes(assignment.CoverPhoto);
 
                 dbContext.Assignments.Update(dbAssignment);
                 await dbContext.SaveChangesAsync();
@@ -320,44 +320,6 @@ namespace Mobile.Services
                 .Select(assignment => assignment.Id)
                 .Max();
                 return Task.FromResult(biggestId + 1);
-            }
-        }
-
-        //------------------------------
-        //          Helpers
-        //------------------------------
-
-        public static async Task<byte[]> ImageToBytes(ImageSource imageSource)
-        {
-            if (imageSource == null)
-            {
-                return new byte[] { };
-            }
-
-            var cancellationToken = System.Threading.CancellationToken.None;
-            using (var imageStream = await ((StreamImageSource)imageSource).Stream(cancellationToken))
-            using (var byteStream = new MemoryStream())
-            {
-                await imageStream.CopyToAsync(byteStream);
-                return byteStream.ToArray();
-            }
-        }
-
-        public static ImageSource BytesToImage(byte[] bytes)
-        {
-            if (bytes.Length < 1)
-            {
-                return null;
-            }
-
-            try
-            {
-                Stream stream = new MemoryStream(bytes);
-                return ImageSource.FromStream(() => { return stream; });
-            }
-            catch
-            {
-                return null;
             }
         }
 

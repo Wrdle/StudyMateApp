@@ -17,6 +17,7 @@ namespace Mobile.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Checkpoint> Checkpoints { get; set; }
+        public DbSet<ChecklistItem> ChecklistItems { get; set; }
 
         // Many to Many / Join Tables
         public DbSet<UserSkill> UserSkills { get; set; }

@@ -18,6 +18,7 @@
     <None Remove="Data\Mappings\**" />
     <None Remove="Data\Repositories\**" />
     <None Remove="Models\NewFolder\**" />
+    <EmbeddedResource Remove="Views\Assignments\Checklist.xaml" />
   </ItemGroup>
 
   <ItemGroup>
