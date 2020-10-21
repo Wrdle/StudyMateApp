@@ -8,7 +8,9 @@ namespace Mobile.Data.Entites
         public long Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Notes { get; set; }
         public DateTime Due { get; set; }
+        public bool IsArchived { get; set; }
         public byte[] CoverPhoto { get; set; }
         public int CoverColorId { get; set; }
 

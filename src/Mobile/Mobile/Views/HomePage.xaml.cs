@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mobile.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,11 @@ namespace Mobile.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
+        HomeViewModel _viewModel;
         public HomePage()
         {
             InitializeComponent();
+            BindingContext = _viewModel = new HomeViewModel();
         }
     }
 }

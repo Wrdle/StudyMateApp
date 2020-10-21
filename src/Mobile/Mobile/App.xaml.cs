@@ -14,6 +14,7 @@ namespace Mobile
         {
             InitializeComponent();
             DependencyService.Register<ImageConverter>();
+            DependencyService.Register<ICoverColorStore, CoverColorStore>();    
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
             DependencyService.Register<IAssignmentStore, AssignmentStore>();
@@ -34,7 +35,6 @@ namespace Mobile
 
         protected override void OnStart()
         {
-            AppShell.Current.GoToAsync("notifications");
         }
 
         protected override void OnSleep()
