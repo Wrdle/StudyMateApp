@@ -64,17 +64,17 @@ namespace Mobile.ViewModels.Assignments
 
                 // Extract and store data
                 AssignmentName = assignment.Title;
-                AssignmentNotes = assignment.Notes;
-                ShowCoverPhoto = CheckCoverPhoto();
+                //AssignmentNotes = assignment.Notes;
+                //ShowCoverPhoto = CheckCoverPhoto();
 
                 var coverColors = await CoverColorStore.GetAll();
 
                 // Load the assignments checkpoints
-                LoadCheckpoints(Assignment.Id);
+                //LoadCheckpoints(Assignment.Id);
             }
             catch (Exception)
             {
-                Debug.WriteLine("Failed to Load Item");
+                //Debug.WriteLine("Failed to Load Item");
             }
             finally
             {
