@@ -6,20 +6,18 @@
              xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
 
-    <!--Issues: 1. the binding checkpoint ID-->
     <!--2. Binding background color-->
     <!--3. Add setting clicked action-->
 
-
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="setting" />
+        <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
         <StackLayout VerticalOptions="Fill" Orientation="Vertical">
 
             <!-- Due Day -->
-            <Frame CornerRadius="2"  HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
+            <Frame CornerRadius="2" HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
                 <Label Text="{Binding Checkpoint.DueDateString}" FontSize="Medium" FontAttributes="Bold" TextColor="Black"></Label>
             </Frame>
 
@@ -30,7 +28,15 @@
 
             <!-- Assigned member: NOT WORKING -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
-                <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small"></Label>
+                <StackLayout>
+                    <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small"></Label>
+                    <Button Text="Add member"
+                            BackgroundColor="Gray"
+                            HeightRequest="46"
+                            BorderRadius="9"
+                            BorderWidth="2"/>
+
+                </StackLayout>
             </Frame>
 
             <!-- Check list: BINDING LATER -->
@@ -39,32 +45,45 @@
                     <Label Text="Checklist" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
                     <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
 
-                    <!-- Check box -->
-                    <StackLayout Orientation="Horizontal">
-                        <CheckBox x:Name="checkBox" Color="DarkSeaGreen"/>
-                        <Label VerticalOptions="Center" Text="test Task 1">
-                            <Label.Triggers>
-                                <DataTrigger TargetType="Label"
+                    <!-- Check box: Checklist items -->
+                    <StackLayout x:Name="CheckListItems"
+                                 BindableLayout.ItemsSource="{ Binding Checkpoint.ChecklistItems }"
+                                 FlowDirection="LeftToRight">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox x:Name="checkBox" IsChecked="{Binding IsDone}" Color="DarkSeaGreen"/>
+                                    <Label VerticalOptions="Center" Text="{ Binding Text }">
+                                        <!-- Checkbox animation -->
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
                                              Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}"
                                              Value="true">
-                                    <Setter Property="FontAttributes"
+                                                <Setter Property="FontAttributes"
                                             Value="Italic, Bold" />
-                                    <Setter Property="FontSize"
+                                                <Setter Property="FontSize"
                                             Value="Medium" />
-                                </DataTrigger>
-                            </Label.Triggers>
-                        </Label>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </StackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
                     </StackLayout>
 
-                    <!-- Add task and Done button -->
+
+                    <!-- ADD task button -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <!--<ColumnDefinition Width="*" />-->
                         </Grid.ColumnDefinitions>
                         <Button Text="Add task"
-                                 CornerRadius="9"
-                                 BackgroundColor="Gray" Clicked="AddTaskPopup"/>
+                                CornerRadius="9"
+                                BackgroundColor="Gray"
+                                HeightRequest="46"
+                                Clicked="AddTaskPopup"/>
                     </Grid>
                 </StackLayout>
             </Frame>

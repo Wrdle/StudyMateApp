@@ -53,17 +53,6 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-
-        // SHOW COVER PHOTO
-        private bool showCoverPhoto;
-
-        public bool ShowCoverPhoto
-        {
-            get => showCoverPhoto;
-            set => SetProperty(ref showCoverPhoto, value);
-        }
-
-
         // CHECKPOINTS
         private ObservableCollection<Checkpoint> checkpoints;
 
