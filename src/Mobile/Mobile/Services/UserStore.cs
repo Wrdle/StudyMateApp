@@ -6,6 +6,7 @@ using Mobile.Services.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 using UserEntity = Mobile.Data.Entites.User;
 
 namespace Mobile.Services
@@ -15,6 +16,8 @@ namespace Mobile.Services
         //------------------------------
         //          Fields
         //------------------------------
+
+        private readonly ImageConverter _imageConverter;
 
         private static long? _currentUserId = null;
 
@@ -50,7 +53,7 @@ namespace Mobile.Services
 
         public UserStore()
         {
-
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -84,6 +87,7 @@ namespace Mobile.Services
                 Email = email.ToUpper(),
                 FirstName = firstName.ToUpper(),
                 LastName = lastName.ToUpper(),
+                ProfilePicture = await _imageConverter.ImageToBytes(null)
             };
 
             using (var dbContext = new AppDbContext())
@@ -139,6 +143,7 @@ namespace Mobile.Services
                     LastName = user.LastName,
                     Institution = user.Institution,
                     Major = user.Major,
+                    ProfilePicture = _imageConverter.BytesToImage(user.ProfilePicture),
                     Skills = skills
                 };
             }
@@ -163,6 +168,7 @@ namespace Mobile.Services
                 savedUser.LastName = user.LastName;
                 savedUser.Institution = user.Institution;
                 savedUser.Major = user.Major;
+                savedUser.ProfilePicture = await _imageConverter.ImageToBytes(user.ProfilePicture);
 
                 try
                 {
