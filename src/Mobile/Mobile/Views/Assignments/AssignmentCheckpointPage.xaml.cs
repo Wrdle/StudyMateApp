@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,12 @@ namespace Mobile.Views.Assignments
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AssignmentCheckpointPage : ContentPage
     {
+        private CheckpointViewModel bindingContext = new CheckpointViewModel();
         public AssignmentCheckpointPage()
         {
             InitializeComponent();
             // Binding the title dased on the checkpointID
-            BindingContext = new CheckpointViewModel();
+            BindingContext = bindingContext;
         }
 
         async void AddTaskPopup(object sender, EventArgs e)
