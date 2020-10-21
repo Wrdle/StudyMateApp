@@ -6,13 +6,11 @@
              xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
 
-    <!--Issues: 1. the binding checkpoint ID-->
     <!--2. Binding background color-->
     <!--3. Add setting clicked action-->
 
-
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="setting" />
+        <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -47,24 +45,35 @@
                     <Label Text="Checklist" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
                     <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
 
-                    <!-- Check box -->
-                    <StackLayout Orientation="Horizontal">
-                        <CheckBox x:Name="checkBox" Color="DarkSeaGreen"/>
-                        <Label VerticalOptions="Center" Text="test Task 1">
-                            <Label.Triggers>
-                                <DataTrigger TargetType="Label"
+                    <!-- Check box: Checklist items -->
+                    <StackLayout x:Name="CheckListItems"
+                                 BindableLayout.ItemsSource="{ Binding Checkpoint.ChecklistItems }"
+                                 FlowDirection="LeftToRight">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox x:Name="checkBox" IsChecked="{Binding IsDone}" Color="DarkSeaGreen"/>
+                                    <Label VerticalOptions="Center" Text="{ Binding Text }">
+                                        <!-- Checkbox animation -->
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
                                              Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}"
                                              Value="true">
-                                    <Setter Property="FontAttributes"
+                                                <Setter Property="FontAttributes"
                                             Value="Italic, Bold" />
-                                    <Setter Property="FontSize"
+                                                <Setter Property="FontSize"
                                             Value="Medium" />
-                                </DataTrigger>
-                            </Label.Triggers>
-                        </Label>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </StackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
                     </StackLayout>
 
-                    <!-- Add task button -->
+
+                    <!-- ADD task button -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />

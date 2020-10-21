@@ -120,7 +120,12 @@ namespace Mobile.Data
                     Title = "Checkpoint 1",
                     Description = "This is the description/notes for checkpoint 1",
                     DateDue = DateTime.Now.AddDays(2),
-                    Assignment = assignment
+                    Assignment = assignment,
+                    ChecklistItems = new List<ChecklistItem>
+                    {
+                        new ChecklistItem {  Text = "dfgdgdg", IsDone = false },
+                        new ChecklistItem {  Text = "asdf", IsDone = true },
+                    }
                 };
                 await dbContext.Checkpoints.AddAsync(checkpoint);
 

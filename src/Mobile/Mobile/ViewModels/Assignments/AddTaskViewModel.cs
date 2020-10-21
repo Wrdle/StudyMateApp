@@ -1,22 +1,31 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Mobile.Models;
 
 namespace Mobile.ViewModels.Assignments
 {
     public class AddTaskViewModel : BaseViewModel
     {
-        public string TaskName { get; set; }
+        private string taskName;
+
+        public string TaskName
+        {
+            get => taskName;
+            set => SetProperty(ref taskName, value);
+        }
 
         public AddTaskViewModel()
         {
 
         }
-        public async Task AddTask(long checkpointID)
+        public async Task<ChecklistItem> AddTask(long checkpointID)
         {
             if (!string.IsNullOrEmpty(TaskName))
             {
-                await CheckpointStore.AddTaskToCheckpoint(checkpointID, TaskName);
+                return await CheckpointStore.AddTaskToCheckpoint(checkpointID, TaskName);
             }
+
+            return null;
         }
 
     }

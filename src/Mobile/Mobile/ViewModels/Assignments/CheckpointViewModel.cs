@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Mobile.ViewModels.Assignments;
 using System.Diagnostics;
 using Mobile.Models;
+using System.Threading.Tasks;
 
 namespace Mobile.ViewModels.Assignments
 {
@@ -35,10 +36,10 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        public void LoadCheckpointID(string id)
+        public async void LoadCheckpointID(string id)
         {
             //var checkpoint = CheckpointStore.GetCheckpointByID(Convert.ToInt64(id));
-            Checkpoint = CheckpointStore.GetById(Convert.ToInt64(id)).Result;
+            Checkpoint = await CheckpointStore.GetById(Convert.ToInt64(id));
 
             // Grab the checkpoint id add to the title 
             Title = Checkpoint.Title;
