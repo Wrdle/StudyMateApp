@@ -9,13 +9,13 @@ namespace Mobile.Models
         public string Name { get; set; }
         public ImageSource CoverPhoto { get; set; }
         public CoverColor CoverColor { get; set; }
-        public ICollection<UserListItem> Members { get; private set; }
-        public ICollection<AssignmentListItem> Assignments { get; private set; }
+        public ICollection<UserListItem> Members { get; set; }
+        public ICollection<Assignment> Assignments { get; set; }
 
         public Group()
         {
             Members = new List<UserListItem>();
-            Assignments = new List<AssignmentListItem>();
+            Assignments = new List<Assignment>();
         }
 
     }
