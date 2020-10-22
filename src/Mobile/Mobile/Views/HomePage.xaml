@@ -11,7 +11,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="notification_bell.png"/>
-        
+
         <ToolbarItem Text="Help and Feedback" Order="Secondary"/>
         <ToolbarItem Text="Logout" Order="Secondary"/>
     </ContentPage.ToolbarItems>
