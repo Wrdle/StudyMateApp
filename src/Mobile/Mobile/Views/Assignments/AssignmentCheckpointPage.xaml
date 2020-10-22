@@ -47,7 +47,7 @@
 
                     <!-- Check box: Checklist items -->
                     <StackLayout x:Name="CheckListItems"
-                                 BindableLayout.ItemsSource="{ Binding Checkpoint.ChecklistItems }"
+                                 BindableLayout.ItemsSource="{ Binding Checklist }"
                                  FlowDirection="LeftToRight">
 
                         <BindableLayout.ItemTemplate>
