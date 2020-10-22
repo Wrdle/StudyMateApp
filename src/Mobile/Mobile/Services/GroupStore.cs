@@ -129,13 +129,15 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
-                var group = await dbContext.Groups.FindAsync(id);
+                var group = await dbContext.Groups
+                    .Include(g => g.CoverColor)
+                    .SingleOrDefaultAsync(g => g.Id == id);
                 return new Group
                 {
                     Id = group.Id,
                     Name = group.Name,
                     CoverPhoto = _imageConverter.BytesToImage(group.CoverPhoto),
-                    CoverColorId = group.CoverColorId
+                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex }
                 };
             }
         }

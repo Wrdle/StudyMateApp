@@ -10,9 +10,9 @@ namespace Mobile.Models
         public long Id { get; set; }
 
         public long AssignmentId { get; set; }
-        
+
         public string Title { get; set; }
-        
+
         public string Notes { get; set; }
 
         public DateTime DueDate { get; set; }
@@ -32,7 +32,6 @@ namespace Mobile.Models
                         return false;
                     }
                 }
-
                 return true;
             }
         }
