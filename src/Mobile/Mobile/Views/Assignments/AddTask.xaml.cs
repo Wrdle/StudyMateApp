@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Mobile.ViewModels.Assignments;
-using Xamarin.Forms;
+﻿using Mobile.ViewModels.Assignments;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Forms.Xaml;
 
 namespace Mobile.Views.Assignments
@@ -18,6 +16,15 @@ namespace Mobile.Views.Assignments
             InitializeComponent();
             BindingContext = _viewModel = new AddTaskViewModel();
             _parentViewModel = parentViewModel;
+        }
+
+        public async void OnClick_addTask(object sender, System.EventArgs e)
+        {
+            var newTask = await ((AddTaskViewModel)BindingContext).AddTask(_parentViewModel.Checkpoint.Id);
+            var checklist = _parentViewModel.Checklist;
+            checklist.Add(newTask);
+            _parentViewModel.Checklist = checklist;
+            await PopupNavigation.Instance.PopAsync();
         }
     }
 }

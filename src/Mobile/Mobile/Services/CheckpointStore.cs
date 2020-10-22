@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using ChecklistItemEntity = Mobile.Data.Entites.ChecklistItem;
 using CheckpointEntity = Mobile.Data.Entites.Checkpoint;
 using UserCheckpointEntity = Mobile.Data.Entites.UserCheckpoint;
-using ChecklistItemEntity = Mobile.Data.Entites.ChecklistItem;
 
 namespace Mobile.Services
 {
