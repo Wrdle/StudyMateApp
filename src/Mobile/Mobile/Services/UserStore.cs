@@ -4,10 +4,13 @@ using Mobile.Data;
 using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using SkillEntity = Mobile.Data.Entites.Skill;
 using UserEntity = Mobile.Data.Entites.User;
+using UserSkillEntity = Mobile.Data.Entites.UserSkill;
 
 namespace Mobile.Services
 {
@@ -118,15 +121,16 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
+                // Get user entity
                 var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == CurrentUserId);
 
-                var userSkills = await dbContext.UserSkills
+                // Get user's current skills
+                var skills = await dbContext.UserSkills
                     .Include(us => us.User)
                     .Include(us => us.Skill)
                     .Where(us => us.UserId == _currentUserId.Value)
+                    .Select(us => us.Skill.Name)
                     .ToListAsync();
-
-                var skills = userSkills.Select(us => new Skill(us.Skill.Id, us.Skill.Name)).ToList();
 
                 return new User
                 {
@@ -151,27 +155,68 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
-                var savedUser = await dbContext.Users.SingleAsync(u => u.Id == _currentUserId.Value);
-                if (savedUser == null)
+                using (var transaction = await dbContext.Database.BeginTransactionAsync())
                 {
-                    throw new Exception(Error.AccountDoesNotExist);
-                }
+                    try
+                    {
+                        // Get current user
+                        var savedUser = await dbContext.Users
+                            .Include(u => u.UserSkills)
+                            .SingleOrDefaultAsync(u => u.Id == _currentUserId.Value);
 
-                savedUser.FirstName = user.FirstName;
-                savedUser.LastName = user.LastName;
-                savedUser.Institution = user.Institution;
-                savedUser.Major = user.Major;
-                savedUser.ProfilePicture = await _imageConverter.ImageToBytes(user.ProfilePicture);
+                        if (savedUser == null)
+                        {
+                            throw new Exception(Error.AccountDoesNotExist);
+                        }
 
-                try
-                {
-                    dbContext.Users.Update(savedUser);
-                    await dbContext.SaveChangesAsync();
-                    return user;
-                }
-                catch (Exception)
-                {
-                    throw new Exception(Error.ServerFailure);
+                        savedUser.FirstName = user.FirstName;
+                        savedUser.LastName = user.LastName;
+                        savedUser.Institution = user.Institution;
+                        savedUser.Major = user.Major;
+                        savedUser.ProfilePicture = await _imageConverter.ImageToBytes(user.ProfilePicture);
+                        savedUser.UserSkills.Clear();
+                        dbContext.Users.Update(savedUser);
+                        await dbContext.SaveChangesAsync();
+
+                        // Normalize updated skills
+                        for (int i = 0; i < user.Skills.Count; i++)
+                        {
+                            user.Skills[i] = user.Skills[i].Trim().ToLower();
+                        }
+
+                        // Get skills that exist in the database
+                        var existingSkills = await dbContext.Skills
+                            .Where(s => user.Skills.Contains(s.Name))
+                            .ToListAsync();
+
+                        // Get skills that don't exist in the database and add them
+                        var skillsNotInDb = new List<SkillEntity>();
+                        foreach (var skill in user.Skills)
+                        {
+                            if (!existingSkills.Any(s => s.Name == skill))
+                            {
+                                skillsNotInDb.Add(new SkillEntity { Name = skill });
+                            }
+                        }
+                        await dbContext.Skills.AddRangeAsync(skillsNotInDb);
+                        await dbContext.SaveChangesAsync();
+                        existingSkills.Concat(skillsNotInDb);
+
+                        // Assign skills to user
+                        var newUserSkills = existingSkills
+                            .Select(s => new UserSkillEntity { UserId = savedUser.Id, SkillId = s.Id })
+                            .ToList();
+                        await dbContext.UserSkills.AddRangeAsync(newUserSkills);
+                        await dbContext.SaveChangesAsync();
+
+                        // Commit transaction
+                        await transaction.CommitAsync();
+                        return user;
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception(Error.ServerFailure);
+                    }
                 }
             }
         }

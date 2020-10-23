@@ -14,7 +14,8 @@ namespace Mobile
         {
             InitializeComponent();
             DependencyService.Register<ImageConverter>();
-            DependencyService.Register<ICoverColorStore, CoverColorStore>();    
+            DependencyService.Register<ICoverColorStore, CoverColorStore>();
+            DependencyService.Register<ISkillStore, SkillStore>();
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
             DependencyService.Register<IAssignmentStore, AssignmentStore>();
