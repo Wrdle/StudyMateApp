@@ -4,21 +4,43 @@
              x:Class="Mobile.Views.Assignments.AssignmentCheckpointPage"
              xmlns:local="clr-namespace:Mobile.ViewModels.Assignments"
              xmlns:model="clr-namespace:Mobile.Models"
-             Title="{Binding Title}">
-
-    <!--2. Binding background color-->
-    <!--3. Add setting clicked action-->
+             Title="{ Binding Title }">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
-        <StackLayout VerticalOptions="Fill" Orientation="Vertical">
+        <StackLayout VerticalOptions="Fill" Orientation="Vertical" HorizontalOptions="Start">
 
             <!-- Due Day -->
             <Frame CornerRadius="2" HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
-                <Label Text="{Binding Checkpoint.DueDateString}" FontSize="Medium" FontAttributes="Bold" TextColor="Black"></Label>
+                <FlexLayout Wrap="Wrap">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="230" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Padding="7"
+                            Grid.Column="0"
+                            Text="Due: "
+                            TextColor="Black"
+                            FontSize="Medium"
+                            FontAttributes="Bold"
+                        />
+                        <Button
+                            Grid.Column="1"
+                            Text="{ Binding Checkpoint.DueDateString }"
+                            FontSize="Small"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            BackgroundColor="#7a7e80"
+                            CornerRadius="180"
+                            WidthRequest="230"
+                        />
+                    </Grid>
+                </FlexLayout>
             </Frame>
 
             <!-- Note board -->
@@ -28,18 +50,43 @@
 
             <!-- Assigned member: NOT WORKING -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
-                <StackLayout>
-                    <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small"></Label>
-                    <Button Text="Add member"
-                            BackgroundColor="#32573a"
-                            HeightRequest="46"
-                            BorderRadius="9"
-                            BorderWidth="2"/>
+                <FlexLayout Wrap="Wrap">
 
-                </StackLayout>
+                    <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small">
+                    </Label>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <!--Binding to the assigned members-->
+                        <Button 
+                            FontSize="Large"
+                            FontAttributes="Bold"
+                            BackgroundColor="White"
+                            BorderColor="Gray"
+                            BorderWidth="2"
+                            HeightRequest="60"
+                            BorderRadius="180"
+                            WidthRequest="60"
+                            />
+
+                        <Button
+                            Grid.Column="1"
+                            Text="+"
+                            FontSize="Large"
+                            FontAttributes="Bold"
+                            BackgroundColor="#bcc3c4"
+                            HeightRequest="60"
+                            BorderRadius="180"
+                            WidthRequest="60"/>
+
+                    </Grid>
+                </FlexLayout>
             </Frame>
 
-            <!-- Check list: BINDING LATER -->
+            <!-- Check list -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
                 <StackLayout>
                     <Label Text="Checklist" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
@@ -67,7 +114,6 @@
                                             Value="Medium" />
                                             </DataTrigger>
                                         </Label.Triggers>
-
                                     </Label>
                                 </StackLayout>
                             </DataTemplate>
@@ -80,11 +126,16 @@
                             <ColumnDefinition Width="*" />
                             <!--<ColumnDefinition Width="*" />-->
                         </Grid.ColumnDefinitions>
-                        <Button Text="Add task"
-                                CornerRadius="9"
-                                BackgroundColor="#32573a"
+                        <Button Text="Add Task"
+                                CornerRadius="180"
+                                BackgroundColor="#bcc3c4"
                                 HeightRequest="46"
                                 Clicked="AddTaskPopup"/>
+                        <!--<Button Grid.Column="1"
+                                Text="Done"
+                                CornerRadius="180"
+                                BackgroundColor="#bcc3c4"
+                                HeightRequest="46"/>-->
                     </Grid>
                 </StackLayout>
             </Frame>

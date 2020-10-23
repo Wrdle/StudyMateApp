@@ -50,7 +50,7 @@ namespace Mobile.Models
         {
             get
             {
-                return ("Due: " + DueDate.ToString("ddd d \\o\\f MMMM yyyy"));
+                return (DueDate.ToString("ddd d \\o\\f MMMM yyyy"));
             }
         }
 
