@@ -86,7 +86,7 @@
                 </FlexLayout>
             </Frame>
 
-            <!-- Check list -->
+            <!-- Check list: -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
                 <StackLayout>
                     <Label Text="Checklist" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>

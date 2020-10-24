@@ -28,12 +28,12 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        // Constructing for checklist
         public ObservableCollection<ChecklistItem> Checklist
         {
             get => checklist;
-            set => SetProperty(ref checklist,  value);
+            set => SetProperty(ref checklist, value);
         }
-
 
         private string checkpointID;
 
