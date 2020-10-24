@@ -19,7 +19,17 @@ namespace Mobile.Data
         private readonly ImageConverter _imageConverter;
 
 
-        public static User TestUser = new User { Email = "test-user@studymate.com", FirstName = "Test", LastName = "User" };
+        public static User TestUser = new User
+        {
+            Email = "test-user@studymate.com",
+            FirstName = "Test",
+            LastName = "User",
+            UserSubjects = new List<UserSubject>
+            {
+                new UserSubject { Subject = "Swag101", IsCurrent = true },
+                new UserSubject { Subject = "HowToBuyALamboCash202", IsCurrent = false }
+            }
+        };
 
         //------------------------------
         //          Constructors
