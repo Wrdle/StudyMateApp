@@ -1,6 +1,11 @@
 ﻿using Mobile.Models;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -13,10 +18,11 @@ namespace Mobile.ViewModels.Assignments
 
         private long assignmentID;
         private Assignment assignment;
+        private Stream coverPhotoStream = null;
 
-        public Command PickImageCommand;
-        public Command RemoveImageCommand;
-        public Command ColorTappedCommand;
+        public Command PickImageCommand { get; }
+        public Command RemoveImageCommand { get; }
+        public Command ColorTappedCommand { get; }
 
         public ObservableCollection<CoverColor> ColorChoices { get; set; }
 
@@ -109,13 +115,57 @@ namespace Mobile.ViewModels.Assignments
         public AssignmentSettingsViewModel()
         {
             Assignment = placeholder;
-            System.Diagnostics.Debug.WriteLine("Testing");
+
+            PickImageCommand = new Command(OnPickImageCommand);
+            RemoveImageCommand = new Command(OnRemoveImageCommand);
+            ColorTappedCommand = new Command<CoverColor>(OnColorTappedCommand);
         }
 
 
         private async void OnPickImageCommand()
         {
+            try
+            {
+                PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync<MediaLibraryPermission>();
+                if (status != PermissionStatus.Granted)
+                {
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.MediaLibrary))
+                    {
+                        Acr.UserDialogs.UserDialogs.Instance.Alert("Need media library", "Please grand media library access in order to add a coverphoto.", "OK");
+                    }
 
+                    status = await CrossPermissions.Current.RequestPermissionAsync<MediaLibraryPermission>();
+                }
+
+                if (status == PermissionStatus.Granted)
+                {
+                    AssignmentCoverPhoto = null;
+
+                    await CrossMedia.Current.Initialize();
+
+                    if (CrossMedia.Current.IsPickPhotoSupported)
+                    {
+                        MediaFile mediaFileCoverPhoto = await CrossMedia.Current.PickPhotoAsync();
+
+                        if (mediaFileCoverPhoto != null)
+                        {
+                            AssignmentCoverPhoto = ImageSource.FromStream(() =>
+                            {
+                                return mediaFileCoverPhoto.GetStream();
+                            });
+                        }
+                    }
+                }
+                else if (status != PermissionStatus.Unknown)
+                {
+                    Acr.UserDialogs.UserDialogs.Instance.Alert("Please allow media access to add a coverphoto.", "Allow Permissions");
+                }
+            }
+            catch
+            {
+
+                Acr.UserDialogs.UserDialogs.Instance.Alert("Something went wrong adding your cover photo", "Error");
+            }
         }
 
         private async void OnRemoveImageCommand()
@@ -125,7 +175,7 @@ namespace Mobile.ViewModels.Assignments
 
         private async void OnColorTappedCommand(CoverColor colorTapped)
         {
-
+            AssignmentCoverColor = colorTapped;
         }
 
 
@@ -140,10 +190,6 @@ namespace Mobile.ViewModels.Assignments
                 // Get Assignment
                 Assignment = await AssignmentStore.GetById(id);
                 var colorChoices = await CoverColorStore.GetAll();
-
-                PickImageCommand = new Command(OnPickImageCommand);
-                RemoveImageCommand = new Command(OnRemoveImageCommand);
-                ColorTappedCommand = new Command<CoverColor>(OnColorTappedCommand);
 
                 Title = "Edit Assignment";
 
