@@ -1,8 +1,7 @@
 ﻿using Mobile.Models;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
@@ -10,9 +9,16 @@ namespace Mobile.ViewModels.Assignments
     [QueryProperty(nameof(inputAssignmentID), nameof(AssignmentID))]
     class AssignmentSettingsViewModel : BaseViewModel
     {
+        private Assignment placeholder = new Assignment() { Id = 0, Title = "", Description = "", Notes = "", Skills = null, DateDue = DateTime.Now, IsArchived = false, CoverPhoto = null, CoverColor = null };
+
         private long assignmentID;
         private Assignment assignment;
 
+        public Command PickImageCommand;
+        public Command RemoveImageCommand;
+        public Command ColorTappedCommand;
+
+        public ObservableCollection<CoverColor> ColorChoices { get; set; }
 
         // ASSIGNMENT ID
         public string inputAssignmentID
@@ -46,7 +52,80 @@ namespace Mobile.ViewModels.Assignments
             set
             {
                 var assignmentEdits = Assignment;
+                assignmentEdits.Title = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentName));
             }
+        }
+
+        public String AssignmentDescription
+        {
+            get => Assignment.Description;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.Description = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentDescription));
+            }
+        }
+
+        public DateTime AssignmentDueDate
+        {
+            get => Assignment.DateDue;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.DateDue = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentDueDate));
+            }
+        }
+
+        public ImageSource AssignmentCoverPhoto
+        {
+            get => Assignment.CoverPhoto;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.CoverPhoto = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentCoverPhoto));
+            }
+        }
+
+        public CoverColor AssignmentCoverColor
+        {
+            get => Assignment.CoverColor;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.CoverColor = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentCoverColor));
+            }
+        }
+
+        public AssignmentSettingsViewModel()
+        {
+            Assignment = placeholder;
+            System.Diagnostics.Debug.WriteLine("Testing");
+        }
+
+
+        private async void OnPickImageCommand()
+        {
+
+        }
+
+        private async void OnRemoveImageCommand()
+        {
+
+        }
+
+        private async void OnColorTappedCommand(CoverColor colorTapped)
+        {
+
         }
 
 
@@ -60,19 +139,22 @@ namespace Mobile.ViewModels.Assignments
             {
                 // Get Assignment
                 Assignment = await AssignmentStore.GetById(id);
+                var colorChoices = await CoverColorStore.GetAll();
+
+                PickImageCommand = new Command(OnPickImageCommand);
+                RemoveImageCommand = new Command(OnRemoveImageCommand);
+                ColorTappedCommand = new Command<CoverColor>(OnColorTappedCommand);
 
                 Title = "Edit Assignment";
 
+                ColorChoices = Helpers.Helpers.ConvertListToObservableCollection<CoverColor>(colorChoices.ToList());
 
-                //// Extract and store data
-                //AssignmentName = assignment.Title;
-
-                //AssignmentNotes = assignment.Notes;
-                //ShowCoverPhoto = CheckCoverPhoto();
-
-                //var coverColors = await CoverColorStore.GetAll();
-
-                //LoadCheckpoints(Assignment.Id);
+                OnPropertyChanged(nameof(AssignmentName));
+                OnPropertyChanged(nameof(AssignmentDescription));
+                OnPropertyChanged(nameof(AssignmentDueDate));
+                OnPropertyChanged(nameof(AssignmentCoverPhoto));
+                OnPropertyChanged(nameof(AssignmentCoverColor));
+                OnPropertyChanged(nameof(ColorChoices));
             }
             catch (Exception)
             {
