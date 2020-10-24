@@ -44,7 +44,6 @@ namespace Mobile.ViewModels.Assignments
             set
             {
                 SetProperty(ref assignmentID, Convert.ToInt64(value));
-                LoadAssignmentId(value);
             }
         }
 
@@ -110,6 +109,11 @@ namespace Mobile.ViewModels.Assignments
         //------------------------------
         //          Methods
         //------------------------------
+
+        public void OnAppearing()
+        {
+            LoadAssignmentId(AssignmentID);
+        }
 
         /// <summary>
         /// Navigate to selected checkpoint page

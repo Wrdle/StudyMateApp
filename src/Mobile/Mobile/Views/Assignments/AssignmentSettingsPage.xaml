@@ -78,8 +78,10 @@
                     </StackLayout>
                 </Frame>
 
-                <Button CornerRadius="9" Text="Pick Cover Photo" Command="{Binding ArchiveAssignmentCommand}" HorizontalOptions="FillAndExpand"></Button>
-                <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding DeleteAssignmentCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
+                <StackLayout Orientation="Horizontal">
+                    <Button CornerRadius="9" Text="{Binding ArchiveButtonText}" Command="{Binding TapArchiveButtonCommand}" HorizontalOptions="FillAndExpand"></Button>
+                    <Button CornerRadius="9" Text="Delete Assignment" Command="{Binding DeleteAssignmentCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

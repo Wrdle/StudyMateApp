@@ -39,18 +39,5 @@ namespace Mobile.Models
         {
             Skills = new List<Skill>();
         }
-
-
-        /*public Assignment DeepCopy()
-        {
-            new Assignment
-            {
-                Id = Id,
-                Title = Title,
-                Description = Description,
-                Notes = Notes,
-                Skills = Skills.Cop
-            }
-        }*/
     }
 }

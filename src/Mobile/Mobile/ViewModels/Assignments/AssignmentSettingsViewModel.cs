@@ -18,11 +18,11 @@ namespace Mobile.ViewModels.Assignments
 
         private long assignmentID;
         private Assignment assignment;
-        private Stream coverPhotoStream = null;
 
         public Command PickImageCommand { get; }
         public Command RemoveImageCommand { get; }
         public Command ColorTappedCommand { get; }
+        public Command TapArchiveButtonCommand { get; }
 
         public ObservableCollection<CoverColor> ColorChoices { get; set; }
 
@@ -112,6 +112,29 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        public bool AssignmentIsArchived
+        {
+            get => Assignment.IsArchived;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.IsArchived = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentCoverColor));
+            }
+        }
+
+
+        public string ArchiveButtonText
+        {
+            get
+            {
+                if (AssignmentIsArchived != true)
+                    return "Archive Assignment";
+                return "Unarchive Assignment";
+            }
+        }
+
         public AssignmentSettingsViewModel()
         {
             Assignment = placeholder;
@@ -119,61 +142,29 @@ namespace Mobile.ViewModels.Assignments
             PickImageCommand = new Command(OnPickImageCommand);
             RemoveImageCommand = new Command(OnRemoveImageCommand);
             ColorTappedCommand = new Command<CoverColor>(OnColorTappedCommand);
+            TapArchiveButtonCommand = new Command(OnTapArchiveButton);
         }
 
+
+        private void OnTapArchiveButton()
+        {
+            AssignmentIsArchived = AssignmentIsArchived == true ? false : true;
+            OnPropertyChanged(nameof(ArchiveButtonText));
+        }
 
         private async void OnPickImageCommand()
         {
-            try
-            {
-                PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync<MediaLibraryPermission>();
-                if (status != PermissionStatus.Granted)
-                {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.MediaLibrary))
-                    {
-                        Acr.UserDialogs.UserDialogs.Instance.Alert("Need media library", "Please grand media library access in order to add a coverphoto.", "OK");
-                    }
-
-                    status = await CrossPermissions.Current.RequestPermissionAsync<MediaLibraryPermission>();
-                }
-
-                if (status == PermissionStatus.Granted)
-                {
-                    AssignmentCoverPhoto = null;
-
-                    await CrossMedia.Current.Initialize();
-
-                    if (CrossMedia.Current.IsPickPhotoSupported)
-                    {
-                        MediaFile mediaFileCoverPhoto = await CrossMedia.Current.PickPhotoAsync();
-
-                        if (mediaFileCoverPhoto != null)
-                        {
-                            AssignmentCoverPhoto = ImageSource.FromStream(() =>
-                            {
-                                return mediaFileCoverPhoto.GetStream();
-                            });
-                        }
-                    }
-                }
-                else if (status != PermissionStatus.Unknown)
-                {
-                    Acr.UserDialogs.UserDialogs.Instance.Alert("Please allow media access to add a coverphoto.", "Allow Permissions");
-                }
-            }
-            catch
-            {
-
-                Acr.UserDialogs.UserDialogs.Instance.Alert("Something went wrong adding your cover photo", "Error");
-            }
+            var selectedPhoto = await RunImagePicker();
+            if (selectedPhoto != null)
+                AssignmentCoverPhoto = selectedPhoto;
         }
 
-        private async void OnRemoveImageCommand()
+        private void OnRemoveImageCommand()
         {
-
+            AssignmentCoverPhoto = null;
         }
 
-        private async void OnColorTappedCommand(CoverColor colorTapped)
+        private void OnColorTappedCommand(CoverColor colorTapped)
         {
             AssignmentCoverColor = colorTapped;
         }
@@ -201,6 +192,9 @@ namespace Mobile.ViewModels.Assignments
                 OnPropertyChanged(nameof(AssignmentCoverPhoto));
                 OnPropertyChanged(nameof(AssignmentCoverColor));
                 OnPropertyChanged(nameof(ColorChoices));
+                OnPropertyChanged(nameof(AssignmentIsArchived));
+
+                OnPropertyChanged(nameof(ArchiveButtonText));
             }
             catch (Exception)
             {
