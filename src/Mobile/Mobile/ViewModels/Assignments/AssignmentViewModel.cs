@@ -22,6 +22,7 @@ namespace Mobile.ViewModels.Assignments
         private Checkpoint _selectedCheckpoint;
         private ObservableCollection<Checkpoint> checkpoints;
 
+        public Command SettingsTapped { get; }
         public Command<Checkpoint> CheckpointTapped { get; }
 
         // Current Assignment
@@ -103,6 +104,7 @@ namespace Mobile.ViewModels.Assignments
             Title = "Assignment";
 
             CheckpointTapped = new Command<Checkpoint>(OnCheckpointSelected);
+            SettingsTapped = new Command(OnSettingsTapped);
         }
 
         //------------------------------
@@ -120,6 +122,15 @@ namespace Mobile.ViewModels.Assignments
 
             // This will push the CheckpointPage onto the navigation stack
             await Shell.Current.GoToAsync($"assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
+        }
+
+        async void OnSettingsTapped()
+        {
+            if (Assignment == null)
+                return;
+
+            // This will push the CheckpointPage onto the navigation stack
+            await Shell.Current.GoToAsync($"assignments/assignmentSettings?{nameof(AssignmentSettingsViewModel.AssignmentID)}={Assignment.Id}");
         }
 
         /// <summary>

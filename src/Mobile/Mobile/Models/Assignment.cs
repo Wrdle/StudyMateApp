@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
+using Mobile.Helpers;
 
 namespace Mobile.Models
 {
@@ -41,16 +42,20 @@ namespace Mobile.Models
         }
 
 
-        /*public Assignment DeepCopy()
+        public Assignment DeepCopy()
         {
-            new Assignment
+            return new Assignment
             {
                 Id = Id,
                 Title = Title,
                 Description = Description,
                 Notes = Notes,
-                Skills = Skills.Cop
-            }
-        }*/
+                Skills = Skills.DeepCopy(),
+                DateDue = DateDue,
+                IsArchived = IsArchived,
+                CoverPhoto = CoverPhoto,
+                CoverColor = CoverColor
+            };
+        }
     }
 }

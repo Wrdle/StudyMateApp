@@ -11,5 +11,14 @@
             Name = name;
         }
 
+        public Skill DeepCopy()
+        {
+            return new Skill
+            (
+                Id = Id,
+                Name = Name
+            );
+        }
+
     }
 }

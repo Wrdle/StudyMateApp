@@ -7,7 +7,7 @@
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
+        <ToolbarItem IconImageSource="settings.png" Command="{Binding SettingsTapped}"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>

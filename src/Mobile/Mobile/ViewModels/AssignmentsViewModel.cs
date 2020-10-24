@@ -169,7 +169,6 @@ namespace Mobile.ViewModels
             await Shell.Current.GoToAsync($"assignments/addAssignment");
         }
 
-
         public List<Assignment> RemoveNotArchived(List<Assignment> assignments)
         {
             List<Assignment> filtered = new List<Assignment>();
