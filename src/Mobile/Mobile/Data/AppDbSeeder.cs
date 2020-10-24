@@ -82,6 +82,7 @@ namespace Mobile.Data
                 var group = new Group
                 {
                     Name = "Test Group",
+                    DateCreated = DateTime.Now,
                     CoverPhoto = await _imageConverter.ImageToBytes(null),
                     CoverColorId = 6,
                     UserGroups = new List<UserGroup>

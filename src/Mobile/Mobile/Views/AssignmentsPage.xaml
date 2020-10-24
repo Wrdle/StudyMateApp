@@ -30,7 +30,7 @@
                                             LineBreakMode="NoWrap" 
                                             Style="{DynamicResource ListItemTextStyle}" 
                                             FontSize="16" TextColor="{Binding CoverColor.FontColor}"/>
-                                            <Label Text="{Binding Description}" 
+                                            <Label Text="{Binding ListDescription}" 
                                             LineBreakMode="NoWrap"
                                             Style="{DynamicResource ListItemDetailTextStyle}"
                                             FontSize="13" TextColor="{Binding CoverColor.FontColor}"/>

@@ -12,6 +12,7 @@ namespace Mobile.Models
         public string Notes { get; set; }
         public ICollection<Skill> Skills { get; set; }
         public DateTime DateDue { get; set; }
+        public string GroupName { get; set; }
         public bool IsArchived { get; set; }
         public ImageSource CoverPhoto { get; set; }
         public CoverColor CoverColor { get; set; }
@@ -35,22 +36,31 @@ namespace Mobile.Models
             }
         }
 
+        public string DateDueMonthDay
+        {
+            get => $"{DateDue:M}";
+        }
+
+        public string ListDescription
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(GroupName))
+                {
+                    return $"Individual | {DateDueMonthDay}";
+                }
+                else
+                {
+                    return $"{GroupName} | {DateDueMonthDay}";
+                }
+            }
+        }
+
         public Assignment()
         {
             Skills = new List<Skill>();
         }
 
 
-        /*public Assignment DeepCopy()
-        {
-            new Assignment
-            {
-                Id = Id,
-                Title = Title,
-                Description = Description,
-                Notes = Notes,
-                Skills = Skills.Cop
-            }
-        }*/
     }
 }

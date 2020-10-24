@@ -161,9 +161,7 @@ namespace Mobile.Services
                 var assignments = await dbContext.UserAssignments
                     .Include(ua => ua.Assignment)
                     .ThenInclude(a => a.CoverColor)
-                    .Where(ua =>
-                            ua.UserId == _userStore.CurrentUserId
-                    )
+                    .Where(ua => ua.UserId == _userStore.CurrentUserId)
                     .Select(ua => new Assignment
                     {
                         Id = ua.Assignment.Id,
@@ -192,6 +190,7 @@ namespace Mobile.Services
 
                     var groupAssignments = await dbContext.GroupAssignments
                         .Include(ga => ga.Assignment)
+                        .Include(ga => ga.Group)
                         .Where(ga => groupIds.Contains(ga.GroupId))
                         .Select(ga => new Assignment
                         {
@@ -200,6 +199,7 @@ namespace Mobile.Services
                             Description = ga.Assignment.Description,
                             Notes = ga.Assignment.Notes,
                             DateDue = ga.Assignment.Due,
+                            GroupName = ga.Group.Name,
                             IsArchived = ga.Assignment.IsArchived,
                             CoverColor = new CoverColor
                             {
@@ -243,11 +243,15 @@ namespace Mobile.Services
             {
                 var assignments = await dbContext.GroupAssignments
                     .Include(ga => ga.Assignment)
+                    .ThenInclude(a => a.CoverColor)
                     .Where(ga => ga.GroupId == groupId)
                     .Select(ga => new Assignment
                     {
                         Id = ga.Assignment.Id,
                         Title = ga.Assignment.Title,
+                        DateDue = ga.Assignment.Due,
+                        CoverColor = new CoverColor { Id = ga.Assignment.CoverColor.Id, BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex, FontColor = ga.Assignment.CoverColor.FontColorFromHex },
+                        CoverPhoto = _imageConverter.BytesToImage(ga.Assignment.CoverPhoto)
                     })
                     .ToListAsync();
 

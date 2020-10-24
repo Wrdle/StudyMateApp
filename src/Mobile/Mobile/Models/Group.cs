@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace Mobile.Models
@@ -7,6 +8,7 @@ namespace Mobile.Models
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public DateTime DateCreated { get; set; }
         public ImageSource CoverPhoto { get; set; }
         public CoverColor CoverColor { get; set; }
         public ICollection<UserListItem> Members { get; set; }

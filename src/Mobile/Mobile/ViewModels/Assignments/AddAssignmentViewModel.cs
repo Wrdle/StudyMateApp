@@ -12,8 +12,26 @@ using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
 {
+    [QueryProperty(nameof(inputGroupID), nameof(GroupID))]
     public class AddAssignmentViewModel : Mobile.ViewModels.BaseViewModel
     {
+        private long groupID;
+
+        // ASSIGNMENT ID
+        public string inputGroupID
+        {
+            set => GroupID = Convert.ToInt64(value);
+        }
+
+        public long GroupID
+        {
+            get => groupID;
+            set
+            {
+                SetProperty(ref groupID, Convert.ToInt64(value));
+            }
+        }
+
         private string name = "";
         public string Name
         {
@@ -173,7 +191,6 @@ namespace Mobile.ViewModels.Assignments
             // Create new assignment with variables
             Assignment newAssignment = new Assignment()
             {
-                Id = AssignmentStore.GenerateNewAssignmentID().Result,
                 Title = Name,
                 Description = Description,
                 DateDue = SelectedDate,
@@ -181,7 +198,7 @@ namespace Mobile.ViewModels.Assignments
                 CoverColor = selectedColor
             };
 
-            await AssignmentStore.Create(newAssignment);
+            await AssignmentStore.Create(newAssignment, groupID);
 
             // This will pop the current page off the navigation stack
             //await Shell.Current.GoToAsync("");
