@@ -24,12 +24,16 @@ namespace Mobile.ViewModels
     public class ProfileViewModel : BaseViewModel
     {
         public ObservableCollection<string> UsersCurrentSkills { get; set; }
+        public ObservableCollection<string> UsersCurrentSubjects { get; set; }
+        public ObservableCollection<string> UsersPreviousSubjects { get; set; }
         public Command LoadUserProfileCommand { get; }
 
         public ProfileViewModel()
         {
             Title = "Profile";
             UsersCurrentSkills = new ObservableCollection<string>();
+            UsersCurrentSubjects = new ObservableCollection<string>();
+            UsersPreviousSubjects = new ObservableCollection<string>();
             LoadUserProfileCommand = new Command(() => ExecuteLoadUserProfile());
         }
 
@@ -109,6 +113,21 @@ namespace Mobile.ViewModels
                 }
                 OnPropertyChanged(nameof(UsersCurrentSkills));
 
+                UsersCurrentSubjects.Clear();
+                UsersPreviousSubjects.Clear();
+                var cSubjects = LoggedInUser.CurrentSubjects;//ConvertListToObservableCollection(LoggedInUser.CurrentSubjects);
+                var pSubjects = LoggedInUser.PreviousSubjects;//ConvertListToObservableCollection(LoggedInUser.PreviousSubjects);
+                foreach (var subject in cSubjects)
+                {
+                    UsersCurrentSubjects.Add(subject);
+                    Debug.WriteLine(subject);
+                }
+                foreach (var subject in pSubjects)
+                {
+                    UsersPreviousSubjects.Add(subject);
+                    Debug.WriteLine(subject);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -124,7 +143,6 @@ namespace Mobile.ViewModels
         {
             
             LoggedInUser.Skills.Add(newSkill);
-            //UserStore.UpdateUser(LoggedInUser);
             IsBusy = true;
             try
             {
