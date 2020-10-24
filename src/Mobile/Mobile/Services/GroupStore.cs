@@ -5,7 +5,6 @@ using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -58,6 +57,7 @@ namespace Mobile.Services
                         var group = new GroupEntity
                         {
                             Name = name,
+                            DateCreated = DateTime.Now,
                             CoverPhoto = await _imageConverter.ImageToBytes(null),
                             CoverColorId = 1,
                             UserGroups = userGroups
@@ -136,6 +136,7 @@ namespace Mobile.Services
                 {
                     Id = group.Id,
                     Name = group.Name,
+                    DateCreated = group.DateCreated,
                     CoverPhoto = _imageConverter.BytesToImage(group.CoverPhoto),
                     CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex }
                 };
@@ -159,6 +160,7 @@ namespace Mobile.Services
                     {
                         Id = ug.Group.Id,
                         Name = ug.Group.Name,
+                        DateCreated = ug.Group.DateCreated,
                         CoverPhoto = _imageConverter.BytesToImage(ug.Group.CoverPhoto),
                         CoverColor = new CoverColor { Id = ug.Group.CoverColor.Id, BackgroundColor = ug.Group.CoverColor.BackgroundColorFromHex, FontColor = ug.Group.CoverColor.FontColorFromHex }
                     })

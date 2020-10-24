@@ -22,6 +22,7 @@ namespace Mobile.Services
 
         private readonly IUserStore _userStore;
         private readonly IAssignmentStore _assignmentStore;
+        private readonly ImageConverter _imageConverter;
 
         //------------------------------
         //          Constructors
@@ -31,6 +32,7 @@ namespace Mobile.Services
         {
             _userStore = DependencyService.Get<IUserStore>();
             _assignmentStore = DependencyService.Get<IAssignmentStore>();
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -251,17 +253,21 @@ namespace Mobile.Services
                     })
                     .ToList();
 
-                var assignedUsers = await dbContext.UserCheckpoints
+                var assignedUserEntities = await dbContext.UserCheckpoints
                     .Include(uc => uc.User)
                     .Where(uc => uc.CheckpointId == id)
+                    .ToListAsync();
+
+                var assignedUsers = assignedUserEntities
                     .Select(uc => new CheckpointUserListItem
                     {
                         Id = uc.User.Id,
+                        ProfilePicture = _imageConverter.BytesToImage(uc.User.ProfilePicture),
                         Email = uc.User.Email,
                         FirstName = uc.User.FirstName,
                         LastName = uc.User.LastName
                     })
-                    .ToListAsync();
+                    .ToList();
 
                 return new Checkpoint
                 {
