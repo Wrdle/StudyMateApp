@@ -77,6 +77,22 @@ namespace Mobile.Services
             }
         }
 
+        public async Task UpdateNotes(long checkpointId, string text)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var checkpointEntity = await dbContext.Checkpoints.SingleOrDefaultAsync(cp => cp.Id == checkpointId);
+                if (checkpointEntity == null)
+                {
+                    return;
+                }
+
+                checkpointEntity.Description = text;
+                dbContext.Checkpoints.Update(checkpointEntity);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task AssignToUser(long checkpointId, long userId)
         {
             if (!_userStore.IsLoggedIn)

@@ -43,18 +43,30 @@
                 </FlexLayout>
             </Frame>
 
-            <!-- Note board -->
+            <!-- Note/Descrition board -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
-                <Label Text="{Binding Checkpoint.Notes}" FontSize="Small"></Label>
+                <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <StackLayout>
+                        <Label
+                            HorizontalTextAlignment="Start"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            Text="Description: "
+                            TextColor="Black" />
+                        <Editor
+                            Placeholder="Add a description here"
+                            Text="{Binding CheckpointNotes, Mode=TwoWay}"
+                            AutoSize="TextChanges" MaxLength="110" Keyboard="Text" />
+                    </StackLayout>
+                </AbsoluteLayout>
             </Frame>
 
             <!-- Assigned member: NOT WORKING -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
                 <FlexLayout Wrap="Wrap">
-
-                    <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small">
-                    </Label>
-
+                    <Label
+                        Text="{Binding Checkpoint.AssignedUsers}"
+                        FontSize="Small" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -81,7 +93,6 @@
                             HeightRequest="60"
                             BorderRadius="180"
                             WidthRequest="60"/>
-
                     </Grid>
                 </FlexLayout>
             </Frame>

@@ -47,6 +47,27 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        // Checkpoint Description/Notes
+        private string checkpointNotes;
+
+        public string CheckpointNotes
+        {
+            get => checkpointNotes;
+            set
+            {
+                // Update Locally
+                SetProperty(ref checkpointNotes, value);
+
+                if (value != null)
+                {
+                    checkpoint.Notes = value;
+
+                    // Update DB 
+                    CheckpointStore.UpdateNotes(checkpoint.Id, value).Wait();
+                }
+            }
+        }
+
         public async void LoadCheckpointID(string id)
         {
             //var checkpoint = CheckpointStore.GetCheckpointByID(Convert.ToInt64(id));
@@ -54,6 +75,7 @@ namespace Mobile.ViewModels.Assignments
 
             // Grab the checkpoint id add to the title 
             Title = Checkpoint.Title;
+            CheckpointNotes = Checkpoint.Notes;
         }
     }
 }
