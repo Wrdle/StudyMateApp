@@ -4,7 +4,8 @@
                  xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
                  xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"           
                  x:Class="Mobile.Views.Profile.AddSkillPopup"
-                 xmlns:model="clr-namespace:Mobile.Models">
+                 xmlns:model="clr-namespace:Mobile.Models"
+                 xmlns:vm="clr-namespace:Mobile.ViewModels">
 
     <pages:PopupPage.Animation>
         <animations:ScaleAnimation DurationIn="400"
@@ -18,48 +19,26 @@
                                    ScaleOut="0.8"/>
     </pages:PopupPage.Animation>
 
-    <StackLayout Margin="12"
-                 Padding="24"
-                 BackgroundColor="WhiteSmoke"
-                 HorizontalOptions="CenterAndExpand"
-                 VerticalOptions="CenterAndExpand">
-        <SearchBar Placeholder="Search..." TextChanged="SearchBar_TextChanged"></SearchBar>
-        <ListView x:Name="SkillListSearch" ItemsSource="{Binding ProfileSkills}" ItemTapped="OnTap">
-            <ListView.ItemTemplate>
-                <DataTemplate
-                    x:DataType="model:Skill">
-                    <TextCell Text="{Binding Name}">
-                    </TextCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+    <StackLayout
+        VerticalOptions="CenterAndExpand"
+        HorizontalOptions="CenterAndExpand"
+        Padding="16"
+        Margin="2"
+        WidthRequest="300"
+        BackgroundColor="White"
+        Orientation="Vertical">
+
+        <!--Group Name Input-->
+        <Entry x:Name="SkillEntry" Text="{Binding NewSkillName}" Placeholder="Add Skill" Margin="0,0,0,8"/>
+
+        <!--Buttons-->
+        <StackLayout Orientation="Horizontal">
+
+            <!--Cancel Button-->
+            <Button Text="Cancel" Margin="0,0,8,0" HorizontalOptions="EndAndExpand" Clicked="OnClick_Cancel" />
+
+            <!--Create Button-->
+            <Button Text="Add Skill" Clicked="OnClick_Create" />
+        </StackLayout>
     </StackLayout>
 </pages:PopupPage>
-
-
-<!--<Frame HasShadow="True">
-
-    <StackLayout>
-        <Label Text="Skills" FontSize="Medium" FontAttributes="Bold"></Label>
-        <FlexLayout x:Name="AddSkillListView" Wrap="Wrap" 
-                        BindableLayout.ItemsSource="{Binding ProfileSkills}">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate>
-                    <Frame CornerRadius="5" x:DataType="model:Skill" 
-                                       BackgroundColor="#56CCF2" HasShadow="False" 
-                                       Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
-                                       VerticalOptions="FillAndExpand"
-                                       Margin="8,0,0,0"
-                                       HeightRequest="30">
-                        <StackLayout AbsoluteLayout.LayoutFlags="All">
-                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-                                <Label Text="{Binding Name}">
-                                </Label>
-                            </StackLayout>
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </FlexLayout>
-    </StackLayout>
-</Frame>-->

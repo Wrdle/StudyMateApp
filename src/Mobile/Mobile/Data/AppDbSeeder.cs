@@ -1,4 +1,5 @@
-﻿using Mobile.Data.Entites;
+﻿using Microsoft.EntityFrameworkCore;
+using Mobile.Data.Entites;
 using Mobile.Services;
 using Mobile.Services.Interfaces;
 using System;
@@ -19,7 +20,7 @@ namespace Mobile.Data
         private readonly ImageConverter _imageConverter;
 
 
-        public static User TestUser = new User { Email = "test-user@studymate.com", FirstName = "Test", LastName = "User" };
+        public static User TestUser = new User { Email = "test-user@studymate.com", FirstName = "Test", LastName = "User", Institution = "Uni of Study", Major = "Testing" };
 
         //------------------------------
         //          Constructors
@@ -154,6 +155,31 @@ namespace Mobile.Data
                     }
                 };
                 await dbContext.Checkpoints.AddAsync(checkpoint3);
+                await dbContext.SaveChangesAsync();
+
+
+                // NEW USERSKILL TEST
+                var skill = new Skill
+                {
+                    Id = 1,
+                    Name = "Python",
+                    UserSkills = new List<UserSkill>
+                    {
+                        new UserSkill { UserId = TestUser.Id }
+                    }
+                };
+                var skill2 = new Skill
+                {
+                    Id = 2,
+                    Name = "Unity",
+                    UserSkills = new List<UserSkill>
+                    {
+                        new UserSkill { UserId = TestUser.Id }
+                    }
+                };
+
+                await dbContext.Skills.AddAsync(skill);
+                await dbContext.Skills.AddAsync(skill2);
                 await dbContext.SaveChangesAsync();
 
             }
