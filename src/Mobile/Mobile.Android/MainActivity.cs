@@ -19,6 +19,9 @@ namespace Mobile.Droid
             // Initialize popup plugin
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
 
+            // Initialize dialogs
+            Acr.UserDialogs.UserDialogs.Init(this);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
