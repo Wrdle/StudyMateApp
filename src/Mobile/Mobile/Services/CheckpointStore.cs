@@ -285,6 +285,15 @@ namespace Mobile.Services
                     })
                     .ToList();
 
+                // If assigned user have no profile pic will assign to a defualt pic
+                foreach (var user in assignedUsers)
+                {
+                    if (user.ProfilePicture == null)
+                    {
+                        user.ProfilePicture = ImageSource.FromFile("user.png");
+                    }
+                }
+
                 return new Checkpoint
                 {
                     Id = checkpoint.Id,

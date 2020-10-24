@@ -64,36 +64,44 @@
             <!-- Assigned member: NOT WORKING -->
             <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
                 <FlexLayout Wrap="Wrap">
-                    <Label
-                        Text="{Binding Checkpoint.AssignedUsers}"
-                        FontSize="Small" />
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <!--Binding to the assigned members-->
-                        <Button 
-                            FontSize="Large"
-                            FontAttributes="Bold"
-                            BackgroundColor="White"
-                            BorderColor="Gray"
-                            BorderWidth="2"
+
+                    <!-- Assigned users list -->
+                    <CollectionView ItemsSource="{Binding AssignedUsers}" SelectionMode="None">
+                        <CollectionView.ItemTemplate >
+
+                            <!-- Image of user -->
+                            <DataTemplate>
+                                <Image Source="" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Frame>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <ImageButton
+                            Source="user.png"
+                            HorizontalOptions="Center"
+                            VerticalOptions="CenterAndExpand"
                             HeightRequest="60"
-                            BorderRadius="180"
                             WidthRequest="60"
                             />
 
-                        <Button
+                            <Button
                             Grid.Column="1"
                             Text="+"
                             FontSize="Large"
                             FontAttributes="Bold"
                             BackgroundColor="#bcc3c4"
-                            HeightRequest="60"
-                            BorderRadius="180"
+                            HeightRequest="10"
+                            BorderRadius="360"
                             WidthRequest="60"/>
-                    </Grid>
+                        </Grid>
+                    </Frame>
                 </FlexLayout>
             </Frame>
 

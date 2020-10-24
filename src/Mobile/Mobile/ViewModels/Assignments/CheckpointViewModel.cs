@@ -11,6 +11,7 @@ namespace Mobile.ViewModels.Assignments
     {
 
         private Checkpoint checkpoint;
+        private ObservableCollection<CheckpointUserListItem> assignedUsers;
         private ObservableCollection<ChecklistItem> checklist;
 
         public Checkpoint Checkpoint
@@ -26,6 +27,12 @@ namespace Mobile.ViewModels.Assignments
                 }
                 Checklist = newChecklist;
             }
+        }
+
+        public ObservableCollection<CheckpointUserListItem> AssignedUsers
+        {
+            get => assignedUsers;
+            set => SetProperty(ref assignedUsers, value);
         }
 
         // Constructing for checklist
