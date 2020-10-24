@@ -1,7 +1,6 @@
 ﻿using Mobile.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using Xamarin.Forms;
 
@@ -63,20 +62,19 @@ namespace Mobile.ViewModels.Assignments
 
                 Title = "Edit Assignment";
 
+                // Extract and store data
+                AssignmentName = assignment.Title;
+                AssignmentNotes = assignment.Notes;
+                ShowCoverPhoto = CheckCoverPhoto();
 
-                //// Extract and store data
-                //AssignmentName = assignment.Title;
+                var coverColors = await CoverColorStore.GetAll();
 
-                //AssignmentNotes = assignment.Notes;
-                //ShowCoverPhoto = CheckCoverPhoto();
-
-                //var coverColors = await CoverColorStore.GetAll();
-
-                //LoadCheckpoints(Assignment.Id);
+                // Load the assignments checkpoints
+                LoadCheckpoints(Assignment.Id);
             }
             catch (Exception)
             {
-                //Debug.WriteLine("Failed to Load Item");
+                Debug.WriteLine("Failed to Load Item");
             }
             finally
             {

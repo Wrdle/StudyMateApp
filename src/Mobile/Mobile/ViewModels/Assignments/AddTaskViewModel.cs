@@ -1,5 +1,6 @@
-﻿using Mobile.Models;
+﻿using System;
 using System.Threading.Tasks;
+using Mobile.Models;
 
 namespace Mobile.ViewModels.Assignments
 {
@@ -15,9 +16,8 @@ namespace Mobile.ViewModels.Assignments
 
         public AddTaskViewModel()
         {
-            TaskName = "";
-        }
 
+        }
         public async Task<ChecklistItem> AddTask(long checkpointID)
         {
             if (!string.IsNullOrEmpty(TaskName))
