@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using SkillEntity = Mobile.Data.Entites.Skill;
 using UserEntity = Mobile.Data.Entites.User;
+using UserSubjectEntity = Mobile.Data.Entites.UserSubject;
 using UserSkillEntity = Mobile.Data.Entites.UserSkill;
 
 namespace Mobile.Services
@@ -122,7 +123,9 @@ namespace Mobile.Services
             using (var dbContext = new AppDbContext())
             {
                 // Get user entity
-                var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == CurrentUserId);
+                var user = await dbContext.Users
+                    .Include(u => u.UserSubjects)
+                    .SingleOrDefaultAsync(u => u.Id == CurrentUserId);
 
                 // Get user's current skills
                 var skills = await dbContext.UserSkills
@@ -141,6 +144,8 @@ namespace Mobile.Services
                     Institution = user.Institution,
                     Major = user.Major,
                     ProfilePicture = _imageConverter.BytesToImage(user.ProfilePicture),
+                    CurrentSubjects = user.UserSubjects.Where(us => us.IsCurrent).Select(us => us.Subject).ToList(),
+                    PreviousSubjects = user.UserSubjects.Where(us => !us.IsCurrent).Select(us => us.Subject).ToList(),
                     Skills = skills
                 };
             }
@@ -161,6 +166,7 @@ namespace Mobile.Services
                     {
                         // Get current user
                         var savedUser = await dbContext.Users
+                            .Include(u => u.UserSubjects)
                             .Include(u => u.UserSkills)
                             .SingleOrDefaultAsync(u => u.Id == _currentUserId.Value);
 
@@ -169,11 +175,19 @@ namespace Mobile.Services
                             throw new Exception(Error.AccountDoesNotExist);
                         }
 
+                        // Update user fields
                         savedUser.FirstName = user.FirstName;
                         savedUser.LastName = user.LastName;
                         savedUser.Institution = user.Institution;
                         savedUser.Major = user.Major;
                         savedUser.ProfilePicture = await _imageConverter.ImageToBytes(user.ProfilePicture);
+                        savedUser.UserSubjects.Clear();
+
+                        var currentSubjects = user.CurrentSubjects.Select((cs) => new UserSubjectEntity { Subject = cs, IsCurrent = true });
+                        (savedUser.UserSubjects as List<UserSubjectEntity>).AddRange(currentSubjects);
+                        var previousSubjects = user.PreviousSubjects.Select((cs) => new UserSubjectEntity { Subject = cs, IsCurrent = false });
+                        (savedUser.UserSubjects as List<UserSubjectEntity>).AddRange(currentSubjects);
+
                         savedUser.UserSkills.Clear();
                         dbContext.Users.Update(savedUser);
                         await dbContext.SaveChangesAsync();

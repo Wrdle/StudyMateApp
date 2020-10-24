@@ -13,12 +13,14 @@ namespace Mobile.Data.Entites
         public byte[] ProfilePicture { get; set; }
 
         // Referencing Entities
+        public ICollection<UserSubject> UserSubjects { get; set; }
         public ICollection<UserSkill> UserSkills { get; set; }
         public ICollection<UserGroup> UserGroups { get; set; }
         public ICollection<UserAssignment> UserAssignments { get; set; }
 
         public User()
         {
+            UserSubjects = new List<UserSubject>();
             UserSkills = new List<UserSkill>();
             UserGroups = new List<UserGroup>();
             UserAssignments = new List<UserAssignment>();
