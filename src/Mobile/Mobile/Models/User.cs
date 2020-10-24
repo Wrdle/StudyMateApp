@@ -12,12 +12,16 @@ namespace Mobile.Models
         public string Institution { get; set; }
         public string Major { get; set; }
         public ImageSource ProfilePicture { get; set; }
+        public List<string> CurrentSubjects { get; set; }
+        public List<string> PreviousSubjects { get; set; }
         public List<string> Skills { get; set; }
         public ICollection<Assignment> Assignments { get; set; }
         public ICollection<Group> Groups { get; set; }
 
         public User()
         {
+            CurrentSubjects = new List<string>();
+            PreviousSubjects = new List<string>();
             Skills = new List<string>();
             Assignments = new List<Assignment>();
             Groups = new List<Group>();

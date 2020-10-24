@@ -28,7 +28,7 @@
                                             LineBreakMode="NoWrap" 
                                             Style="{DynamicResource ListItemTextStyle}" 
                                             FontSize="16" TextColor="{Binding CoverColor.FontColor}"/>
-                                        <Label Text="Description here." 
+                                        <Label Text="{Binding SemesterAndYear}" 
                                             LineBreakMode="NoWrap"
                                             Style="{DynamicResource ListItemDetailTextStyle}"
                                             FontSize="13" TextColor="{Binding CoverColor.FontColor}"/>

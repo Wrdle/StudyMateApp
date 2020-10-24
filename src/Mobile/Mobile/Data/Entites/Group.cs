@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Mobile.Data.Entites
 {
@@ -6,6 +7,7 @@ namespace Mobile.Data.Entites
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public DateTime DateCreated { get; set; }
         public byte[] CoverPhoto { get; set; }
         public int CoverColorId { get; set; }
 

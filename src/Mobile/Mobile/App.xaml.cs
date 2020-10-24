@@ -31,7 +31,6 @@ namespace Mobile
 
             // Load the login page on app startup
             MainPage = new NavigationPage(new LoginPage());
-            MainPage = new AppShell();
         }
 
         protected override void OnStart()
