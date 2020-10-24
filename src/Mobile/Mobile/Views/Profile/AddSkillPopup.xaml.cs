@@ -26,6 +26,7 @@ namespace Mobile.Views.Profile
 
         public AddSkillPopup()
         {
+
         }
 
         public AddSkillPopup(ProfileViewModel parentViewModel)
@@ -50,7 +51,7 @@ namespace Mobile.Views.Profile
         private async void OnClick_Create(object sender, System.EventArgs e)
         {
             newSkill =  ((AddSkillPopupViewModel)BindingContext).AddSkill();
-            _parentViewModel.ExecuteAddNewSkill(newSkill);
+            _parentViewModel.ExecuteAddNewSkillAsync(newSkill);
             await PopupNavigation.Instance.PopAsync();
         }
     }

@@ -26,11 +26,17 @@ namespace Mobile.Views
         {
             base.OnAppearing();
             _viewModel.OnAppearing();
+            _viewModel.ExecuteLoadUserProfile();
         }
 
         protected async void AddSkillPopupCommandAsync(object sender, EventArgs e)
         {
             await PopupNavigation.Instance.PushAsync(new AddSkillPopup((ProfileViewModel)BindingContext));
+        }
+
+        protected async void AddSubjectPopupCommandAsync(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.PushAsync(new AddSubjectPopup((ProfileViewModel)BindingContext));
         }
     }
 }

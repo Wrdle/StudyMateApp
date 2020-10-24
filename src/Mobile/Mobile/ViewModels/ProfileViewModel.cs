@@ -18,6 +18,7 @@ using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore.Query;
 using Acr.UserDialogs;
 using Mobile.Data;
+using Mobile.Services.Interfaces;
 
 namespace Mobile.ViewModels
 {
@@ -77,7 +78,7 @@ namespace Mobile.ViewModels
             IsBusy = true;           
         }
 
-        void ExecuteLoadUserProfile()
+        public void ExecuteLoadUserProfile()
         {
             IsBusy = true;
             try
@@ -115,8 +116,8 @@ namespace Mobile.ViewModels
 
                 UsersCurrentSubjects.Clear();
                 UsersPreviousSubjects.Clear();
-                var cSubjects = LoggedInUser.CurrentSubjects;//ConvertListToObservableCollection(LoggedInUser.CurrentSubjects);
-                var pSubjects = LoggedInUser.PreviousSubjects;//ConvertListToObservableCollection(LoggedInUser.PreviousSubjects);
+                var cSubjects = LoggedInUser.CurrentSubjects;
+                var pSubjects = LoggedInUser.PreviousSubjects;
                 foreach (var subject in cSubjects)
                 {
                     UsersCurrentSubjects.Add(subject);
@@ -139,9 +140,8 @@ namespace Mobile.ViewModels
             }
         }
 
-        public void ExecuteAddNewSkill(string newSkill)
+        public void ExecuteAddNewSkillAsync(string newSkill)
         {
-            
             LoggedInUser.Skills.Add(newSkill);
             IsBusy = true;
             try
@@ -152,6 +152,52 @@ namespace Mobile.ViewModels
                 {
                     UsersCurrentSkills.Add(skill);
                     Debug.WriteLine(skill);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public void ExecuteAddCurrentSubject(string newSubject)
+        {
+            LoggedInUser.CurrentSubjects.Add(newSubject);
+            IsBusy = true;
+            try
+            {
+                UsersCurrentSubjects.Clear();
+                var subjects = LoggedInUser.CurrentSubjects;
+                foreach (var subject in subjects)
+                {
+                    UsersCurrentSubjects.Add(subject);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public void ExecuteAddPreviousSubject(string newSubject)
+        {
+            LoggedInUser.PreviousSubjects.Add(newSubject);
+            IsBusy = true;
+            try
+            {
+                UsersPreviousSubjects.Clear();
+                var subjects = LoggedInUser.PreviousSubjects;
+                foreach (var subject in subjects)
+                {
+                    UsersPreviousSubjects.Add(subject);
                 }
             }
             catch (Exception ex)

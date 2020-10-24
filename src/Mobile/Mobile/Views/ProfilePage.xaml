@@ -10,8 +10,8 @@
     <ContentPage.BindingContext>
         <vm:ProfileViewModel />
     </ContentPage.BindingContext>
-
-    <RefreshView x:DataType="local:ProfileViewModel" Command="{Binding LoadUserProfileCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+    <ScrollView>
+        <RefreshView x:DataType="local:ProfileViewModel" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
 
             <Grid>
@@ -35,7 +35,7 @@
             <Frame HasShadow="True">
                 <StackLayout>
                     <Label Text="Skills" FontSize="Medium" FontAttributes="Bold"></Label>
-                    <FlexLayout x:Name="UsersCurrentSkillsView" Wrap="Wrap"                      
+                    <FlexLayout x:Name="UsersCurrentSkillsView" Wrap="Wrap"                     
                         BindableLayout.ItemsSource="{Binding UsersCurrentSkills}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
@@ -56,7 +56,7 @@
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
                     <Button Text="Add Skill" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
-                    BackgroundColor="#bdbdbd" HorizontalOptions="Center" WidthRequest="60"
+                    BackgroundColor="#4F4F4F" HorizontalOptions="Center" WidthRequest="60"
                     CornerRadius="5" Clicked="AddSkillPopupCommandAsync"/>
                 </StackLayout>
             </Frame>
@@ -85,9 +85,8 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
-                    <!--<Button Text="Add Skill" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
-                    BackgroundColor="#56CCF2" HorizontalOptions="Center" WidthRequest="60"
-                    CornerRadius="5" Clicked="AddSkillPopupCommandAsync"/>-->
+                    
+                    <!--Previous Subjects-->
                     <Label Text="Previous Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
                     <FlexLayout x:Name="UsersPreviousSubjectsView" Wrap="Wrap"                      
                         BindableLayout.ItemsSource="{Binding UsersPreviousSubjects}">
@@ -109,40 +108,13 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
+                    <Button Text="Add Subject" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
+                    BackgroundColor="#4F4F4F" HorizontalOptions="Center" WidthRequest="60"
+                    CornerRadius="5" Clicked="AddSubjectPopupCommandAsync"/>
                 </StackLayout>
             </Frame>
-
-            <!--Previous Subjects-->
-            <!--<Frame HasShadow="True">
-                <StackLayout>
-                    <Label Text="Previous Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
-                    <FlexLayout x:Name="UsersPreviousSubjectsView" Wrap="Wrap"                      
-                        BindableLayout.ItemsSource="{Binding UsersPreviousSubjects}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Frame CornerRadius="5" x:DataType="x:String" 
-                                       BackgroundColor="#bdbdbd" HasShadow="False" 
-                                       Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
-                                       VerticalOptions="FillAndExpand"
-                                       Margin="8,0,0,0"
-                                       HeightRequest="30">
-                                    <StackLayout AbsoluteLayout.LayoutFlags="All">
-                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-                                            <Label Text="{Binding .}" TextColor="White">
-                                            </Label>
-                                        </StackLayout>
-                                    </StackLayout>
-                                </Frame>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </FlexLayout>
-                    --><!--<Button Text="Add Skill" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
-                    BackgroundColor="#56CCF2" HorizontalOptions="Center" WidthRequest="60"
-                    CornerRadius="5" Clicked="AddSkillPopupCommandAsync"/>--><!--
-                </StackLayout>
-            </Frame>-->
-
         </StackLayout>
     </RefreshView>
+    </ScrollView>
 </ContentPage>
     
