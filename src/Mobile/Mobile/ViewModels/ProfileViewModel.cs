@@ -22,6 +22,8 @@ namespace Mobile.ViewModels
         public ObservableCollection<string> UsersPreviousSubjects { get; set; }
         public Command LoadUserProfileCommand { get; }
 
+        public Command EditProfilePictureCommand { get; }
+
         public ProfileViewModel()
         {
             Title = "Profile";
@@ -29,6 +31,7 @@ namespace Mobile.ViewModels
             UsersCurrentSubjects = new ObservableCollection<string>();
             UsersPreviousSubjects = new ObservableCollection<string>();
             LoadUserProfileCommand = new Command(() => ExecuteLoadUserProfile());
+            EditProfilePictureCommand = new Command(() => ExecuteEditProfilePictureCommand());
         }
 
         string firstName;
@@ -61,9 +64,24 @@ namespace Mobile.ViewModels
             get => email;
         }
 
+        ImageSource profilePicture = null;
         public ImageSource ProfilePicture
         {
             get => LoggedInUser.ProfilePicture;
+            set
+            {
+            }        
+        }
+
+        async void ExecuteEditProfilePictureCommand()
+        {
+            var selectedPhoto = await RunImagePicker();
+            if (selectedPhoto != null)
+            {
+                LoggedInUser.ProfilePicture = selectedPhoto;
+                SetProperty(ref profilePicture, selectedPhoto);
+                OnPropertyChanged(nameof(ProfilePicture));
+            }
         }
 
         public string DisplayUsername => $"Name: {FirstName}" + " " + $"{LastName}";
@@ -125,8 +143,7 @@ namespace Mobile.ViewModels
                 {
                     UsersPreviousSubjects.Add(subject);
                     Debug.WriteLine(subject);
-                }
-                
+                }            
             }
             catch (Exception ex)
             {
@@ -140,72 +157,125 @@ namespace Mobile.ViewModels
 
         public void ExecuteAddNewSkillAsync(string newSkill)
         {
-            LoggedInUser.Skills.Add(newSkill);
-            IsBusy = true;
-            try
+            if (newSkill == null)
             {
-                UsersCurrentSkills.Clear();
-                var skills = LoggedInUser.Skills;
-                foreach (var skill in skills)
+                return;
+            }
+            else
+            {
+                LoggedInUser.Skills.Add(newSkill);
+                IsBusy = true;
+                try
                 {
-                    UsersCurrentSkills.Add(skill);
-                    Debug.WriteLine(skill);
+                    UsersCurrentSkills.Clear();
+                    var skills = LoggedInUser.Skills;
+                    foreach (var skill in skills)
+                    {
+                        UsersCurrentSkills.Add(skill);
+                        Debug.WriteLine(skill);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }            
         }
 
         public void ExecuteAddCurrentSubject(string newSubject)
         {
-            LoggedInUser.CurrentSubjects.Add(newSubject);
-            IsBusy = true;
-            try
+            if (newSubject == null)
             {
-                UsersCurrentSubjects.Clear();
-                var subjects = LoggedInUser.CurrentSubjects;
-                foreach (var subject in subjects)
+                return;
+            }
+            else
+            {
+                LoggedInUser.CurrentSubjects.Add(newSubject);
+                IsBusy = true;
+                try
                 {
-                    UsersCurrentSubjects.Add(subject);
+                    UsersCurrentSubjects.Clear();
+                    var subjects = LoggedInUser.CurrentSubjects;
+                    foreach (var subject in subjects)
+                    {
+                        UsersCurrentSubjects.Add(subject);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }          
         }
 
         public void ExecuteAddPreviousSubject(string newSubject)
         {
-            LoggedInUser.PreviousSubjects.Add(newSubject);
-            IsBusy = true;
-            try
+            if (newSubject == null)
             {
-                UsersPreviousSubjects.Clear();
-                var subjects = LoggedInUser.PreviousSubjects;
-                foreach (var subject in subjects)
+                return;
+            }
+            else
+            {
+                LoggedInUser.PreviousSubjects.Add(newSubject);
+                IsBusy = true;
+                try
                 {
-                    UsersPreviousSubjects.Add(subject);
+                    UsersPreviousSubjects.Clear();
+                    var subjects = LoggedInUser.PreviousSubjects;
+                    foreach (var subject in subjects)
+                    {
+                        UsersPreviousSubjects.Add(subject);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }      
+        }
+
+        public void ExecuteUpdateFirstName(string newFirstName)
+        {
+            LoggedInUser.FirstName = newFirstName;
+            SetProperty(ref firstName, LoggedInUser.FirstName);
+            OnPropertyChanged(nameof(FirstName));
+            OnPropertyChanged(nameof(DisplayUsername));
+        }
+
+        public void ExecuteUpdateLastName(string newLastName)
+        {
+            LoggedInUser.LastName = newLastName;
+            SetProperty(ref lastName, LoggedInUser.LastName);
+            OnPropertyChanged(nameof(LastName));
+            OnPropertyChanged(nameof(DisplayUsername));
+        }
+
+        public void ExecuteUpdateInstitution(string newInstitution)
+        {
+            LoggedInUser.Institution = newInstitution;
+            SetProperty(ref lastName, LoggedInUser.Institution);
+            OnPropertyChanged(nameof(Institution));
+            OnPropertyChanged(nameof(DisplayInstitution));
+        }
+
+        public void ExecuteUpdateMajor(string newMajor)
+        {
+            LoggedInUser.Major = newMajor;
+            SetProperty(ref lastName, LoggedInUser.Major);
+            OnPropertyChanged(nameof(Major));
+            OnPropertyChanged(nameof(DisplayMajor));
         }
     }
 }

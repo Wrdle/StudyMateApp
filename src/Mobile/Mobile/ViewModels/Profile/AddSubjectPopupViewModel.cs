@@ -27,7 +27,7 @@ namespace Mobile.ViewModels.Profile
             }
             else
             {
-                return "";
+                return null;
             }
         }
     }

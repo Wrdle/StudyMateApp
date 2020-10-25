@@ -28,17 +28,12 @@
         BackgroundColor="White"
         Orientation="Vertical">
 
-        <!--Group Name Input-->
+        <!--Add New Skill-->
         <Entry x:Name="SkillEntry" Text="{Binding NewSkillName}" Placeholder="Add Skill" Margin="0,0,0,8"/>
-
-        <!--Buttons-->
         <StackLayout Orientation="Horizontal">
-
-            <!--Cancel Button-->
             <Button Text="Cancel" FontSize="Micro" Margin="0,0,8,0" HorizontalOptions="EndAndExpand" Clicked="OnClick_Cancel" />
-
-            <!--Create Button-->
             <Button Text="Add Skill" BackgroundColor="#56CCF2" FontSize="Micro"  Clicked="OnClick_Create" />
         </StackLayout>
+        
     </StackLayout>
 </pages:PopupPage>

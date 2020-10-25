@@ -38,5 +38,10 @@ namespace Mobile.Views
         {
             await PopupNavigation.Instance.PushAsync(new AddSubjectPopup((ProfileViewModel)BindingContext));
         }
+
+        protected async void EditProfilePopupCommandAsync(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.PushAsync(new EditProfilePopup((ProfileViewModel)BindingContext));
+        }
     }
 }
