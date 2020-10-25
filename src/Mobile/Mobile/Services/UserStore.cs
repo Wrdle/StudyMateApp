@@ -12,6 +12,7 @@ using SkillEntity = Mobile.Data.Entites.Skill;
 using UserEntity = Mobile.Data.Entites.User;
 using UserSubjectEntity = Mobile.Data.Entites.UserSubject;
 using UserSkillEntity = Mobile.Data.Entites.UserSkill;
+using Mobile.Views;
 
 namespace Mobile.Services
 {
@@ -82,6 +83,7 @@ namespace Mobile.Services
         public async Task Logout()
         {
             _currentUserId = null;
+            Application.Current.MainPage = new LoginPage();
         }
 
         public async Task CreateAccount(string email, string firstName, string lastName)

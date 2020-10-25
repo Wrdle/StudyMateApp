@@ -18,6 +18,7 @@ namespace Mobile.ViewModels
 
         // Commands
         public Command<Assignment> AssignmentTapped { get; }
+        public Command LogoutTapped { get; }
 
         // Collections
         public ObservableCollection<Checkpoint> Checkpoints7Days;
@@ -40,6 +41,7 @@ namespace Mobile.ViewModels
             Title = "Home";
 
             AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
+            LogoutTapped = new Command(OnLogoutSelected);
         }
 
         //------------------------------
@@ -58,6 +60,11 @@ namespace Mobile.ViewModels
 
             // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"assignments/assignment?{nameof(AssignmentViewModel.AssignmentID)}={Assignment.Id}");
+        }
+
+        async void OnLogoutSelected()
+        {
+            await UserStore.Logout();
         }
 
         public void LoadData()

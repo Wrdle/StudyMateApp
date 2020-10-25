@@ -13,7 +13,7 @@
         <ToolbarItem IconImageSource="notification_bell.png"/>
         
         <ToolbarItem Text="Help and Feedback" Order="Secondary"/>
-        <ToolbarItem Text="Logout" Order="Secondary"/>
+        <ToolbarItem Text="Logout" Order="Secondary" Command="{Binding LogoutTapped}"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
