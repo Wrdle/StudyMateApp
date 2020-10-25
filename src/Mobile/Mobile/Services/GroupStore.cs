@@ -58,7 +58,7 @@ namespace Mobile.Services
                         {
                             Name = name,
                             DateCreated = DateTime.Now,
-                            CoverPhoto = await _imageConverter.ImageToBytes(null),
+                            CoverPhotoBytes = new byte[] { },
                             CoverColorId = 1,
                             UserGroups = userGroups
                         };
@@ -137,7 +137,7 @@ namespace Mobile.Services
                     Id = group.Id,
                     Name = group.Name,
                     DateCreated = group.DateCreated,
-                    CoverPhoto = _imageConverter.BytesToImage(group.CoverPhoto),
+                    CoverPhotoBytes = group.CoverPhotoBytes,
                     CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex }
                 };
             }
@@ -161,7 +161,7 @@ namespace Mobile.Services
                         Id = ug.Group.Id,
                         Name = ug.Group.Name,
                         DateCreated = ug.Group.DateCreated,
-                        CoverPhoto = _imageConverter.BytesToImage(ug.Group.CoverPhoto),
+                        CoverPhotoBytes = ug.Group.CoverPhotoBytes,
                         CoverColor = new CoverColor { Id = ug.Group.CoverColor.Id, BackgroundColor = ug.Group.CoverColor.BackgroundColorFromHex, FontColor = ug.Group.CoverColor.FontColorFromHex }
                     })
                     .ToListAsync();

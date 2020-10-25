@@ -4,10 +4,11 @@
              x:Class="Mobile.Views.Assignments.AssignmentPage"
              xmlns:local="clr-namespace:Mobile.ViewModels.Assignments"
              xmlns:model="clr-namespace:Mobile.Models"
+             xmlns:components="clr-namespace:Mobile.Components;assembly=Mobile"
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
+        <ToolbarItem IconImageSource="settings.png" Command="{Binding SettingsTapped}"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -20,7 +21,7 @@
                         <Frame BackgroundColor="#D9FFFFFF" CornerRadius="5" Margin="20,20,20,20" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1">
                             <StackLayout>
                                 <Label HorizontalTextAlignment="Center" FontSize="16" FontAttributes="Bold">Notes</Label>
-                                <Editor Text="{Binding AssignmentNotes, Mode=TwoWay}" AutoSize="TextChanges" MaxLength="110" Keyboard="Text" HorizontalOptions="CenterAndExpand"></Editor>
+                                <components:CustomEditor Text="{Binding AssignmentNotes, Mode=TwoWay}" AutoSize="TextChanges" MaxLength="110" Keyboard="Text" HorizontalOptions="CenterAndExpand" Placeholder="Add notes."></components:CustomEditor>
                             </StackLayout>
                         </Frame>
                     </AbsoluteLayout>

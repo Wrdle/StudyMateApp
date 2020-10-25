@@ -26,6 +26,7 @@ namespace Mobile.Data
             LastName = "User",
             Institution = "QUT",
             Major = "Pro Gamer",
+            ProfilePictureBytes = EncodedImages.Image3,
             UserSubjects = new List<UserSubject>
             {
                 new UserSubject { Subject = "Swag101", IsCurrent = true },
@@ -85,7 +86,7 @@ namespace Mobile.Data
                 {
                     Name = "Test Group",
                     DateCreated = DateTime.Now,
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhotoBytes = EncodedImages.Image2,
                     CoverColorId = 6,
                     UserGroups = new List<UserGroup>
                     {
@@ -102,7 +103,7 @@ namespace Mobile.Data
                     Title = "Test Assignment",
                     Description = "blah blah blah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhotoBytes = EncodedImages.Image1,
                     CoverColorId = 1,
                     UserAssignments = new List<UserAssignment>
                     {
@@ -117,7 +118,7 @@ namespace Mobile.Data
                     Title = "Test Group Assignment",
                     Description = "blafadagsflah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhotoBytes = new byte[] { },
                     CoverColorId = 8,
                     GroupAssignments = new List<GroupAssignment>
                     {

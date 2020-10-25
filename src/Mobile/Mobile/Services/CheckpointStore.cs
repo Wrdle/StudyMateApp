@@ -262,7 +262,7 @@ namespace Mobile.Services
                     .Select(uc => new CheckpointUserListItem
                     {
                         Id = uc.User.Id,
-                        ProfilePicture = _imageConverter.BytesToImage(uc.User.ProfilePicture),
+                        ProfilePictureBytes = uc.User.ProfilePictureBytes,
                         Email = uc.User.Email,
                         FirstName = uc.User.FirstName,
                         LastName = uc.User.LastName

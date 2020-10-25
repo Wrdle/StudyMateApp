@@ -40,13 +40,16 @@ namespace Mobile.ViewModels
             Title = "Home";
 
             AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
-
-            LoadData();
         }
 
         //------------------------------
         //          Methods
         //------------------------------
+
+        public void OnAppearing()
+        {
+            LoadData();
+        }
 
         async void OnAssignmentSelected(Assignment selected)
         {
@@ -62,7 +65,6 @@ namespace Mobile.ViewModels
             Assignment = LoadNextAssignment();
             Checkpoints7Days = LoadCheckpointsNext7Days();
             Groups = Load4Groups();
-
         }
 
         public ObservableCollection<Checkpoint> LoadCheckpointsNext7Days()
