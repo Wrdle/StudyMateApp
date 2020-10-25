@@ -76,6 +76,24 @@ namespace Mobile.Services
             }
         }
 
+        public async Task Update(Group group)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var groupEntity = await dbContext.Groups.SingleOrDefaultAsync(g => g.Id == group.Id);
+                if (groupEntity == null)
+                {
+                    throw new Exception();
+                }
+
+                groupEntity.Name = group.Name;
+                groupEntity.CoverColorId = group.CoverColor.Id;
+                groupEntity.CoverPhotoBytes = group.CoverPhotoBytes;
+                dbContext.Groups.Update(groupEntity);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task Leave(long id)
         {
             if (!_userStore.IsLoggedIn)
@@ -132,13 +150,44 @@ namespace Mobile.Services
                 var group = await dbContext.Groups
                     .Include(g => g.CoverColor)
                     .SingleOrDefaultAsync(g => g.Id == id);
+
+                var members = await dbContext.UserGroups
+                    .Include(ug => ug.User)
+                    .Where(ug => ug.GroupId == id)
+                    .Select(ug => new UserListItem
+                    {
+                        Id = ug.User.Id,
+                        Email = ug.User.Email,
+                        FirstName = ug.User.FirstName,
+                        LastName = ug.User.LastName,
+                        ProfilePicture = ug.User.ProfilePictureBytes
+                    })
+                    .ToListAsync();
+
+                var assignments = await dbContext.GroupAssignments
+                    .Include(ga => ga.Assignment)
+                    .ThenInclude(ga => ga.CoverColor)
+                    .Where(ga => ga.GroupId == id)
+                    .Select(ga => new Assignment
+                    {
+                        Id = ga.Assignment.Id,
+                        Title = ga.Assignment.Title,
+                        DateDue = ga.Assignment.Due,
+                        Description = ga.Assignment.Description,
+                        CoverColor = new CoverColor { Id = ga.Assignment.CoverColor.Id, BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex, FontColor = ga.Assignment.CoverColor.FontColorFromHex },
+                        CoverPhotoBytes = ga.Assignment.CoverPhotoBytes
+                    })
+                    .ToListAsync();
+
                 return new Group
                 {
                     Id = group.Id,
                     Name = group.Name,
                     DateCreated = group.DateCreated,
                     CoverPhotoBytes = group.CoverPhotoBytes,
-                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex }
+                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex },
+                    Members = members,
+                    Assignments = assignments
                 };
             }
         }

@@ -24,7 +24,7 @@
 
                 <!-- CollectionView -->
                 <CollectionView x:Name="AssignmentsListView"
-                ItemsSource="{Binding Group.Assignments}"
+                ItemsSource="{Binding Assignments}"
                 SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>

@@ -12,13 +12,13 @@ namespace Mobile.Models
         public DateTime DateCreated { get; set; }
         public byte[] CoverPhotoBytes { get; set; }
         public CoverColor CoverColor { get; set; }
-        public ICollection<UserListItem> Members { get; private set; }
-        public ICollection<AssignmentListItem> Assignments { get; private set; }
+        public ICollection<UserListItem> Members { get; set; }
+        public ICollection<Assignment> Assignments { get; set; }
 
         public Group()
         {
             Members = new List<UserListItem>();
-            Assignments = new List<AssignmentListItem>();
+            Assignments = new List<Assignment>();
         }
 
         public ImageSource CoverPhoto
@@ -47,5 +47,16 @@ namespace Mobile.Models
                 }
             }
         }
+
+        public string SemesterAndYear
+        {
+            get
+            {
+                var semester = DateCreated.Month > 6 ? 2 : 1;
+                var year = DateCreated.Year;
+                return $"Semester {semester} | {year}";
+            }
+        }
+
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Mobile.Models;
 using Mobile.ViewModels.Assignments;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Groups
@@ -22,16 +24,19 @@ namespace Mobile.ViewModels.Groups
             InfoTappedCommand = new Command(OnInfoTappedCommand);
         }
 
-        // =============================
-        //       ASSIGNMENT DATA
-        // =============================
-
         private Group group;
+        private ObservableCollection<Assignment> assignments;
 
         public Group Group
         {
             get => group;
             set => SetProperty(ref group, value);
+        }
+
+        public ObservableCollection<Assignment> Assignments
+        {
+            get => assignments;
+            set => SetProperty(ref assignments, value);
         }
 
         // GROUP ID
@@ -72,6 +77,7 @@ namespace Mobile.ViewModels.Groups
             {
                 // Get Group
                 Group = await GroupStore.GetById(id);
+                Assignments = Helpers.Helpers.ConvertListToObservableCollection(Group.Assignments.ToList());
 
                 // Extract and store data
                 Title = group.Name;
