@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"           
+                 x:Class="Mobile.Views.Profile.EditProfilePopup"
+                 xmlns:model="clr-namespace:Mobile.Models"
+                 xmlns:vm="clr-namespace:Mobile.ViewModels">
+
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation DurationIn="400"
+                                   DurationOut="300"
+                                   EasingIn="SinOut"
+                                   EasingOut="SinIn"
+                                   HasBackgroundAnimation="True"
+                                   PositionIn="Center"
+                                   PositionOut="Center"
+                                   ScaleIn="1.2"
+                                   ScaleOut="0.8"
+                                   />
+    </pages:PopupPage.Animation>
+
+    <ScrollView>
+    <StackLayout
+        VerticalOptions="CenterAndExpand"
+        HorizontalOptions="CenterAndExpand"
+        Padding="16"
+        Margin="2"
+        WidthRequest="300"
+        BackgroundColor="LightGray"
+        Orientation="Vertical"
+        >
+
+        <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="First Name" FontSize="Medium" FontAttributes="Bold" Grid.Row="0" Grid.Column="0"></Label>
+                <Entry x:Name="FirstName" Text="{Binding NewFirstName}" Placeholder="" Margin="0,0,0,8" Grid.Row="1" Grid.ColumnSpan="2"/>
+
+                <Label Text="Last Name" FontSize="Medium" FontAttributes="Bold" Grid.Row="2" Grid.Column="0"></Label>
+                    <Entry x:Name="LastName" Text="{Binding NewLastName}" Placeholder="" Margin="0,0,0,8" Grid.Row="3" Grid.ColumnSpan="2"/>
+                
+                
+                <Label Text="Institution" FontSize="Medium" FontAttributes="Bold" Grid.Row="4" Grid.Column="0"></Label>
+                    <Entry x:Name="Institution" Text="{Binding NewInstitution}" Placeholder="" Margin="0,0,0,8" Grid.Row="5" Grid.ColumnSpan="2"/>
+                
+                
+                <Label Text="Major" FontSize="Medium" FontAttributes="Bold" Grid.Row="6" Grid.Column="0"></Label>
+                    <Entry x:Name="Major" Text="{Binding NewMajor}" Placeholder="" Margin="0,0,0,8" Grid.Row="7" Grid.ColumnSpan="2"/>
+                
+
+                <Button Text="Close" BackgroundColor="DarkRed" FontSize="Micro" Grid.Row="8" Grid.Column="0" Clicked="OnClick_Cancel"/>
+                <Button Text="Save and Close" BackgroundColor="#27ae60" FontSize="Micro" Grid.Row="8" Grid.Column="1" Clicked="OnClick_UpdateProfileInformation"/>
+
+                </Grid>
+        </StackLayout>
+    </StackLayout>
+    </ScrollView>
+</pages:PopupPage>
