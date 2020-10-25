@@ -18,12 +18,12 @@
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
                                     <!--<Setter Property="BackgroundColor" Value="{StaticResource Primary}" />-->
-                                    <Setter Property="BackgroundColor" Value="White" />
+                                    <Setter Property="BackgroundColor" Value="SteelBlue" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="White" />
+                                    <Setter Property="BackgroundColor" Value="SteelBlue" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>

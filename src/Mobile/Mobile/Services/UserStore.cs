@@ -146,7 +146,7 @@ namespace Mobile.Services
                     Institution = user.Institution,
                     Major = user.Major,
 
-                    ProfilePicture = user.ProfilePicture != null && user.ProfilePicture.Length > 0 ? _imageConverter.BytesToImage(user.ProfilePicture) : ImageSource.FromFile("user.png"),
+                    ProfilePicture = user.ProfilePictureBytes != null && user.ProfilePictureBytes.Length > 0 ? _imageConverter.BytesToImage(user.ProfilePictureBytes) : ImageSource.FromFile("user.png"),
                     CurrentSubjects = user.UserSubjects.Where(us => us.IsCurrent).Select(us => us.Subject).ToList(),
                     PreviousSubjects = user.UserSubjects.Where(us => !us.IsCurrent).Select(us => us.Subject).ToList(),
                     Skills = skills
