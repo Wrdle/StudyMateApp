@@ -8,6 +8,7 @@ namespace Mobile.Services.Interfaces
     {
         // Commands
         Task<Checkpoint> Add(Checkpoint checkpoint);
+        Task UpdateNotes(long checkpointId, string text);
         Task AssignToUser(long checkpointId, long userId);
         Task Remove(long checkpointId);
         Task UnassignUser(long checkpointId, long userId);
@@ -26,6 +27,5 @@ namespace Mobile.Services.Interfaces
         /// <param name="userId">ID of user</param>
         /// <returns>List of checkpoints</returns>
         Task<ICollection<Checkpoint>> GetByUserId(long userId);
-
     }
 }

@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
+using Mobile.Models;
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Xamarin.Forms;
 using Mobile.ViewModels.Assignments;
 using System.Diagnostics;
@@ -16,13 +18,45 @@ namespace Mobile.ViewModels.Assignments
 
         private Checkpoint checkpoint;
 
+        private ObservableCollection<CheckpointUserListItem> assignedUsers;
+        private ObservableCollection<ChecklistItem> checklist;
+
         public Checkpoint Checkpoint
         {
             get => checkpoint;
-            set => SetProperty(ref checkpoint, value);
+
+            set
+            {
+                SetProperty(ref checkpoint, value);
+
+                var newChecklist = new ObservableCollection<ChecklistItem>();
+                foreach (var item in value.ChecklistItems)
+                {
+                    newChecklist.Add(item);
+                }
+                Checklist = newChecklist;
+
+                var newAssignedUsers = new ObservableCollection<CheckpointUserListItem>();
+                foreach (var item in value.AssignedUsers)
+                {
+                    newAssignedUsers.Add(item);
+                }
+                AssignedUsers = newAssignedUsers;
+            }
         }
 
+        public ObservableCollection<CheckpointUserListItem> AssignedUsers
+        {
+            get => assignedUsers;
+            set => SetProperty(ref assignedUsers, value);
+        }
 
+        // Constructing for checklist
+        public ObservableCollection<ChecklistItem> Checklist
+        {
+            get => checklist;
+            set => SetProperty(ref checklist, value);
+        }
 
         private string checkpointID;
 
@@ -36,6 +70,27 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
+        // Checkpoint Description/Notes
+        private string checkpointNotes;
+
+        public string CheckpointNotes
+        {
+            get => checkpointNotes;
+            set
+            {
+                // Update Locally
+                SetProperty(ref checkpointNotes, value);
+
+                if (value != null)
+                {
+                    checkpoint.Notes = value;
+
+                    // Update DB 
+                    CheckpointStore.UpdateNotes(checkpoint.Id, value).Wait();
+                }
+            }
+        }
+
         public async void LoadCheckpointID(string id)
         {
             //var checkpoint = CheckpointStore.GetCheckpointByID(Convert.ToInt64(id));
@@ -43,6 +98,12 @@ namespace Mobile.ViewModels.Assignments
 
             // Grab the checkpoint id add to the title 
             Title = Checkpoint.Title;
+            CheckpointNotes = Checkpoint.Notes;
+        }
+
+        public CheckpointViewModel()
+        {
+            Debug.WriteLine("Testing");
         }
     }
 }

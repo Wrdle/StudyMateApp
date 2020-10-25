@@ -34,6 +34,18 @@ namespace Mobile.Data
             }
         };
 
+        public static User TestUser2 = new User
+        {
+            Email = "test-user2@studymate.com",
+            FirstName = "Test 2",
+            LastName = "User 2",
+            UserSubjects = new List<UserSubject>
+            {
+                new UserSubject { Subject = "Swag420", IsCurrent = true },
+                new UserSubject { Subject = "HowToBuyAPorshe", IsCurrent = false }
+            }
+        };
+
         //------------------------------
         //          Constructors
         //------------------------------
@@ -79,6 +91,7 @@ namespace Mobile.Data
                 // USER
                 TestUser.Email = TestUser.Email.ToUpper();
                 await dbContext.Users.AddAsync(TestUser);
+                await dbContext.Users.AddAsync(TestUser2);
                 await dbContext.SaveChangesAsync();
 
                 // GROUP
@@ -193,7 +206,8 @@ namespace Mobile.Data
                     DateDue = DateTime.Now.AddDays(3),
                     Assignment = assignment,
                     UserCheckpoints = new List<UserCheckpoint> {
-                        new UserCheckpoint { UserId = TestUser.Id }
+                        new UserCheckpoint { UserId = TestUser.Id },
+                        new UserCheckpoint { UserId = TestUser2.Id }
                     }
                 };
                 await dbContext.Checkpoints.AddAsync(checkpoint2);
