@@ -11,7 +11,7 @@
         <vm:ProfileViewModel />
     </ContentPage.BindingContext>
     <ScrollView>
-        <RefreshView x:DataType="local:ProfileViewModel" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <!--<RefreshView x:DataType="local:ProfileViewModel" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">-->
         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
 
             <Grid>
@@ -85,7 +85,7 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
-                    
+
                     <!--Previous Subjects-->
                     <Label Text="Previous Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
                     <FlexLayout x:Name="UsersPreviousSubjectsView" Wrap="Wrap"                      
@@ -114,7 +114,6 @@
                 </StackLayout>
             </Frame>
         </StackLayout>
-    </RefreshView>
+        <!--</RefreshView>-->
     </ScrollView>
 </ContentPage>
-    
