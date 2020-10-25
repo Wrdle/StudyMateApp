@@ -18,9 +18,9 @@
     </ContentPage.ToolbarItems>
 
     <ScrollView>
-        <!--<RefreshView x:DataType="local:ProfileViewModel" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">-->
         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
-        
+
+            <!--User Info-->
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height ="20"/>
@@ -126,6 +126,5 @@
                 </StackLayout>
             </Frame>
         </StackLayout>
-        <!--</RefreshView>-->
     </ScrollView>
 </ContentPage>

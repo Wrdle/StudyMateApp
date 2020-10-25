@@ -50,21 +50,23 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
+                <!--Users First Name-->
                 <Label Text="First Name" FontSize="Medium" FontAttributes="Bold" Grid.Row="0" Grid.Column="0"></Label>
-                <Entry x:Name="FirstName" Text="{Binding NewFirstName}" Placeholder="" Margin="0,0,0,8" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <Entry x:Name="FirstName" Text="{Binding NewFirstName}" Placeholder="" Margin="0,0,0,8" Grid.Row="1" Grid.ColumnSpan="2"/>
 
+                <!--Users Last Name-->
                 <Label Text="Last Name" FontSize="Medium" FontAttributes="Bold" Grid.Row="2" Grid.Column="0"></Label>
                     <Entry x:Name="LastName" Text="{Binding NewLastName}" Placeholder="" Margin="0,0,0,8" Grid.Row="3" Grid.ColumnSpan="2"/>
                 
-                
+                <!--Institution-->
                 <Label Text="Institution" FontSize="Medium" FontAttributes="Bold" Grid.Row="4" Grid.Column="0"></Label>
                     <Entry x:Name="Institution" Text="{Binding NewInstitution}" Placeholder="" Margin="0,0,0,8" Grid.Row="5" Grid.ColumnSpan="2"/>
                 
-                
+                <!--Major-->
                 <Label Text="Major" FontSize="Medium" FontAttributes="Bold" Grid.Row="6" Grid.Column="0"></Label>
                     <Entry x:Name="Major" Text="{Binding NewMajor}" Placeholder="" Margin="0,0,0,8" Grid.Row="7" Grid.ColumnSpan="2"/>
                 
-
+                <!--Buttons-->
                 <Button Text="Close" BackgroundColor="DarkRed" FontSize="Micro" Grid.Row="8" Grid.Column="0" Clicked="OnClick_Cancel"/>
                 <Button Text="Save and Close" BackgroundColor="#27ae60" FontSize="Micro" Grid.Row="8" Grid.Column="1" Clicked="OnClick_UpdateProfileInformation"/>
 

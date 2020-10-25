@@ -18,7 +18,7 @@
                                    ScaleIn="1.2"
                                    ScaleOut="0.8"/>
     </pages:PopupPage.Animation>
-    
+
     <StackLayout
         VerticalOptions="CenterAndExpand"
         HorizontalOptions="CenterAndExpand"
@@ -28,19 +28,13 @@
         BackgroundColor="White"
         Orientation="Vertical">
 
-        <!--Group Name Input-->
+        <!--Add New Subject-->
         <Entry x:Name="SubjectEntry" Text="{Binding NewSubject}" Placeholder="Add Subject" Margin="0,0,0,8"/>
-
-        <!--Buttons-->
         <StackLayout Orientation="Horizontal">
-
-            <!--Cancel Button-->
             <Button Text="Cancel" FontSize="Micro" Margin="0,0,8,0" HorizontalOptions="EndAndExpand" Clicked="OnClick_Cancel" />
-
-            <!--Create Button-->
             <Button Text="Add Previous" BackgroundColor="#bdbdbd" FontSize="Micro" Clicked="OnClick_CreatePrevious" />
-
             <Button Text="Add Current" BackgroundColor="#27ae60" FontSize="Micro" Clicked="OnClick_CreateCurrent" />
         </StackLayout>
+        
     </StackLayout>
 </pages:PopupPage>

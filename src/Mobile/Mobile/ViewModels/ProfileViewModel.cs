@@ -143,8 +143,7 @@ namespace Mobile.ViewModels
                 {
                     UsersPreviousSubjects.Add(subject);
                     Debug.WriteLine(subject);
-                }
-                
+                }            
             }
             catch (Exception ex)
             {
@@ -184,8 +183,7 @@ namespace Mobile.ViewModels
                 {
                     IsBusy = false;
                 }
-            }
-            
+            }            
         }
 
         public void ExecuteAddCurrentSubject(string newSubject)
