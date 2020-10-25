@@ -64,7 +64,7 @@ namespace Mobile.Services
                             Description = assignment.Description,
                             IsArchived = false,
                             CoverColorId = assignment.CoverColor.Id,
-                            CoverPhoto = await _imageConverter.ImageToBytes(assignment.CoverPhoto),
+                            CoverPhotoBytes = await _imageConverter.ImageToBytes(assignment.CoverPhoto),
                             Due = assignment.DateDue
                         };
 
@@ -161,9 +161,7 @@ namespace Mobile.Services
                 var assignments = await dbContext.UserAssignments
                     .Include(ua => ua.Assignment)
                     .ThenInclude(a => a.CoverColor)
-                    .Where(ua =>
-                            ua.UserId == _userStore.CurrentUserId
-                    )
+                    .Where(ua => ua.UserId == _userStore.CurrentUserId)
                     .Select(ua => new Assignment
                     {
                         Id = ua.Assignment.Id,
@@ -178,7 +176,7 @@ namespace Mobile.Services
                             BackgroundColor = ua.Assignment.CoverColor.BackgroundColorFromHex,
                             FontColor = ua.Assignment.CoverColor.FontColorFromHex
                         },
-                        CoverPhoto = _imageConverter.BytesToImage(ua.Assignment.CoverPhoto),
+                        CoverPhotoBytes = ua.Assignment.CoverPhotoBytes,
                         Skills = new List<Skill>()
                     })
                     .ToListAsync();
@@ -192,6 +190,7 @@ namespace Mobile.Services
 
                     var groupAssignments = await dbContext.GroupAssignments
                         .Include(ga => ga.Assignment)
+                        .Include(ga => ga.Group)
                         .Where(ga => groupIds.Contains(ga.GroupId))
                         .Select(ga => new Assignment
                         {
@@ -200,6 +199,7 @@ namespace Mobile.Services
                             Description = ga.Assignment.Description,
                             Notes = ga.Assignment.Notes,
                             DateDue = ga.Assignment.Due,
+                            GroupName = ga.Group.Name,
                             IsArchived = ga.Assignment.IsArchived,
                             CoverColor = new CoverColor
                             {
@@ -207,7 +207,7 @@ namespace Mobile.Services
                                 BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex,
                                 FontColor = ga.Assignment.CoverColor.FontColorFromHex
                             },
-                            CoverPhoto = _imageConverter.BytesToImage(ga.Assignment.CoverPhoto),
+                            CoverPhotoBytes = ga.Assignment.CoverPhotoBytes,
                             Skills = new List<Skill>()
                         })
                         .ToListAsync();
@@ -243,11 +243,15 @@ namespace Mobile.Services
             {
                 var assignments = await dbContext.GroupAssignments
                     .Include(ga => ga.Assignment)
+                    .ThenInclude(a => a.CoverColor)
                     .Where(ga => ga.GroupId == groupId)
                     .Select(ga => new Assignment
                     {
                         Id = ga.Assignment.Id,
                         Title = ga.Assignment.Title,
+                        DateDue = ga.Assignment.Due,
+                        CoverColor = new CoverColor { Id = ga.Assignment.CoverColor.Id, BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex, FontColor = ga.Assignment.CoverColor.FontColorFromHex },
+                        CoverPhotoBytes = ga.Assignment.CoverPhotoBytes
                     })
                     .ToListAsync();
 
@@ -282,7 +286,7 @@ namespace Mobile.Services
                         BackgroundColor = assignment.CoverColor.BackgroundColorFromHex,
                         FontColor = assignment.CoverColor.FontColorFromHex
                     },
-                    CoverPhoto = _imageConverter.BytesToImage(assignment.CoverPhoto),
+                    CoverPhotoBytes = assignment.CoverPhotoBytes,
                     Skills = new List<Skill>()
                 };
             }
@@ -304,7 +308,7 @@ namespace Mobile.Services
                 dbAssignment.Due = assignment.DateDue;
                 dbAssignment.IsArchived = assignment.IsArchived;
                 dbAssignment.CoverColorId = assignment.CoverColor.Id;
-                dbAssignment.CoverPhoto = await _imageConverter.ImageToBytes(assignment.CoverPhoto);
+                dbAssignment.CoverPhotoBytes = assignment.CoverPhotoBytes;
 
                 dbContext.Assignments.Update(dbAssignment);
                 await dbContext.SaveChangesAsync();

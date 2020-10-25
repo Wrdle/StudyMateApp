@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Mobile.Views.HomePage"
              xmlns:vm="clr-namespace:Mobile.ViewModels"
+             xmlns:model="clr-namespace:Mobile.Models"
              Title="{Binding Title}">
 
     <ContentPage.BindingContext>
@@ -13,13 +14,45 @@
         <ToolbarItem IconImageSource="notification_bell.png"/>
 
         <ToolbarItem Text="Help and Feedback" Order="Secondary"/>
-        <ToolbarItem Text="Logout" Order="Secondary"/>
+        <ToolbarItem Text="Logout" Order="Secondary" Command="{Binding LogoutTapped}"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
-                <Frame Margin="20,20,20,20" Padding="20,20,20,20">
+                <!-- Checkpoints next 7 days -->
+                <Frame Margin="20,20,20,5" Padding="20,20,20,20">
+                    <StackLayout>
+                        <Label FontSize="18" FontAttributes="Bold">
+                            Next 7 Days
+                        </Label>
+                        <StackLayout x:Name="Checkpoints7DaysListView" BindableLayout.ItemsSource="{Binding Checkpoints7Days}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="model:Checkpoint">
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Margin="0,5,0,5">
+                                        <Image Source="check.png" Margin="0,0,5,0"></Image>
+                                        <StackLayout HorizontalOptions="FillAndExpand">
+                                            <Label FontSize="Medium" Text="{Binding Title}"></Label>
+                                            <Label FontSize="Caption" Text="{Binding HomePageString}"></Label>
+                                            <BoxView Color="LightGray" HeightRequest="1"></BoxView>
+                                        </StackLayout>
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                            NumberOfTapsRequired="1"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=CheckpointTapped}"		
+                                                            CommandParameter="{Binding .}">
+                                            </TapGestureRecognizer>
+                                        </StackLayout.GestureRecognizers>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+
+                <!-- Next Assignment Due -->
+                <Frame Margin="20,5,20,5" Padding="20,20,20,20">
                     <StackLayout>
                         <Label FontSize="18" FontAttributes="Bold">
                             Next Assignment Due
@@ -48,6 +81,42 @@
                                 </StackLayout>
                             </AbsoluteLayout>
                         </Frame>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Groups -->
+                <Frame Margin="20,5,20,5" Padding="20,20,20,20">
+                    <StackLayout>
+                        <Label FontSize="18" FontAttributes="Bold">
+                            Groups
+                        </Label>
+                        <Grid>
+                            <ScrollView>
+                                <FlexLayout Wrap="Wrap" JustifyContent="Center" x:Name="GroupsFlex" BindableLayout.ItemsSource="{Binding Groups}" HorizontalOptions="FillAndExpand">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="model:GroupListItem">
+                                            <Frame Padding="0,0,0,0" FlexLayout.Basis="50%">
+                                                <AbsoluteLayout BackgroundColor="{Binding CoverColor.BackgroundColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                                    <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
+                                                    <StackLayout Padding="25, 25, 25, 25" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                                                        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Orientation="Vertical">
+                                                            <Label Text="{Binding Name}" TextColor="{Binding CoverColor.FontColor}" FontSize="16" FontAttributes="Bold"></Label>
+                                                        </StackLayout>
+                                                        <StackLayout.GestureRecognizers>
+                                                            <TapGestureRecognizer 
+                                                                 NumberOfTapsRequired="1"
+                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=GroupTapped}"		
+                                                                 CommandParameter="{Binding .}">
+                                                            </TapGestureRecognizer>
+                                                        </StackLayout.GestureRecognizers>
+                                                    </StackLayout>
+                                                </AbsoluteLayout>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </ScrollView>
+                        </Grid>
                     </StackLayout>
                 </Frame>
             </StackLayout>

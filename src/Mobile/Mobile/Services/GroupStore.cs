@@ -5,7 +5,6 @@ using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -21,7 +20,6 @@ namespace Mobile.Services
         //------------------------------
 
         private readonly IUserStore _userStore;
-        private readonly IAssignmentStore _assignmentStore;
         private readonly ImageConverter _imageConverter;
 
         //------------------------------
@@ -31,7 +29,6 @@ namespace Mobile.Services
         public GroupStore()
         {
             _userStore = DependencyService.Get<IUserStore>();
-            _assignmentStore = DependencyService.Get<IAssignmentStore>();
             _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
@@ -60,7 +57,8 @@ namespace Mobile.Services
                         var group = new GroupEntity
                         {
                             Name = name,
-                            CoverPhoto = await _imageConverter.ImageToBytes(null),
+                            DateCreated = DateTime.Now,
+                            CoverPhotoBytes = new byte[] { },
                             CoverColorId = 1,
                             UserGroups = userGroups
                         };
@@ -134,16 +132,13 @@ namespace Mobile.Services
                 var group = await dbContext.Groups
                     .Include(g => g.CoverColor)
                     .SingleOrDefaultAsync(g => g.Id == id);
-
-                var assignments = await _assignmentStore.GetByGroupId(id);
-
                 return new Group
                 {
                     Id = group.Id,
                     Name = group.Name,
-                    CoverPhoto = _imageConverter.BytesToImage(group.CoverPhoto),
-                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex },
-                    Assignments = assignments
+                    DateCreated = group.DateCreated,
+                    CoverPhotoBytes = group.CoverPhotoBytes,
+                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex }
                 };
             }
         }
@@ -165,7 +160,8 @@ namespace Mobile.Services
                     {
                         Id = ug.Group.Id,
                         Name = ug.Group.Name,
-                        CoverPhoto = _imageConverter.BytesToImage(ug.Group.CoverPhoto),
+                        DateCreated = ug.Group.DateCreated,
+                        CoverPhotoBytes = ug.Group.CoverPhotoBytes,
                         CoverColor = new CoverColor { Id = ug.Group.CoverColor.Id, BackgroundColor = ug.Group.CoverColor.BackgroundColorFromHex, FontColor = ug.Group.CoverColor.FontColorFromHex }
                     })
                     .ToListAsync();

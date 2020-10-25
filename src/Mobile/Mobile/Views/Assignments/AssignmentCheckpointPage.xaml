@@ -138,6 +138,7 @@
                                             Value="Italic, Bold" />
                                                     <Setter Property="FontSize"
                                             Value="Medium" />
+                                            
                                                 </DataTrigger>
                                             </Label.Triggers>
                                         </Label>

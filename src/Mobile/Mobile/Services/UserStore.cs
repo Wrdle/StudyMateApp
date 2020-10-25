@@ -12,6 +12,7 @@ using SkillEntity = Mobile.Data.Entites.Skill;
 using UserEntity = Mobile.Data.Entites.User;
 using UserSubjectEntity = Mobile.Data.Entites.UserSubject;
 using UserSkillEntity = Mobile.Data.Entites.UserSkill;
+using Mobile.Views;
 
 namespace Mobile.Services
 {
@@ -82,6 +83,7 @@ namespace Mobile.Services
         public async Task Logout()
         {
             _currentUserId = null;
+            Application.Current.MainPage = new LoginPage();
         }
 
         public async Task CreateAccount(string email, string firstName, string lastName)
@@ -91,7 +93,7 @@ namespace Mobile.Services
                 Email = email.ToUpper(),
                 FirstName = firstName.ToUpper(),
                 LastName = lastName.ToUpper(),
-                ProfilePicture = await _imageConverter.ImageToBytes(null)
+                ProfilePictureBytes = new byte[] { }
             };
 
             using (var dbContext = new AppDbContext())
@@ -143,6 +145,7 @@ namespace Mobile.Services
                     LastName = user.LastName,
                     Institution = user.Institution,
                     Major = user.Major,
+
                     ProfilePicture = user.ProfilePicture != null && user.ProfilePicture.Length > 0 ? _imageConverter.BytesToImage(user.ProfilePicture) : ImageSource.FromFile("user.png"),
                     CurrentSubjects = user.UserSubjects.Where(us => us.IsCurrent).Select(us => us.Subject).ToList(),
                     PreviousSubjects = user.UserSubjects.Where(us => !us.IsCurrent).Select(us => us.Subject).ToList(),
@@ -180,7 +183,7 @@ namespace Mobile.Services
                         savedUser.LastName = user.LastName;
                         savedUser.Institution = user.Institution;
                         savedUser.Major = user.Major;
-                        savedUser.ProfilePicture = await _imageConverter.ImageToBytes(user.ProfilePicture);
+                        savedUser.ProfilePictureBytes = user.ProfilePictureBytes;
                         savedUser.UserSubjects.Clear();
 
                         var currentSubjects = user.CurrentSubjects.Select((cs) => new UserSubjectEntity { Subject = cs, IsCurrent = true });

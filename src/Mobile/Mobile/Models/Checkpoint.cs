@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Mobile.Services.Interfaces;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+using Xamarin.Forms;
 
 namespace Mobile.Models
 {
@@ -51,6 +51,26 @@ namespace Mobile.Models
             get
             {
                 return (DueDate.ToString("ddd d \\o\\f MMMM yyyy"));
+            }
+        }
+
+        public string HomePageString
+        {
+            get
+            {
+                IAssignmentStore AssignmentStore = DependencyService.Get<IAssignmentStore>();
+                var assignment = AssignmentStore.GetById(AssignmentId).Result;
+
+                var assignmentTitle = assignment.Title;
+                var groupName = assignment.GroupName;
+
+                var day = Date.DayOfWeek.ToString();
+
+                if (groupName != null)
+                {
+                    return assignmentTitle + " - " + groupName + " - " + day;
+                }
+                return assignmentTitle + " - " + day;
             }
         }
 

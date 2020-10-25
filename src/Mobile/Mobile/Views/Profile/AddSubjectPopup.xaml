@@ -3,7 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                  xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
                  xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"           
-                 x:Class="Mobile.Views.Profile.AddSkillPopup"
+                 x:Class="Mobile.Views.Profile.AddSubjectPopup"
                  xmlns:model="clr-namespace:Mobile.Models"
                  xmlns:vm="clr-namespace:Mobile.ViewModels">
 
@@ -28,11 +28,12 @@
         BackgroundColor="White"
         Orientation="Vertical">
 
-        <!--Add New Skill-->
-        <Entry x:Name="SkillEntry" Text="{Binding NewSkillName}" Placeholder="Add Skill" Margin="0,0,0,8"/>
+        <!--Add New Subject-->
+        <Entry x:Name="SubjectEntry" Text="{Binding NewSubject}" Placeholder="Add Subject" Margin="0,0,0,8"/>
         <StackLayout Orientation="Horizontal">
             <Button Text="Cancel" FontSize="Micro" Margin="0,0,8,0" HorizontalOptions="EndAndExpand" Clicked="OnClick_Cancel" />
-            <Button Text="Add Skill" BackgroundColor="#56CCF2" FontSize="Micro"  Clicked="OnClick_Create" />
+            <Button Text="Add Previous" BackgroundColor="#bdbdbd" FontSize="Micro" Clicked="OnClick_CreatePrevious" />
+            <Button Text="Add Current" BackgroundColor="#27ae60" FontSize="Micro" Clicked="OnClick_CreateCurrent" />
         </StackLayout>
         
     </StackLayout>

@@ -1,4 +1,5 @@
 ﻿using Mobile.Models;
+using Mobile.ViewModels.Assignments;
 using System;
 using System.Diagnostics;
 using Xamarin.Forms;
@@ -8,10 +9,17 @@ namespace Mobile.ViewModels.Groups
     [QueryProperty(nameof(inputGroupID), nameof(GroupID))]
     public class GroupViewModel : BaseViewModel
     {
+        public Command<Assignment> AssignmentTapped { get; }
+        public Command AddAssignmentCommand { get; }
+        public Command InfoTappedCommand { get; }
+
         public GroupViewModel()
         {
             Title = "Group";
             Debug.WriteLine("We made it to the group page");
+            AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
+            AddAssignmentCommand = new Command(OnAddAssignmentTapped);
+            InfoTappedCommand = new Command(OnInfoTappedCommand);
         }
 
         // =============================
@@ -92,6 +100,29 @@ namespace Mobile.ViewModels.Groups
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Runs when assignment selected, navigating to assignment page of given assignment
+        /// </summary>
+        /// <param name="assignment">Assignment to navigate to</param>
+        async void OnAssignmentSelected(Assignment assignment)
+        {
+            if (assignment == null)
+                return;
+
+            // This will push the ItemDetailPage onto the navigation stack
+            await Shell.Current.GoToAsync($"assignments/assignment?{nameof(AssignmentViewModel.AssignmentID)}={assignment.Id}");
+        }
+
+        async void OnAddAssignmentTapped()
+        {
+            await Shell.Current.GoToAsync($"assignments/addAssignment?{nameof(AddAssignmentViewModel.GroupID)}={Group.Id}");
+        }
+
+        async void OnInfoTappedCommand()
+        {
+            await Shell.Current.GoToAsync($"groups/groupInfo?{nameof(GroupInfoViewModel.GroupId)}={Group.Id}");
         }
     }
 }

@@ -19,5 +19,11 @@ namespace Mobile.Views
             InitializeComponent();
             BindingContext = _viewModel = new HomeViewModel();
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _viewModel.OnAppearing();
+        }
     }
 }

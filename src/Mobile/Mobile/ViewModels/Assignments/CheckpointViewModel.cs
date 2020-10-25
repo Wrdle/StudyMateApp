@@ -1,8 +1,13 @@
-﻿using Mobile.Models;
+
+using Mobile.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Xamarin.Forms;
+using Mobile.ViewModels.Assignments;
+using System.Diagnostics;
+using Mobile.Models;
+using System.Threading.Tasks;
 
 namespace Mobile.ViewModels.Assignments
 {
@@ -12,12 +17,14 @@ namespace Mobile.ViewModels.Assignments
     {
 
         private Checkpoint checkpoint;
+
         private ObservableCollection<CheckpointUserListItem> assignedUsers;
         private ObservableCollection<ChecklistItem> checklist;
 
         public Checkpoint Checkpoint
         {
             get => checkpoint;
+
             set
             {
                 SetProperty(ref checkpoint, value);

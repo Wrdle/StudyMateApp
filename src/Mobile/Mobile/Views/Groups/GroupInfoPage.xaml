@@ -1,13 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Mobile.Views.Groups.GroupInfoPage">
+             x:Class="Mobile.Views.Groups.GroupInfoPage"
+             Title="{Binding Title}">
+
+    <!-- Content -->
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
-                <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <StackLayout VerticalOptions="Fill" Orientation="Vertical">
+
+                <!-- Cover Photo -->
+                <Frame Padding="0" Margin="20" HeightRequest="200" BackgroundColor="{Binding Group.CoverColor.BackgroundColor}">
+                    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Image AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill" Source="{Binding Group.CoverPhoto}" IsVisible="{Binding HasCoverPhoto}" />
+                        <Label Text="Change Cover" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"></Label>
+                    </AbsoluteLayout>
+                </Frame>
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

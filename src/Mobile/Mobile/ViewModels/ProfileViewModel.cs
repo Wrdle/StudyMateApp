@@ -1,142 +1,281 @@
-﻿using Mobile.Data.Entites;
-using Mobile.Models;
-using MvvmHelpers.Commands;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Mobile.Views.Profile;
+
+// Helpers
+using static Mobile.Helpers.Helpers;
+
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore.Query;
+using Acr.UserDialogs;
+using Mobile.Data;
+using Mobile.Services.Interfaces;
+using Xamarin.Forms;
 
 namespace Mobile.ViewModels
 {
-    class ProfileViewModel : BaseViewModel
+    public class ProfileViewModel : BaseViewModel
     {
-        public ObservableCollection<Models.Skill> ProfileSkills { get; }
+        public ObservableCollection<string> UsersCurrentSkills { get; set; }
+        public ObservableCollection<string> UsersCurrentSubjects { get; set; }
+        public ObservableCollection<string> UsersPreviousSubjects { get; set; }
+        public Command LoadUserProfileCommand { get; }
 
-        public ObservableCollection<Models.Subject> CurrentSubjects { get; }
-        public ObservableCollection<Models.Subject> PastSubjects { get; }
-
-        public Command LoadProfileSkillsCommand { get; }
-
-        public Command LoadSubjectsCommand { get; }
-
-      
+        public Command EditProfilePictureCommand { get; }
 
         public ProfileViewModel()
         {
             Title = "Profile";
-
-            ProfileSkills = new ObservableCollection<Models.Skill>();
-            CurrentSubjects = new ObservableCollection<Models.Subject>();
-            PastSubjects = new ObservableCollection<Models.Subject>();
-
-            LoadProfileSkillsCommand = new Command(async () => await ExecuteLoadProfileSkillsCommand());
-            LoadSubjectsCommand = new Command(async () => await ExecuteLoadSubjectsCommand());
+            UsersCurrentSkills = new ObservableCollection<string>();
+            UsersCurrentSubjects = new ObservableCollection<string>();
+            UsersPreviousSubjects = new ObservableCollection<string>();
+            LoadUserProfileCommand = new Command(() => ExecuteLoadUserProfile());
+            EditProfilePictureCommand = new Command(() => ExecuteEditProfilePictureCommand());
         }
 
-        
-        
-        string name = "Felix";
-
-        public String Name
+        string firstName;
+        public string FirstName
         {
-            get => name;
+            get => firstName;
+        }
+
+        string lastName;
+        public string LastName
+        {
+            get => lastName;
+        }
+
+        string institution;
+        public string Institution
+        {
+            get => institution;
+        }
+
+        string major;
+        public string Major
+        {
+            get => major;
+        }
+
+        string email;
+        public string Email
+        {
+            get => email;
+        }
+
+        ImageSource profilePicture = null;
+        public ImageSource ProfilePicture
+        {
+            get => LoggedInUser.ProfilePicture;
             set
             {
-                SetProperty(ref name, value);
-                OnPropertyChanged(nameof(Name));
-                OnPropertyChanged(nameof(DisplayName));
-            }
+            }        
         }
 
-        public string DisplayName => $"Name: {Name}";
-
-        string university = "QUT";
-
-        public String University
+        async void ExecuteEditProfilePictureCommand()
         {
-            get => university;
-            set
+            var selectedPhoto = await RunImagePicker();
+            if (selectedPhoto != null)
             {
-                SetProperty(ref name, value);
-                OnPropertyChanged(nameof(University));
-                OnPropertyChanged(nameof(DisplayUniversity));
+                LoggedInUser.ProfilePicture = selectedPhoto;
+                SetProperty(ref profilePicture, selectedPhoto);
+                OnPropertyChanged(nameof(ProfilePicture));
             }
         }
 
-        public string DisplayUniversity => $"University: {University}";
+        public string DisplayUsername => $"Name: {FirstName}" + " " + $"{LastName}";
+        public string DisplayInstitution => $"Institution : {Institution}";
+        public string DisplayMajor => $"Major: {Major}";
+        public string DisplayEmail => $"Email: {Email}";
 
-        string skillsTitle = "Skills";
-
-        public string SkillsTitle => $"{skillsTitle}";
-
-        async Task ExecuteLoadProfileSkillsCommand()
-        {
-            IsBusy = true;
-
-            try
-            {
-                ProfileSkills.Clear();
-                //var skills = await SkillsStore.GetAllSkillsByUserAsync(1);
-                var skills = new List<Mobile.Models.Skill>();
-                foreach (var skill in skills)
-                {
-                    
-                    ProfileSkills.Add(skill);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
-        async Task ExecuteLoadSubjectsCommand()
-        {
-            IsBusy = true;
-
-            try
-            {
-                CurrentSubjects.Clear();
-                PastSubjects.Clear();
-                //var subjects = await SubjectStore.GetAllSubjectsByUserAsync(1);
-                var subjects = new List<Subject>();
-                foreach (var subject in subjects)
-                {
-                    if (subject.Current)
-                    {
-                        CurrentSubjects.Add(subject);
-                    }
-                    else
-                    {
-                        PastSubjects.Add(subject);
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-       
         public void OnAppearing()
         {
-            IsBusy = true;
-            
+            IsBusy = true;           
         }
 
-        
-    }  
+        public void ExecuteLoadUserProfile()
+        {
+            IsBusy = true;
+            try
+            {
+                var userFirstName = LoggedInUser.FirstName;
+                var userLastName = LoggedInUser.LastName;
+                var userInstitution = LoggedInUser.Institution;
+                var userMajor = LoggedInUser.Major;
+                var userEmail = LoggedInUser.Email;
+
+                SetProperty(ref firstName, userFirstName);
+                SetProperty(ref lastName, userLastName);
+                SetProperty(ref institution, userInstitution);
+                SetProperty(ref major, userMajor);
+                SetProperty(ref email, userEmail);
+
+                OnPropertyChanged(nameof(FirstName));
+                OnPropertyChanged(nameof(LastName));
+                OnPropertyChanged(nameof(Institution));
+                OnPropertyChanged(nameof(Major));
+                OnPropertyChanged(nameof(Email));
+                OnPropertyChanged(nameof(DisplayInstitution));
+                OnPropertyChanged(nameof(DisplayUsername));
+                OnPropertyChanged(nameof(DisplayEmail));
+                OnPropertyChanged(nameof(DisplayMajor));
+
+                UsersCurrentSkills.Clear();
+                var skills = LoggedInUser.Skills;
+                foreach (var skill in skills)
+                {
+                    UsersCurrentSkills.Add(skill);
+                    Debug.WriteLine(skill);
+                }
+                OnPropertyChanged(nameof(UsersCurrentSkills));
+
+                UsersCurrentSubjects.Clear();
+                UsersPreviousSubjects.Clear();
+                var cSubjects = LoggedInUser.CurrentSubjects;
+                var pSubjects = LoggedInUser.PreviousSubjects;
+                foreach (var subject in cSubjects)
+                {
+                    UsersCurrentSubjects.Add(subject);
+                    Debug.WriteLine(subject);
+                }
+                foreach (var subject in pSubjects)
+                {
+                    UsersPreviousSubjects.Add(subject);
+                    Debug.WriteLine(subject);
+                }            
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public void ExecuteAddNewSkillAsync(string newSkill)
+        {
+            if (newSkill == null)
+            {
+                return;
+            }
+            else
+            {
+                LoggedInUser.Skills.Add(newSkill);
+                IsBusy = true;
+                try
+                {
+                    UsersCurrentSkills.Clear();
+                    var skills = LoggedInUser.Skills;
+                    foreach (var skill in skills)
+                    {
+                        UsersCurrentSkills.Add(skill);
+                        Debug.WriteLine(skill);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }            
+        }
+
+        public void ExecuteAddCurrentSubject(string newSubject)
+        {
+            if (newSubject == null)
+            {
+                return;
+            }
+            else
+            {
+                LoggedInUser.CurrentSubjects.Add(newSubject);
+                IsBusy = true;
+                try
+                {
+                    UsersCurrentSubjects.Clear();
+                    var subjects = LoggedInUser.CurrentSubjects;
+                    foreach (var subject in subjects)
+                    {
+                        UsersCurrentSubjects.Add(subject);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }          
+        }
+
+        public void ExecuteAddPreviousSubject(string newSubject)
+        {
+            if (newSubject == null)
+            {
+                return;
+            }
+            else
+            {
+                LoggedInUser.PreviousSubjects.Add(newSubject);
+                IsBusy = true;
+                try
+                {
+                    UsersPreviousSubjects.Clear();
+                    var subjects = LoggedInUser.PreviousSubjects;
+                    foreach (var subject in subjects)
+                    {
+                        UsersPreviousSubjects.Add(subject);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }      
+        }
+
+        public void ExecuteUpdateFirstName(string newFirstName)
+        {
+            LoggedInUser.FirstName = newFirstName;
+            SetProperty(ref firstName, LoggedInUser.FirstName);
+            OnPropertyChanged(nameof(FirstName));
+            OnPropertyChanged(nameof(DisplayUsername));
+        }
+
+        public void ExecuteUpdateLastName(string newLastName)
+        {
+            LoggedInUser.LastName = newLastName;
+            SetProperty(ref lastName, LoggedInUser.LastName);
+            OnPropertyChanged(nameof(LastName));
+            OnPropertyChanged(nameof(DisplayUsername));
+        }
+
+        public void ExecuteUpdateInstitution(string newInstitution)
+        {
+            LoggedInUser.Institution = newInstitution;
+            SetProperty(ref lastName, LoggedInUser.Institution);
+            OnPropertyChanged(nameof(Institution));
+            OnPropertyChanged(nameof(DisplayInstitution));
+        }
+
+        public void ExecuteUpdateMajor(string newMajor)
+        {
+            LoggedInUser.Major = newMajor;
+            SetProperty(ref lastName, LoggedInUser.Major);
+            OnPropertyChanged(nameof(Major));
+            OnPropertyChanged(nameof(DisplayMajor));
+        }
+    }
 }

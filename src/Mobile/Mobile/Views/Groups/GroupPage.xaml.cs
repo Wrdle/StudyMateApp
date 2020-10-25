@@ -15,5 +15,11 @@ namespace Mobile.Views.Groups
             InitializeComponent();
             BindingContext = _viewModel = new GroupViewModel();
         }
+
+        protected override void OnAppearing()
+        {
+            _viewModel.LoadGroupId(_viewModel.GroupID);
+            base.OnAppearing();
+        }
     }
 }

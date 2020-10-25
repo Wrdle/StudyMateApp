@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Mobile.ViewModels"
+             xmlns:local="clr-namespace:Mobile.ViewModels.Groups"
              xmlns:model="clr-namespace:Mobile.Models"
              x:Class="Mobile.Views.Groups.GroupPage"
              Title="{Binding Title}">
 
     <!--Toolbar-->
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Info"></ToolbarItem>
+        <ToolbarItem IconImageSource="add.png" Command="{Binding AddAssignmentCommand}"></ToolbarItem>
+        <ToolbarItem IconImageSource="tab_about.png" Command="{Binding InfoTappedCommand}"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <!--Content-->
@@ -37,14 +38,14 @@
                                             LineBreakMode="NoWrap" 
                                             Style="{DynamicResource ListItemTextStyle}" 
                                             FontSize="16" TextColor="{Binding CoverColor.FontColor}"/>
-                                                <Label Text="{Binding Description}" 
+                                                <Label Text="{Binding DateDueMonthDay}" 
                                             LineBreakMode="NoWrap"
                                             Style="{DynamicResource ListItemDetailTextStyle}"
                                             FontSize="13" TextColor="{Binding CoverColor.FontColor}"/>
                                                 <StackLayout.GestureRecognizers>
                                                     <TapGestureRecognizer 
                                                 NumberOfTapsRequired="1"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AssignmentsViewModel}}, Path=AssignmentTapped}"		
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:GroupViewModel}}, Path=AssignmentTapped}"		
                                                 CommandParameter="{Binding .}">
                                                     </TapGestureRecognizer>
                                                 </StackLayout.GestureRecognizers>
@@ -56,7 +57,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
