@@ -22,6 +22,8 @@ namespace Mobile.ViewModels
         public ObservableCollection<string> UsersPreviousSubjects { get; set; }
         public Command LoadUserProfileCommand { get; }
 
+        public Command EditProfilePictureCommand { get; }
+
         public ProfileViewModel()
         {
             Title = "Profile";
@@ -29,6 +31,7 @@ namespace Mobile.ViewModels
             UsersCurrentSubjects = new ObservableCollection<string>();
             UsersPreviousSubjects = new ObservableCollection<string>();
             LoadUserProfileCommand = new Command(() => ExecuteLoadUserProfile());
+            EditProfilePictureCommand = new Command(() => ExecuteEditProfilePictureCommand());
         }
 
         string firstName;
@@ -61,9 +64,24 @@ namespace Mobile.ViewModels
             get => email;
         }
 
+        ImageSource profilePicture = null;
         public ImageSource ProfilePicture
         {
             get => LoggedInUser.ProfilePicture;
+            set
+            {
+            }        
+        }
+
+        async void ExecuteEditProfilePictureCommand()
+        {
+            var selectedPhoto = await RunImagePicker();
+            if (selectedPhoto != null)
+            {
+                LoggedInUser.ProfilePicture = selectedPhoto;
+                SetProperty(ref profilePicture, selectedPhoto);
+                OnPropertyChanged(nameof(ProfilePicture));
+            }
         }
 
         public string DisplayUsername => $"Name: {FirstName}" + " " + $"{LastName}";

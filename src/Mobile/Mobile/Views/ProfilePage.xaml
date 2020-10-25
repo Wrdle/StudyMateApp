@@ -14,7 +14,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="" Text="Edit"/>
         <ToolbarItem Text="Edit Profile" Order="Secondary" Clicked="EditProfilePopupCommandAsync"></ToolbarItem>
-        <ToolbarItem Text="Edit Profile Picture" Order="Secondary"></ToolbarItem>
+        <ToolbarItem Text="Edit Profile Picture" Order="Secondary" Command="{Binding EditProfilePictureCommand}"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ScrollView>
