@@ -10,9 +10,10 @@
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">
 
                 <!-- Cover Photo -->
-                <Frame Padding="0" Margin="0" HeightRequest="200" BackgroundColor="{Binding Group.CoverColor.BackgroundColor}">
+                <Frame Padding="0" Margin="20" HeightRequest="200" BackgroundColor="{Binding Group.CoverColor.BackgroundColor}">
                     <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <Image AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill" Source="{Binding Group.CoverPhoto}" IsVisible="{Binding HasCoverPhoto}" />
+                        <Label Text="Change Cover" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"></Label>
                     </AbsoluteLayout>
                 </Frame>
 
