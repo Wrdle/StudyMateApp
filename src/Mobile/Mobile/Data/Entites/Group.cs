@@ -8,7 +8,7 @@ namespace Mobile.Data.Entites
         public long Id { get; set; }
         public string Name { get; set; }
         public DateTime DateCreated { get; set; }
-        public byte[] CoverPhoto { get; set; }
+        public byte[] CoverPhotoBytes { get; set; }
         public int CoverColorId { get; set; }
 
         // Referenced Entities
