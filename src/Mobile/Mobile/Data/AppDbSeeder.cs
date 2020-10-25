@@ -34,6 +34,18 @@ namespace Mobile.Data
             }
         };
 
+        public static User TestUser2 = new User
+        {
+            Email = "test-user2@studymate.com",
+            FirstName = "Test 2",
+            LastName = "User 2",
+            UserSubjects = new List<UserSubject>
+            {
+                new UserSubject { Subject = "Swag420", IsCurrent = true },
+                new UserSubject { Subject = "HowToBuyAPorshe", IsCurrent = false }
+            }
+        };
+
         //------------------------------
         //          Constructors
         //------------------------------
@@ -79,10 +91,11 @@ namespace Mobile.Data
                 // USER
                 TestUser.Email = TestUser.Email.ToUpper();
                 await dbContext.Users.AddAsync(TestUser);
+                await dbContext.Users.AddAsync(TestUser2);
                 await dbContext.SaveChangesAsync();
 
                 // GROUP
-                var group = new Group
+                var group1 = new Group
                 {
                     Name = "Test Group",
                     DateCreated = DateTime.Now,
@@ -94,7 +107,49 @@ namespace Mobile.Data
                     }
                 };
 
-                await dbContext.Groups.AddAsync(group);
+                // GROUP
+                var group2 = new Group
+                {
+                    Name = "CAB202 Group",
+                    DateCreated = DateTime.Now,
+                    CoverPhotoBytes = EncodedImages.Image3,
+                    CoverColorId = 5,
+                    UserGroups = new List<UserGroup>
+                    {
+                        new UserGroup { UserId = TestUser.Id }
+                    }
+                };
+
+                // GROUP
+                var group3 = new Group
+                {
+                    Name = "CAB303",
+                    DateCreated = DateTime.Now,
+                    CoverPhotoBytes = new byte[] { },
+                    CoverColorId = 5,
+                    UserGroups = new List<UserGroup>
+                    {
+                        new UserGroup { UserId = TestUser.Id }
+                    }
+                };
+
+                // GROUP
+                var group4 = new Group
+                {
+                    Name = "My Group",
+                    DateCreated = DateTime.Now,
+                    CoverPhotoBytes = EncodedImages.Image4,
+                    CoverColorId = 5,
+                    UserGroups = new List<UserGroup>
+                    {
+                        new UserGroup { UserId = TestUser.Id }
+                    }
+                };
+
+                await dbContext.Groups.AddAsync(group1);
+                await dbContext.Groups.AddAsync(group2);
+                await dbContext.Groups.AddAsync(group3);
+                await dbContext.Groups.AddAsync(group4);
                 await dbContext.SaveChangesAsync();
 
                 // USER ASSIGNMENT
@@ -122,7 +177,7 @@ namespace Mobile.Data
                     CoverColorId = 8,
                     GroupAssignments = new List<GroupAssignment>
                     {
-                        new GroupAssignment { GroupId = group.Id }
+                        new GroupAssignment { GroupId = group1.Id }
                     }
                 };
                 await dbContext.Assignments.AddAsync(groupAssignment);
@@ -151,7 +206,8 @@ namespace Mobile.Data
                     DateDue = DateTime.Now.AddDays(3),
                     Assignment = assignment,
                     UserCheckpoints = new List<UserCheckpoint> {
-                        new UserCheckpoint { UserId = TestUser.Id }
+                        new UserCheckpoint { UserId = TestUser.Id },
+                        new UserCheckpoint { UserId = TestUser2.Id }
                     }
                 };
                 await dbContext.Checkpoints.AddAsync(checkpoint2);

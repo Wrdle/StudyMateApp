@@ -1,5 +1,6 @@
 ﻿using Mobile.Models;
 using Mobile.ViewModels.Assignments;
+using Mobile.ViewModels.Groups;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,10 +20,12 @@ namespace Mobile.ViewModels
         // Commands
         public Command<Assignment> AssignmentTapped { get; }
         public Command LogoutTapped { get; }
+        public Command<Checkpoint> CheckpointTapped { get; }
+        public Command<GroupListItem> GroupTapped { get; }
 
         // Collections
-        public ObservableCollection<Checkpoint> Checkpoints7Days;
-        public ObservableCollection<GroupListItem> Groups;
+        public ObservableCollection<Checkpoint> Checkpoints7Days { get; set; }
+        public ObservableCollection<GroupListItem> Groups { get; set; }
 
         // Other
         private Assignment _assignment;
@@ -42,6 +45,8 @@ namespace Mobile.ViewModels
 
             AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
             LogoutTapped = new Command(OnLogoutSelected);
+            CheckpointTapped = new Command<Checkpoint>(OnCheckpointSelected);
+            GroupTapped = new Command<GroupListItem>(OnGroupSelected);
         }
 
         //------------------------------
@@ -51,6 +56,15 @@ namespace Mobile.ViewModels
         public void OnAppearing()
         {
             LoadData();
+        }
+
+        async void OnGroupSelected(GroupListItem selected)
+        {
+            if (selected == null)
+                return;
+
+            // This will push the ItemDetailPage onto the navigation stack
+            await Shell.Current.GoToAsync($"groups/group?{nameof(GroupViewModel.GroupID)}={selected.Id}");
         }
 
         async void OnAssignmentSelected(Assignment selected)
@@ -65,6 +79,16 @@ namespace Mobile.ViewModels
         async void OnLogoutSelected()
         {
             await UserStore.Logout();
+
+        }
+        
+        async void OnCheckpointSelected(Checkpoint selected)
+        {
+            if (selected == null)
+                return;
+
+            // This will push the ItemDetailPage onto the navigation stack
+            await Shell.Current.GoToAsync($"assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={selected.Id}");
         }
 
         public void LoadData()
@@ -72,6 +96,10 @@ namespace Mobile.ViewModels
             Assignment = LoadNextAssignment();
             Checkpoints7Days = LoadCheckpointsNext7Days();
             Groups = Load4Groups();
+
+            OnPropertyChanged(nameof(Assignment));
+            OnPropertyChanged(nameof(Checkpoints7Days));
+            OnPropertyChanged(nameof(Groups));
         }
 
         public ObservableCollection<Checkpoint> LoadCheckpointsNext7Days()
@@ -95,11 +123,11 @@ namespace Mobile.ViewModels
         {
             var groups = GroupStore.MyGroups().Result.ToList();
 
-            // Ensure no more than 4 checkpoints is returned
-            /*if (groups.Count > 4)
+            // Ensure no more than 4 groups is returned
+            if (groups.Count > 4)
             {
                 groups = groups.GetRange(0, 4);
-            }*/
+            }
 
            return ConvertListToObservableCollection(groups);
         }

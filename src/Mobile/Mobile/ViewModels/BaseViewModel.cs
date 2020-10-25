@@ -68,8 +68,6 @@ namespace Mobile.ViewModels
 
                 if (status == PermissionStatus.Granted)
                 {
-                    ImageSource CoverPhoto = null;
-
                     await CrossMedia.Current.Initialize();
 
                     if (CrossMedia.Current.IsPickPhotoSupported)
