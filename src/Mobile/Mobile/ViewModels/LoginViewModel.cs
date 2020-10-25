@@ -74,7 +74,6 @@ namespace Mobile.ViewModels
                     {
                         await UserStore.Login(Email, Password);
                         Application.Current.MainPage = new AppShell();
-                        await Shell.Current.GoToAsync("home");
                     }
                     catch (Exception)
                     {
