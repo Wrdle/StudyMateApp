@@ -114,7 +114,7 @@ namespace Mobile.ViewModels.Assignments
 
         public bool ShowCoverPhoto
         {
-            get => Assignment.CoverPhoto != null;
+            get => Assignment.CoverPhoto != null && Assignment.CoverPhotoBytes.Length > 0;
         }
 
         public CoverColor AssignmentCoverColor
@@ -152,16 +152,6 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        public bool ShowRemoveImageButton
-        {
-            get
-            {
-                if (AssignmentCoverPhoto == null)
-                    return false;
-                return true;
-            }
-        }
-
         public AssignmentSettingsViewModel()
         {
             //Assignment = placeholder;
@@ -191,7 +181,7 @@ namespace Mobile.ViewModels.Assignments
             if (selectedPhoto != null)
             {
                 AssignmentCoverPhoto = selectedPhoto;
-                OnPropertyChanged(nameof(ShowRemoveImageButton));
+                OnPropertyChanged(nameof(ShowCoverPhoto));
             }
         }
 
@@ -231,7 +221,6 @@ namespace Mobile.ViewModels.Assignments
                 OnPropertyChanged(nameof(AssignmentIsArchived));
 
                 OnPropertyChanged(nameof(ArchiveButtonText));
-                OnPropertyChanged(nameof(ShowRemoveImageButton));
                 OnPropertyChanged(nameof(ShowCoverPhoto));
             }
             catch (Exception)

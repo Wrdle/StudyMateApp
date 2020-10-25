@@ -52,7 +52,7 @@
                     <StackLayout>
                         <Label Text="Cover Photo" FontSize="Medium" FontAttributes="Bold"></Label>
                         <Button CornerRadius="9" Text="Pick Cover Photo" Command="{Binding PickImageCommand}" HorizontalOptions="FillAndExpand"></Button>
-                        <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
+                        <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowCoverPhoto}" BackgroundColor="#EB5757"></Button>
                     </StackLayout>
                 </Frame>
 
