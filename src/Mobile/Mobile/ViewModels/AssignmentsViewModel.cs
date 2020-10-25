@@ -93,6 +93,7 @@ namespace Mobile.ViewModels
         {
             IsBusy = true;
             SelectedAssignment = null;
+            ExecuteLoadAssignmentsCommand();
         }
 
         /// <summary>
@@ -109,6 +110,7 @@ namespace Mobile.ViewModels
                 Assignments.Clear();
                 AssignmentsWithoutArchived.Clear();
                 AssignmentsWithArchived.Clear();
+                showArchived = false;
 
                 // Get data from db
                 var assignmentsWithoutArchived = await AssignmentStore.GetByUserIdAsync(userId: LoggedInUser.Id, includeGroupAssignments: true);
@@ -121,6 +123,8 @@ namespace Mobile.ViewModels
                 AssignmentsWithArchived = ConvertListToObservableCollection<Assignment>(RemoveNotArchived(assignmentsWithArchived.ToList()));
 
                 OnPropertyChanged(nameof(Assignments));
+                OnPropertyChanged(nameof(AssignmentsHeading));
+                OnPropertyChanged(nameof(ShowArchivedButtonText));
             }
             catch (Exception ex)
             {

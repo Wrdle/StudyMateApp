@@ -87,50 +87,11 @@ namespace Mobile.ViewModels.Assignments
         /// </summary>
         private async void OnPickImageTapped()
         {
-            try
-            {
-                PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync<MediaLibraryPermission>();
-                if (status != PermissionStatus.Granted)
-                {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.MediaLibrary))
-                    {
-                        Acr.UserDialogs.UserDialogs.Instance.Alert("Need media library", "Please grand media library access in order to add a coverphoto.", "OK");
-                    }
-
-                    status = await CrossPermissions.Current.RequestPermissionAsync<MediaLibraryPermission>();
-                }
-
-                if (status == PermissionStatus.Granted)
-                {
-                    CoverPhoto = null;
-
-                    await CrossMedia.Current.Initialize();
-
-                    if (CrossMedia.Current.IsPickPhotoSupported)
-                    {
-                        MediaFile mediaFileCoverPhoto = await CrossMedia.Current.PickPhotoAsync();
-
-                        if (mediaFileCoverPhoto != null)
-                        {
-                            CoverPhoto = ImageSource.FromStream(() =>
-                            {
-                                return mediaFileCoverPhoto.GetStream();
-                            });
-                        }
-                    }
-                }
-                else if (status != PermissionStatus.Unknown)
-                {
-                    Acr.UserDialogs.UserDialogs.Instance.Alert("Please allow media access to add a coverphoto.", "Allow Permissions");
-                }
-            }
-            catch
-            {
-
-                Acr.UserDialogs.UserDialogs.Instance.Alert("Something went wrong adding your cover photo", "Error");
-            }
+            var selectedPhoto = await RunImagePicker();
+            if (selectedPhoto != null)
+                CoverPhoto = selectedPhoto;
         }
-
+           
 
         private bool showRemoveImageButton;
         public bool ShowRemoveImageButton
