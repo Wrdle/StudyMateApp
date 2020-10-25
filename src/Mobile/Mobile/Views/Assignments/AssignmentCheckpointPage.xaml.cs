@@ -15,12 +15,14 @@ namespace Mobile.Views.Assignments
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AssignmentCheckpointPage : ContentPage
     {
-        private CheckpointViewModel bindingContext = new CheckpointViewModel();
+        private CheckpointViewModel _viewModel;
+        //private AddAssignUserViewModel bindingContext2 = new AddAssignUserViewModel();
+
         public AssignmentCheckpointPage()
         {
             InitializeComponent();
             // Binding the title dased on the checkpointID
-            BindingContext = bindingContext;
+            BindingContext = _viewModel = new CheckpointViewModel();
         }
 
 
@@ -30,5 +32,17 @@ namespace Mobile.Views.Assignments
             await PopupNavigation.Instance.PushAsync(new AddTask((CheckpointViewModel)BindingContext));
 
         }
+
+        // Assign checkpoin to member
+        async void Button_Clicked(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.PushAsync(new AddAssignUser(_viewModel));
+
+        }
+
+        //async void AddMemberPopup(object sender, EventArgs e)
+        //{
+        //    await PopupNavigation.Instance.PushAsync(new AssignUser((CheckpointViewModel)BindingContext));
+        //}
     }
 }

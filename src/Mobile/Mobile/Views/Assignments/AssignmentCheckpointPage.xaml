@@ -10,154 +10,162 @@
         <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
-    <ScrollView>
-        <StackLayout VerticalOptions="Fill" Orientation="Vertical" HorizontalOptions="Start">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout VerticalOptions="Fill" Orientation="Vertical">
 
-            <!-- Due Day -->
-            <Frame CornerRadius="2" HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
-                <FlexLayout Wrap="Wrap">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="230" />
-                        </Grid.ColumnDefinitions>
-                        <Label
-                            Padding="7"
-                            Grid.Column="0"
-                            Text="Due: "
-                            TextColor="Black"
-                            FontSize="Medium"
-                            FontAttributes="Bold"
-                        />
-                        <Button
-                            Grid.Column="1"
-                            Text="{ Binding Checkpoint.DueDateString }"
-                            FontSize="Small"
-                            FontAttributes="Bold"
-                            TextColor="White"
-                            BackgroundColor="#7a7e80"
-                            CornerRadius="180"
-                            WidthRequest="230"
-                        />
-                    </Grid>
-                </FlexLayout>
-            </Frame>
+                <!-- Due Day -->
+                <Frame CornerRadius="2" HasShadow="True" Margin="30,20,30,5" IsTabStop="False">
+                    <FlexLayout Wrap="Wrap">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="230"/>
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Padding="7"
+                                Grid.Column="0"
+                                Text="Due: "
+                                TextColor="Black"
+                                FontSize="Medium"
+                                FontAttributes="Bold"/>
+                            <Button
+                                Grid.Column="1"
+                                Text="{ Binding Checkpoint.DueDateString }"
+                                FontSize="Small"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                BackgroundColor="#7a7e80"
+                                CornerRadius="180"
+                                WidthRequest="230"/>
+                        </Grid>
+                    </FlexLayout>
+                </Frame>
 
-            <!-- Note/Descrition board -->
-            <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
-                <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                    <StackLayout>
-                        <Label
-                            HorizontalTextAlignment="Start"
-                            FontSize="16"
-                            FontAttributes="Bold"
-                            Text="Description: "
-                            TextColor="Black" />
-                        <Editor
-                            Placeholder="Add a description here"
-                            Text="{Binding CheckpointNotes, Mode=TwoWay}"
-                            AutoSize="TextChanges" MaxLength="110" Keyboard="Text" />
-                    </StackLayout>
-                </AbsoluteLayout>
-            </Frame>
+                <!-- Note/Descrition board -->
+                <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
+                    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout>
+                            <Label
+                                HorizontalTextAlignment="Start"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                Text="Description: "
+                                TextColor="Black"
+                                />
+                            <Editor
+                                Placeholder="Add a description here"
+                                Text="{Binding CheckpointNotes, Mode=TwoWay}"
+                                AutoSize="TextChanges" MaxLength="110" Keyboard="Text"
+                                />
+                        </StackLayout>
+                    </AbsoluteLayout>
+                </Frame>
 
-            <!-- Assigned member: NOT WORKING -->
-            <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
-                <FlexLayout Wrap="Wrap">
-
-                    <!-- Assigned users list -->
-                    <CollectionView ItemsSource="{Binding AssignedUsers}" SelectionMode="None">
-                        <CollectionView.ItemTemplate >
-
-                            <!-- Image of user -->
-                            <DataTemplate>
-                                <Image Source="" />
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-
-                    <Frame>
+                <!-- Assigned member -->
+                <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
+                    <StackLayout >
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-
-                            <ImageButton
-                            Source="user.png"
-                            HorizontalOptions="Center"
-                            VerticalOptions="CenterAndExpand"
-                            HeightRequest="60"
-                            WidthRequest="60"
-                            />
-
-                            <Button
-                            Grid.Column="1"
-                            Text="+"
-                            FontSize="Large"
+                            <Label
+                            Text="Assigned member: "
+                            TextColor="Black"
+                            FontSize="Medium"
                             FontAttributes="Bold"
-                            BackgroundColor="#bcc3c4"
-                            HeightRequest="10"
-                            BorderRadius="360"
-                            WidthRequest="60"/>
+                            />
+                            <Button
+                                Grid.Column="1"
+                                Text="+"
+                                FontAttributes="Bold"
+                                BackgroundColor="#bcc3c4"
+                                HeightRequest="33"
+                                HorizontalOptions="EndAndExpand"
+                                VerticalOptions="EndAndExpand"
+                                BorderRadius="360"
+                                WidthRequest="33"
+                                Clicked="Button_Clicked"
+                            />
                         </Grid>
-                    </Frame>
-                </FlexLayout>
-            </Frame>
+                        <StackLayout
+                            Orientation="Horizontal"
+                                HorizontalOptions="StartAndExpand"
+                                x:Name="CheckpointUserListItem"
+                                BindableLayout.ItemsSource="{Binding Checkpoint.AssignedUsers}"
+                                >
+                            <!-- Assigned users list: auto add user profile pic -->
+                            <BindableLayout.ItemTemplate >
+                                <DataTemplate x:DataType="model:CheckpointUserListItem">
+                                    <Image
+                                        Source="{Binding ProfilePicture}"
+                                        HorizontalOptions="FillAndExpand"
+                                        VerticalOptions="FillAndExpand"
+                                        HeightRequest="60"
+                                        WidthRequest="60"
+                                    />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
 
-            <!-- Check list: -->
-            <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
-                <StackLayout>
-                    <Label Text="Checklist" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
-                    <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
+                <!-- Check list: -->
+                <Frame HasShadow="True" Margin="30,5,30,30" IsTabStop="False">
+                    <StackLayout>
+                        <Label Text="Checklist" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
 
-                    <!-- Check box: Checklist items -->
-                    <StackLayout x:Name="CheckListItems"
-                                 BindableLayout.ItemsSource="{ Binding Checklist }"
-                                 FlowDirection="LeftToRight">
+                        <!-- Check box: Checklist items -->
+                        <StackLayout
+                            x:Name="CheckListItems"
+                            BindableLayout.ItemsSource="{ Binding Checklist }"
+                            FlowDirection="LeftToRight">
 
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout Orientation="Horizontal">
-                                    <CheckBox x:Name="checkBox" IsChecked="{Binding IsDone}" Color="DarkSeaGreen"/>
-                                    <Label VerticalOptions="Center" Text="{ Binding Text }">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Orientation="Horizontal">
+                                        <CheckBox x:Name="checkBox" IsChecked="{Binding IsDone}" Color="DarkSeaGreen"/>
+                                        <Label VerticalOptions="Center" Text="{ Binding Text }">
 
-                                        <!-- Checkbox animation -->
-                                        <Label.Triggers>
-                                            <DataTrigger TargetType="Label"
+                                            <!-- Checkbox animation -->
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
                                              Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}"
                                              Value="true">
-                                                <Setter Property="FontAttributes"
+                                                    <Setter Property="FontAttributes"
                                             Value="Italic, Bold" />
-                                                <Setter Property="FontSize"
+                                                    <Setter Property="FontSize"
                                             Value="Medium" />
-                                            </DataTrigger>
-                                        </Label.Triggers>
-                                    </Label>
-                                </StackLayout>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </StackLayout>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
 
-                    <!-- ADD task button -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <!--<ColumnDefinition Width="*" />-->
-                        </Grid.ColumnDefinitions>
-                        <Button Text="Add Task"
+                        <!-- ADD task button -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <!--<ColumnDefinition Width="*" />-->
+                            </Grid.ColumnDefinitions>
+                            <Button Text="Add Task"
                                 CornerRadius="180"
                                 BackgroundColor="#bcc3c4"
                                 HeightRequest="46"
                                 Clicked="AddTaskPopup"/>
-                        <!--<Button Grid.Column="1"
+                            <!--<Button Grid.Column="1"
                                 Text="Done"
                                 CornerRadius="180"
                                 BackgroundColor="#bcc3c4"
                                 HeightRequest="46"/>-->
-                    </Grid>
-                </StackLayout>
-            </Frame>
-        </StackLayout>
-    </ScrollView>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
 </ContentPage>

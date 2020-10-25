@@ -290,7 +290,7 @@ namespace Mobile.Services
                 {
                     if (user.ProfilePicture == null)
                     {
-                        user.ProfilePicture = ImageSource.FromFile("user.png");
+                        user.ProfilePicture = "user.png";
                     }
                 }
 

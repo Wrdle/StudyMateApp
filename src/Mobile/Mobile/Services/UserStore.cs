@@ -143,7 +143,7 @@ namespace Mobile.Services
                     LastName = user.LastName,
                     Institution = user.Institution,
                     Major = user.Major,
-                    ProfilePicture = _imageConverter.BytesToImage(user.ProfilePicture),
+                    ProfilePicture = user.ProfilePicture != null && user.ProfilePicture.Length > 0 ? _imageConverter.BytesToImage(user.ProfilePicture) : ImageSource.FromFile("user.png"),
                     CurrentSubjects = user.UserSubjects.Where(us => us.IsCurrent).Select(us => us.Subject).ToList(),
                     PreviousSubjects = user.UserSubjects.Where(us => !us.IsCurrent).Select(us => us.Subject).ToList(),
                     Skills = skills

@@ -1,6 +1,7 @@
 ﻿using Mobile.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
@@ -20,12 +21,20 @@ namespace Mobile.ViewModels.Assignments
             set
             {
                 SetProperty(ref checkpoint, value);
+
                 var newChecklist = new ObservableCollection<ChecklistItem>();
                 foreach (var item in value.ChecklistItems)
                 {
                     newChecklist.Add(item);
                 }
                 Checklist = newChecklist;
+
+                var newAssignedUsers = new ObservableCollection<CheckpointUserListItem>();
+                foreach (var item in value.AssignedUsers)
+                {
+                    newAssignedUsers.Add(item);
+                }
+                AssignedUsers = newAssignedUsers;
             }
         }
 
@@ -83,6 +92,11 @@ namespace Mobile.ViewModels.Assignments
             // Grab the checkpoint id add to the title 
             Title = Checkpoint.Title;
             CheckpointNotes = Checkpoint.Notes;
+        }
+
+        public CheckpointViewModel()
+        {
+            Debug.WriteLine("Testing");
         }
     }
 }
