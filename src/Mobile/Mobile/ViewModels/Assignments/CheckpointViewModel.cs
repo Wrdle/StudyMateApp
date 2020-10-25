@@ -1,19 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
+using Mobile.Models;
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Xamarin.Forms;
 using Mobile.ViewModels.Assignments;
-
-
-// Issues: Back button nevg to Assignments page instead of Assignment page
+using System.Threading.Tasks;
 
 namespace Mobile.ViewModels.Assignments
 {
-    // Pass to the view model which checkpoint been clicked
+
     [QueryProperty(nameof(CheckpointID), nameof(CheckpointID))]
-    class CheckpointViewModel : BaseViewModel
+    public class CheckpointViewModel : BaseViewModel
     {
-        string checkpointID;
+
+        private Checkpoint checkpoint;
+
+        private ObservableCollection<CheckpointUserListItem> assignedUsers;
+        private ObservableCollection<ChecklistItem> checklist;
+
+        public Checkpoint Checkpoint
+        {
+            get => checkpoint;
+
+            set
+            {
+                SetProperty(ref checkpoint, value);
+
+                var newChecklist = new ObservableCollection<ChecklistItem>();
+                foreach (var item in value.ChecklistItems)
+                {
+                    newChecklist.Add(item);
+                }
+                Checklist = newChecklist;
+
+                var newAssignedUsers = new ObservableCollection<CheckpointUserListItem>();
+                foreach (var item in value.AssignedUsers)
+                {
+                    newAssignedUsers.Add(item);
+                }
+                AssignedUsers = newAssignedUsers;
+            }
+        }
+
+        public ObservableCollection<CheckpointUserListItem> AssignedUsers
+        {
+            get => assignedUsers;
+            set => SetProperty(ref assignedUsers, value);
+        }
+
+        // Constructing for checklist
+        public ObservableCollection<ChecklistItem> Checklist
+        {
+            get => checklist;
+            set => SetProperty(ref checklist, value);
+        }
+
+        private string checkpointID;
 
         public string CheckpointID
         {
@@ -25,33 +68,40 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        /// <summary>
-        /// Load the checkpoint ID and due date
-        /// </summary>
-        /// <param name="id"></param>
-        private void LoadCheckpointID(string id)
-        {
-            // Grab the checkpoint id add to the title 
-            Title = "Checkpoint" + " " + checkpointID;
+        // Checkpoint Description/Notes
+        private string checkpointNotes;
 
-            // This needs to be converted to use the new CheckpointStore
-            //var checkpoint = CheckpointDataStore.GetCheckpointByID(Convert.ToInt64(id));
+        public string CheckpointNotes
+        {
+            get => checkpointNotes;
+            set
+            {
+                // Update Locally
+                SetProperty(ref checkpointNotes, value);
+
+                if (value != null)
+                {
+                    checkpoint.Notes = value;
+
+                    // Update DB 
+                    CheckpointStore.UpdateNotes(checkpoint.Id, value).Wait();
+                }
+            }
         }
 
-        //string checkpointDueDay;
-        //public string DueDay
-        //{
-        //    get => checkpointDueDay;
-        //    set
-        //    {
-        //        SetProperty(ref checkpointDueDay, value);
-        //        LoadCpDueDay();
-        //    }
-        //}
+        public async void LoadCheckpointID(string id)
+        {
+            //var checkpoint = CheckpointStore.GetCheckpointByID(Convert.ToInt64(id));
+            Checkpoint = await CheckpointStore.GetById(Convert.ToInt64(id));
 
-        //private void LoadCpDueDay()
-        //{
-        //    //DueDate = checkpointDueDay;
-        //}
+            // Grab the checkpoint id add to the title 
+            Title = Checkpoint.Title;
+            CheckpointNotes = Checkpoint.Notes;
+        }
+
+        public CheckpointViewModel()
+        {
+            Debug.WriteLine("Testing");
+        }
     }
 }

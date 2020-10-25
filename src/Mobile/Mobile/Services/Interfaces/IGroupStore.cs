@@ -8,6 +8,7 @@ namespace Mobile.Services.Interfaces
     {
         // Commands
         Task Create(string name);
+        Task Update(Group group);
         Task Leave(long id);
 
         // Queries

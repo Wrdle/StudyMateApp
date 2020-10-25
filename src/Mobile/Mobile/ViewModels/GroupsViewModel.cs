@@ -1,67 +1,89 @@
 ﻿using Mobile.Models;
-using Mobile.Services.Interfaces;
-using MvvmHelpers;
+using Mobile.ViewModels.Groups;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels
 {
-    class GroupsViewModel : BaseViewModel
+    public class GroupsViewModel : BaseViewModel
     {
-        //------------------------------
-        //          Fields
-        //------------------------------
+        private GroupListItem _selectedGroup;
 
-        // Services
-        private IGroupStore _groupStore;
-
-        // Data
-        private ICollection<GroupListItem> _groups;
-
-        // Public
-        public string Error { get; set; }
-        public ICollection<GroupListItem> Groups
-        {
-            get => _groups;
-
-            set
-            {
-                _groups = value;
-                OnPropertyChanged(nameof(Groups));
-            }
-        }
-
-        //------------------------------
-        //          Constructors
-        //------------------------------
+        public ObservableCollection<GroupListItem> Groups { get; }
+        public Command LoadGroupsCommand { get; }
+        public Command<GroupListItem> GroupTapped { get; }
 
         public GroupsViewModel()
         {
             Title = "Groups";
-            Error = null;
+            Groups = new ObservableCollection<GroupListItem>();
+            LoadGroupsCommand = new Command(async () => await ExecuteLoadGroupsCommand());
 
-            _groupStore = DependencyService.Get<IGroupStore>();
-
-            _groups = new List<GroupListItem>();
-            LoadGroups().SafeFireAndForget();
+            GroupTapped = new Command<GroupListItem>(OnGroupSelected);
         }
 
-        //------------------------------
-        //          Methods
-        //------------------------------
-
-        public async Task LoadGroups()
+        /// <summary>
+        /// Load groups from datastore
+        /// </summary>
+        /// <returns>Task type</returns>
+        public async Task ExecuteLoadGroupsCommand()
         {
+            IsBusy = true;
+
             try
             {
-                _groups = await _groupStore.MyGroups();
+                Groups.Clear();
+                var groups = await GroupStore.MyGroups();
+                foreach (var group in groups)
+                {
+                    Groups.Add(group);
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Error = e.Message;
+                Debug.WriteLine("\n===================================================");
+                Debug.WriteLine(ex);
+                Debug.WriteLine("===================================================\n");
             }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        /// <summary>
+        /// Runs before page appears, resetting variables and sets IsBusy to true
+        /// </summary>
+        public void OnAppearing()
+        {
+            IsBusy = true;
+            SelectedGroup = null;
+        }
+
+        public GroupListItem SelectedGroup
+        {
+            get => _selectedGroup;
+            set
+            {
+                SetProperty(ref _selectedGroup, value);
+                OnGroupSelected(value);
+            }
+        }
+
+        /// <summary>
+        /// Runs when group selected, navigating to group page of given group
+        /// </summary>
+        /// <param name="group">Grou to navigate to</param>
+        async void OnGroupSelected(GroupListItem group)
+        {
+            if (group == null)
+                return;
+
+            // This will push the ItemDetailPage onto the navigation stack
+            await Shell.Current.GoToAsync($"groups/group?{nameof(GroupViewModel.GroupID)}={group.Id}");
         }
 
     }

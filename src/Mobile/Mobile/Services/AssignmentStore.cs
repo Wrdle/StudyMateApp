@@ -5,7 +5,6 @@ using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -23,6 +22,7 @@ namespace Mobile.Services
 
         private readonly IUserStore _userStore;
         private readonly ICoverColorStore _coverColorStore;
+        private readonly ImageConverter _imageConverter;
 
         //------------------------------
         //          Constructor
@@ -32,6 +32,7 @@ namespace Mobile.Services
         {
             _userStore = DependencyService.Get<IUserStore>();
             _coverColorStore = DependencyService.Get<ICoverColorStore>();
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -61,8 +62,9 @@ namespace Mobile.Services
                         {
                             Title = assignment.Title,
                             Description = assignment.Description,
+                            IsArchived = false,
                             CoverColorId = assignment.CoverColor.Id,
-                            CoverPhoto = await ImageToBytes(assignment.CoverPhoto),
+                            CoverPhotoBytes = await _imageConverter.ImageToBytes(assignment.CoverPhoto),
                             Due = assignment.DateDue
                         };
 
@@ -140,7 +142,12 @@ namespace Mobile.Services
             }
         }
 
-        public async Task<ICollection<Assignment>> GetByUserIdAsync(long userId, bool includeGroupAssignments)
+        public async Task<ICollection<Assignment>> GetByUserIdAsync(long userId, bool includeGroupAssignments = false)
+        {
+            return await GetByUserIdAsync(userId, includeGroupAssignments, false);
+        }
+
+        public async Task<ICollection<Assignment>> GetByUserIdAsync(long userId, bool includeGroupAssignments = false, bool includeArchived = false)
         {
             if (!_userStore.IsLoggedIn)
             {
@@ -149,6 +156,8 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
+
+
                 var assignments = await dbContext.UserAssignments
                     .Include(ua => ua.Assignment)
                     .ThenInclude(a => a.CoverColor)
@@ -158,14 +167,16 @@ namespace Mobile.Services
                         Id = ua.Assignment.Id,
                         Title = ua.Assignment.Title,
                         Description = ua.Assignment.Description,
+                        Notes = ua.Assignment.Notes,
                         DateDue = ua.Assignment.Due,
+                        IsArchived = ua.Assignment.IsArchived,
                         CoverColor = new CoverColor
                         {
                             Id = ua.Assignment.CoverColor.Id,
                             BackgroundColor = ua.Assignment.CoverColor.BackgroundColorFromHex,
                             FontColor = ua.Assignment.CoverColor.FontColorFromHex
                         },
-                        CoverPhoto = BytesToImage(ua.Assignment.CoverPhoto),
+                        CoverPhotoBytes = ua.Assignment.CoverPhotoBytes,
                         Skills = new List<Skill>()
                     })
                     .ToListAsync();
@@ -179,20 +190,24 @@ namespace Mobile.Services
 
                     var groupAssignments = await dbContext.GroupAssignments
                         .Include(ga => ga.Assignment)
+                        .Include(ga => ga.Group)
                         .Where(ga => groupIds.Contains(ga.GroupId))
                         .Select(ga => new Assignment
                         {
                             Id = ga.Assignment.Id,
                             Title = ga.Assignment.Title,
                             Description = ga.Assignment.Description,
+                            Notes = ga.Assignment.Notes,
                             DateDue = ga.Assignment.Due,
+                            GroupName = ga.Group.Name,
+                            IsArchived = ga.Assignment.IsArchived,
                             CoverColor = new CoverColor
                             {
                                 Id = ga.Assignment.CoverColor.Id,
                                 BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex,
                                 FontColor = ga.Assignment.CoverColor.FontColorFromHex
                             },
-                            CoverPhoto = BytesToImage(ga.Assignment.CoverPhoto),
+                            CoverPhotoBytes = ga.Assignment.CoverPhotoBytes,
                             Skills = new List<Skill>()
                         })
                         .ToListAsync();
@@ -200,8 +215,20 @@ namespace Mobile.Services
                     assignments.AddRange(groupAssignments);
                 }
 
+                List<Assignment> finalAssignments = new List<Assignment>();
+                finalAssignments.AddRange(assignments);
+
+                if (includeArchived == false)
+                {
+                    foreach (Assignment a in assignments)
+                    {
+                        if (a.IsArchived == true)
+                            finalAssignments.Remove(a);
+                    }
+                }
+
                 assignments.OrderByDescending(a => a.DateDue);
-                return assignments;
+                return finalAssignments;
             }
         }
 
@@ -216,11 +243,15 @@ namespace Mobile.Services
             {
                 var assignments = await dbContext.GroupAssignments
                     .Include(ga => ga.Assignment)
+                    .ThenInclude(a => a.CoverColor)
                     .Where(ga => ga.GroupId == groupId)
                     .Select(ga => new Assignment
                     {
                         Id = ga.Assignment.Id,
                         Title = ga.Assignment.Title,
+                        DateDue = ga.Assignment.Due,
+                        CoverColor = new CoverColor { Id = ga.Assignment.CoverColor.Id, BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex, FontColor = ga.Assignment.CoverColor.FontColorFromHex },
+                        CoverPhotoBytes = ga.Assignment.CoverPhotoBytes
                     })
                     .ToListAsync();
 
@@ -246,14 +277,16 @@ namespace Mobile.Services
                     Id = assignment.Id,
                     Title = assignment.Title,
                     Description = assignment.Description,
+                    Notes = assignment.Notes,
                     DateDue = assignment.Due,
+                    IsArchived = assignment.IsArchived,
                     CoverColor = new CoverColor
                     {
                         Id = assignment.CoverColor.Id,
                         BackgroundColor = assignment.CoverColor.BackgroundColorFromHex,
                         FontColor = assignment.CoverColor.FontColorFromHex
                     },
-                    CoverPhoto = BytesToImage(assignment.CoverPhoto),
+                    CoverPhotoBytes = assignment.CoverPhotoBytes,
                     Skills = new List<Skill>()
                 };
             }
@@ -271,9 +304,11 @@ namespace Mobile.Services
 
                 dbAssignment.Title = assignment.Title;
                 dbAssignment.Description = assignment.Description;
+                dbAssignment.Notes = assignment.Notes;
                 dbAssignment.Due = assignment.DateDue;
+                dbAssignment.IsArchived = assignment.IsArchived;
                 dbAssignment.CoverColorId = assignment.CoverColor.Id;
-                dbAssignment.CoverPhoto = await ImageToBytes(assignment.CoverPhoto);
+                dbAssignment.CoverPhotoBytes = assignment.CoverPhotoBytes;
 
                 dbContext.Assignments.Update(dbAssignment);
                 await dbContext.SaveChangesAsync();
@@ -288,45 +323,7 @@ namespace Mobile.Services
                 biggestId = dbContext.Assignments
                 .Select(assignment => assignment.Id)
                 .Max();
-                return Task.FromResult(biggestId);
-            }
-        }
-
-        //------------------------------
-        //          Helpers
-        //------------------------------
-
-        public static async Task<byte[]> ImageToBytes(ImageSource imageSource)
-        {
-            if (imageSource == null)
-            {
-                return new byte[] { };
-            }
-
-            var cancellationToken = System.Threading.CancellationToken.None;
-            using (var imageStream = await ((StreamImageSource)imageSource).Stream(cancellationToken))
-            using (var byteStream = new MemoryStream())
-            {
-                await imageStream.CopyToAsync(byteStream);
-                return byteStream.ToArray();
-            }
-        }
-
-        public static ImageSource BytesToImage(byte[] bytes)
-        {
-            if (bytes.Length < 1)
-            {
-                return null;
-            }
-
-            try
-            {
-                Stream stream = new MemoryStream(bytes);
-                return ImageSource.FromStream(() => { return stream; });
-            }
-            catch
-            {
-                return null;
+                return Task.FromResult(biggestId + 1);
             }
         }
 

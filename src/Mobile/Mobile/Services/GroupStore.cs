@@ -5,7 +5,6 @@ using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -21,6 +20,7 @@ namespace Mobile.Services
         //------------------------------
 
         private readonly IUserStore _userStore;
+        private readonly ImageConverter _imageConverter;
 
         //------------------------------
         //          Constructor
@@ -29,6 +29,7 @@ namespace Mobile.Services
         public GroupStore()
         {
             _userStore = DependencyService.Get<IUserStore>();
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -53,7 +54,16 @@ namespace Mobile.Services
                             new UserGroupEntity { UserId = _userStore.CurrentUserId }
                         };
 
-                        await dbContext.Groups.AddAsync(new GroupEntity { Name = name, UserGroups = userGroups });
+                        var group = new GroupEntity
+                        {
+                            Name = name,
+                            DateCreated = DateTime.Now,
+                            CoverPhotoBytes = new byte[] { },
+                            CoverColorId = 1,
+                            UserGroups = userGroups
+                        };
+
+                        await dbContext.Groups.AddAsync(group);
                         await dbContext.SaveChangesAsync();
                         await transaction.CommitAsync();
                     }
@@ -63,6 +73,24 @@ namespace Mobile.Services
                         throw new Exception(Error.ServerFailure);
                     }
                 }
+            }
+        }
+
+        public async Task Update(Group group)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var groupEntity = await dbContext.Groups.SingleOrDefaultAsync(g => g.Id == group.Id);
+                if (groupEntity == null)
+                {
+                    throw new Exception();
+                }
+
+                groupEntity.Name = group.Name;
+                groupEntity.CoverColorId = group.CoverColor.Id;
+                groupEntity.CoverPhotoBytes = group.CoverPhotoBytes;
+                dbContext.Groups.Update(groupEntity);
+                await dbContext.SaveChangesAsync();
             }
         }
 
@@ -119,13 +147,47 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
-                var group = await dbContext.Groups.FindAsync(id);
+                var group = await dbContext.Groups
+                    .Include(g => g.CoverColor)
+                    .SingleOrDefaultAsync(g => g.Id == id);
+
+                var members = await dbContext.UserGroups
+                    .Include(ug => ug.User)
+                    .Where(ug => ug.GroupId == id)
+                    .Select(ug => new UserListItem
+                    {
+                        Id = ug.User.Id,
+                        Email = ug.User.Email,
+                        FirstName = ug.User.FirstName,
+                        LastName = ug.User.LastName,
+                        ProfilePicture = ug.User.ProfilePictureBytes
+                    })
+                    .ToListAsync();
+
+                var assignments = await dbContext.GroupAssignments
+                    .Include(ga => ga.Assignment)
+                    .ThenInclude(ga => ga.CoverColor)
+                    .Where(ga => ga.GroupId == id)
+                    .Select(ga => new Assignment
+                    {
+                        Id = ga.Assignment.Id,
+                        Title = ga.Assignment.Title,
+                        DateDue = ga.Assignment.Due,
+                        Description = ga.Assignment.Description,
+                        CoverColor = new CoverColor { Id = ga.Assignment.CoverColor.Id, BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex, FontColor = ga.Assignment.CoverColor.FontColorFromHex },
+                        CoverPhotoBytes = ga.Assignment.CoverPhotoBytes
+                    })
+                    .ToListAsync();
+
                 return new Group
                 {
                     Id = group.Id,
                     Name = group.Name,
-                    CoverPhoto = BytesToImage(group.CoverPhoto),
-                    CoverColorId = group.CoverColorId
+                    DateCreated = group.DateCreated,
+                    CoverPhotoBytes = group.CoverPhotoBytes,
+                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex },
+                    Members = members,
+                    Assignments = assignments
                 };
             }
         }
@@ -141,18 +203,19 @@ namespace Mobile.Services
             {
                 var groups = await dbContext.UserGroups
                     .Include(ug => ug.Group)
+                    .ThenInclude(g => g.CoverColor)
                     .Where(ug => ug.UserId == _userStore.CurrentUserId)
                     .Select(ug => new GroupListItem
                     {
                         Id = ug.Group.Id,
                         Name = ug.Group.Name,
-                        CoverPhoto = BytesToImage(ug.Group.CoverPhoto),
-                        CoverColorId = ug.Group.CoverColorId
+                        DateCreated = ug.Group.DateCreated,
+                        CoverPhotoBytes = ug.Group.CoverPhotoBytes,
+                        CoverColor = new CoverColor { Id = ug.Group.CoverColor.Id, BackgroundColor = ug.Group.CoverColor.BackgroundColorFromHex, FontColor = ug.Group.CoverColor.FontColorFromHex }
                     })
                     .ToListAsync();
 
-                return new List<GroupListItem>() { };
-                //return groups;
+                return groups;
             }
         }
 
@@ -180,37 +243,5 @@ namespace Mobile.Services
             }
         }
 
-        //------------------------------
-        //          Helpers
-        //------------------------------
-
-        private async Task<byte[]> ImageToBytes(ImageSource imageSource)
-        {
-            var cancellationToken = System.Threading.CancellationToken.None;
-            using (var imageStream = await ((StreamImageSource)imageSource).Stream(cancellationToken))
-            using (var byteStream = new MemoryStream())
-            {
-                await imageStream.CopyToAsync(byteStream);
-                return byteStream.ToArray();
-            }
-        }
-
-        public static ImageSource BytesToImage(byte[] bytes)
-        {
-            if (bytes != null && bytes.Length < 1)
-            {
-                return null;
-            }
-
-            try
-            {
-                Stream stream = new MemoryStream(bytes);
-                return ImageSource.FromStream(() => { return stream; });
-            }
-            catch
-            {
-                return null;
-            }
-        }
     }
 }

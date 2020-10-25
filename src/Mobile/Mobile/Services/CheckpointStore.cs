@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using CheckpointEntity = Mobile.Data.Entites.Checkpoint;
 using UserCheckpointEntity = Mobile.Data.Entites.UserCheckpoint;
+using ChecklistItemEntity = Mobile.Data.Entites.ChecklistItem;
 
 namespace Mobile.Services
 {
@@ -21,6 +22,7 @@ namespace Mobile.Services
 
         private readonly IUserStore _userStore;
         private readonly IAssignmentStore _assignmentStore;
+        private readonly ImageConverter _imageConverter;
 
         //------------------------------
         //          Constructors
@@ -30,6 +32,7 @@ namespace Mobile.Services
         {
             _userStore = DependencyService.Get<IUserStore>();
             _assignmentStore = DependencyService.Get<IAssignmentStore>();
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -71,6 +74,22 @@ namespace Mobile.Services
                 await dbContext.SaveChangesAsync();
                 checkpoint.Id = newCheckpoint.Id;
                 return checkpoint;
+            }
+        }
+
+        public async Task UpdateNotes(long checkpointId, string text)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var checkpointEntity = await dbContext.Checkpoints.SingleOrDefaultAsync(cp => cp.Id == checkpointId);
+                if (checkpointEntity == null)
+                {
+                    return;
+                }
+
+                checkpointEntity.Description = text;
+                dbContext.Checkpoints.Update(checkpointEntity);
+                await dbContext.SaveChangesAsync();
             }
         }
 
@@ -118,7 +137,7 @@ namespace Mobile.Services
                         Title = c.Title,
                         Notes = c.Description,
                         DueDate = c.DateDue.ToLocalTime(),
-                        AssignedUsers = new List<UserListItem>()
+                        AssignedUsers = new List<CheckpointUserListItem>()
                     })
                     .ToListAsync();
 
@@ -130,7 +149,7 @@ namespace Mobile.Services
                     .Select(uc => new
                     {
                         CheckpointId = uc.CheckpointId,
-                        User = new UserListItem
+                        User = new CheckpointUserListItem
                         {
                             Id = uc.User.Id,
                             Email = uc.User.Email,
@@ -181,7 +200,7 @@ namespace Mobile.Services
                         Title = c.Title,
                         Notes = c.Description,
                         DueDate = c.DateDue.ToLocalTime(),
-                        AssignedUsers = new List<UserListItem>()
+                        AssignedUsers = new List<CheckpointUserListItem>()
                     })
                     .ToListAsync();
 
@@ -230,43 +249,109 @@ namespace Mobile.Services
 
         public async Task<Checkpoint> GetById(long id)
         {
-            if (!_userStore.IsLoggedIn)
-            {
-                throw new Exception(Error.NotLoggedIn);
-            }
-
             using (var dbContext = new AppDbContext())
             {
-                var userCheckpoints = await dbContext.UserCheckpoints
+                var checkpoint = await dbContext.Checkpoints
+                    .Include(c => c.ChecklistItems)
+                    .SingleOrDefaultAsync(c => c.Id == id);
+
+                if (checkpoint == null)
+                {
+                    throw new Exception(Error.CheckpointDoesNotExist);
+                }
+
+                var checklistItems = checkpoint.ChecklistItems
+                    .Select(ci => new ChecklistItem
+                    {
+                        Id = ci.Id,
+                        Text = ci.Text,
+                        IsDone = ci.IsDone
+                    })
+                    .ToList();
+
+                var assignedUserEntities = await dbContext.UserCheckpoints
                     .Include(uc => uc.User)
-                    .Include(uc => uc.Checkpoint)
                     .Where(uc => uc.CheckpointId == id)
                     .ToListAsync();
 
-                if (userCheckpoints.Count > 0)
-                {
-                    var checkpoint = userCheckpoints[0].Checkpoint;
-                    var assignedUsers = userCheckpoints
-                        .Select(uc => new UserListItem
-                        {
-                            Id = uc.User.Id,
-                            Email = uc.User.Email,
-                            FirstName = uc.User.FirstName,
-                            LastName = uc.User.LastName
-                        })
-                        .ToList();
-
-                    return new Checkpoint
+                var assignedUsers = assignedUserEntities
+                    .Select(uc => new CheckpointUserListItem
                     {
-                        Id = checkpoint.Id,
-                        AssignmentId = checkpoint.AssignmentId,
-                        Title = checkpoint.Title,
-                        Notes = checkpoint.Description,
-                        DueDate = checkpoint.DateDue.ToLocalTime(),
-                        AssignedUsers = assignedUsers
-                    };
+                        Id = uc.User.Id,
+                        ProfilePictureBytes = uc.User.ProfilePictureBytes,
+                        Email = uc.User.Email,
+                        FirstName = uc.User.FirstName,
+                        LastName = uc.User.LastName
+                    })
+                    .ToList();
+
+                // If assigned user have no profile pic will assign to a defualt pic
+                foreach (var user in assignedUsers)
+                {
+                    if (user.ProfilePicture == null)
+                    {
+                        user.ProfilePictureBytes = EncodedImages.UserImage;
+                    }
                 }
-                else return null;
+
+                return new Checkpoint
+                {
+                    Id = checkpoint.Id,
+                    Title = checkpoint.Title,
+                    Notes = checkpoint.Description,
+                    AssignmentId = checkpoint.AssignmentId,
+                    DueDate = checkpoint.DateDue,
+                    AssignedUsers = assignedUsers,
+                    ChecklistItems = checklistItems
+                };
+            }
+        }
+
+        public async Task<ChecklistItem> AddTaskToCheckpoint(long checkpointId, string task)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var checklistItem = new ChecklistItemEntity { CheckpointId = checkpointId, Text = task, IsDone = false };
+                await dbContext.ChecklistItems.AddAsync(checklistItem);
+                await dbContext.SaveChangesAsync();
+                return new ChecklistItem { Id = checklistItem.Id, Text = checklistItem.Text, IsDone = checklistItem.IsDone };
+            }
+        }
+
+        public async Task<ChecklistItem> UpdateTaskFromCheckpoint(long checkpointId, ChecklistItem task)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var checklistItem = await dbContext.ChecklistItems
+                    .SingleOrDefaultAsync(cli => cli.Id == task.Id && cli.CheckpointId == checkpointId);
+
+                if (checklistItem == null)
+                {
+                    throw new Exception(Error.ChecklistItemDoesNotExist);
+                }
+
+                checklistItem.Text = task.Text;
+                checklistItem.IsDone = task.IsDone;
+
+                dbContext.ChecklistItems.Update(checklistItem);
+                await dbContext.SaveChangesAsync();
+                return task;
+            }
+        }
+        public async Task RemoveTaskFromCheckpoint(long checkpointId, long taskId)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var checklistItem = await dbContext.ChecklistItems
+                    .SingleOrDefaultAsync(cli => cli.Id == taskId && cli.CheckpointId == checkpointId);
+
+                if (checklistItem == null)
+                {
+                    throw new Exception(Error.ChecklistItemDoesNotExist);
+                }
+
+                dbContext.ChecklistItems.Remove(checklistItem);
+                await dbContext.SaveChangesAsync();
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿
-using Acr.UserDialogs;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
@@ -20,12 +19,11 @@ namespace Mobile.Droid
             // Initialize popup plugin
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
 
+            // Initialize dialogs
+            Acr.UserDialogs.UserDialogs.Init(this);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-
-            //ACR Dialogs
-            UserDialogs.Init(this);
-
             LoadApplication(new App());
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

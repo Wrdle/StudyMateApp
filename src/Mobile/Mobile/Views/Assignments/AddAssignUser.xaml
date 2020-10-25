@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pages:PopupPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+    xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup" xmlns:model="clr-namespace:Mobile.Models"
+    x:Class="Mobile.Views.Assignments.AddAssignUser">
+
+    <!-- List of unassigned users: -->
+    <StackLayout
+        x:Name="UnassignedUserList"
+        VerticalOptions="CenterAndExpand"
+        HorizontalOptions="CenterAndExpand"
+        Padding="9"
+        Margin="2"
+        WidthRequest="330"
+        BackgroundColor="White"
+        Orientation="Vertical">
+
+        <Button Text="Save"
+                BackgroundColor="DarkSeaGreen"
+                CornerRadius="9"
+                />
+        <StackLayout Orientation="Horizontal" BindableLayout.ItemsSource="{ Binding Checkpoint.UnassignedUsers }">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="model:CheckpointUserListItem">
+                    <StackLayout Orientation="Horizontal">
+                        <!-- Checkbox for select user to assign this checkpoint to -->
+                        <CheckBox x:Name="checkBox1"  Color="DarkSeaGreen"/>
+                        <Label VerticalOptions="Center" Text="{ Binding Email }">
+
+                            <!--Checkbox animation-->
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding Source={x:Reference checkBox1}, Path=IsChecked}"
+                                             Value="true">
+                                    <Setter Property="FontAttributes"
+                                            Value="Italic, Bold" />
+                                    <Setter Property="FontSize"
+                                            Value="Medium" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </StackLayout>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
+
+
+    </StackLayout>
+</pages:PopupPage>

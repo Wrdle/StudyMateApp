@@ -1,13 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Mobile.Views.Groups.GroupPage">
+             xmlns:local="clr-namespace:Mobile.ViewModels.Groups"
+             xmlns:model="clr-namespace:Mobile.Models"
+             x:Class="Mobile.Views.Groups.GroupPage"
+             Title="{Binding Title}">
+
+    <!--Toolbar-->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="add.png" Command="{Binding AddAssignmentCommand}"></ToolbarItem>
+        <ToolbarItem IconImageSource="tab_about.png" Command="{Binding InfoTappedCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <!--Content-->
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
-                <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <StackLayout VerticalOptions="Fill" Orientation="Vertical">
+
+                <!-- Cover Photo -->
+                <Frame Padding="0" Margin="0" BackgroundColor="{Binding Group.CoverColor.BackgroundColor}">
+                    <Image Source="{Binding Group.CoverPhoto}" HeightRequest="200" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
+                </Frame>
+
+                <!-- CollectionView -->
+                <CollectionView x:Name="AssignmentsListView"
+                ItemsSource="{Binding Assignments}"
+                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame>
+                                <Frame CornerRadius="2" Padding="0,0,0,0">
+                                    <AbsoluteLayout BackgroundColor="{Binding CoverColor.BackgroundColor}" x:DataType="model:Assignment" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
+                                        <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
+                                                <Label Text="{Binding Title}" 
+                                            LineBreakMode="NoWrap" 
+                                            Style="{DynamicResource ListItemTextStyle}" 
+                                            FontSize="16" TextColor="{Binding CoverColor.FontColor}"/>
+                                                <Label Text="{Binding DateDueMonthDay}" 
+                                            LineBreakMode="NoWrap"
+                                            Style="{DynamicResource ListItemDetailTextStyle}"
+                                            FontSize="13" TextColor="{Binding CoverColor.FontColor}"/>
+                                                <StackLayout.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                NumberOfTapsRequired="1"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:GroupViewModel}}, Path=AssignmentTapped}"		
+                                                CommandParameter="{Binding .}">
+                                                    </TapGestureRecognizer>
+                                                </StackLayout.GestureRecognizers>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </AbsoluteLayout>
+                                </Frame>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

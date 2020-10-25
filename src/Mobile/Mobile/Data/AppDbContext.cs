@@ -17,8 +17,10 @@ namespace Mobile.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Checkpoint> Checkpoints { get; set; }
+        public DbSet<ChecklistItem> ChecklistItems { get; set; }
 
         // Many to Many / Join Tables
+        public DbSet<UserSubject> UserSubjects { get; set; }
         public DbSet<UserSkill> UserSkills { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<UserAssignment> UserAssignments { get; set; }
@@ -47,6 +49,9 @@ namespace Mobile.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // UserSubjects - Composite Key
+            modelBuilder.Entity<UserSubject>().HasKey(us => new { us.Subject, us.UserId });
+
             // UserSkill - Composite Key
             modelBuilder.Entity<UserSkill>().HasKey(us => new { us.UserId, us.SkillId });
 

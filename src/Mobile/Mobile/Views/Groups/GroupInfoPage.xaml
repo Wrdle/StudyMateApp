@@ -1,13 +1,126 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Mobile.Views.Groups.GroupInfoPage">
+             x:Class="Mobile.Views.Groups.GroupInfoPage"
+             xmlns:vm="clr-namespace:Mobile.ViewModels.Groups"
+             xmlns:model="clr-namespace:Mobile.Models"
+             Title="{Binding Title}">
+
+    <!-- Content -->
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
-                <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <StackLayout Padding="20,20,20,20">
+
+                <!-- Cover -->
+                <Frame CornerRadius="2" Padding="0,0,0,0" Margin="0,8,0,8">
+                    <AbsoluteLayout BackgroundColor="{Binding CoverColor.BackgroundColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Image Source="{Binding CoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill" IsVisible="{Binding HasCoverPhoto}"></Image>
+                        <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
+                                <Label Text="{Binding GroupName}" 
+                                            LineBreakMode="NoWrap" 
+                                            Style="{DynamicResource ListItemTextStyle}" 
+                                            FontSize="16" TextColor="{Binding CoverColor.FontColor}"/>
+                                <Label Text="{Binding Group.SemesterAndYear}" 
+                                            LineBreakMode="NoWrap"
+                                            Style="{DynamicResource ListItemDetailTextStyle}"
+                                            FontSize="13" TextColor="{Binding CoverColor.FontColor}"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </AbsoluteLayout>
+                </Frame>
+
+                <!-- Group Name -->
+                <Frame>
+                    <StackLayout>
+                        <Label FontSize="Micro" Margin="5,0,0,0">Group Name</Label>
+                        <Entry Text="{Binding GroupName, Mode=TwoWay}" Margin="0,-15,0,0"></Entry>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Members -->
+                <Frame>
+                    <StackLayout>
+                        <Label FontSize="Default" Margin="5,0,0,0">Members</Label>
+
+                        <!-- Collection View-->
+                        <CollectionView ItemsSource="{Binding GroupMembers}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Orientation="Horizontal" Margin="0,20,0,0">
+
+                                        <!-- Profile Picture -->
+                                        <Frame CornerRadius="800" Padding="0,0,0,0" WidthRequest="70" HeightRequest="70" HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image Source="{Binding ProfilePictureSource}" Aspect="AspectFill"></Image>
+                                        </Frame>
+
+                                        <!-- Name -->
+                                        <Label Text="{Binding Name}"  Margin="10,0,0,0" FontSize="Body"></Label>
+
+                                        <!-- Kick Button -->
+                                        <Frame CornerRadius="800" Padding="0,0,0,0" WidthRequest="50" HeightRequest="50" HorizontalOptions="EndAndExpand" VerticalOptions="Center" BackgroundColor="White" HasShadow="False">
+                                            <ImageButton Source="delete.png" WidthRequest="50" HeightRequest="50" BackgroundColor="White"></ImageButton>
+                                        </Frame>
+
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!-- Add member -->
+                        <StackLayout Orientation="Horizontal" Margin="0,20,0,10">
+
+                            <!-- Profile Picture -->
+                            <Frame CornerRadius="800" Padding="0,0,0,0" WidthRequest="70" HeightRequest="70" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Source="add.png" Aspect="AspectFill"></Image>
+                            </Frame>
+
+                            <!-- Name -->
+                            <Label Text="Add member"  Margin="10,0,0,0" FontSize="Body"></Label>
+
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Image Buttons -->
+                <Frame>
+                    <StackLayout>
+                        <Label Text="Cover Photo" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <Button CornerRadius="9" Text="Pick Cover Photo" Command="{Binding PickImageCommand}" HorizontalOptions="FillAndExpand"></Button>
+                        <Button CornerRadius="9" Text="Remove Cover Photo" Command="{Binding RemoveImageCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding HasCoverPhoto}" BackgroundColor="#EB5757"></Button>
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:DataType="vm:GroupInfoViewModel" Margin="0,8,0,8">
+                    <StackLayout>
+                        <Label Text="Banner Colours" FontSize="Medium" FontAttributes="Bold"></Label>
+                        <FlexLayout  x:Name="ColourListView"
+                         BindableLayout.ItemsSource="{Binding ColorChoices}" JustifyContent="SpaceAround" Wrap="Wrap">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame x:DataType="model:CoverColor" WidthRequest="35" HeightRequest="35" CornerRadius="18" Margin="5,5,5,5" Padding="0,0,0,0" BackgroundColor="{Binding BackgroundColor}" HorizontalOptions="Start">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                            NumberOfTapsRequired="1"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupInfoViewModel}}, Path=SelectColorCommand}"		
+                                            CommandParameter="{Binding .}">
+                                            </TapGestureRecognizer>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </StackLayout>
+                </Frame>
+
+                <!--<Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" CornerRadius="9" Text="{Binding ArchiveButtonText}" Command="{Binding TapArchiveButtonCommand}" HorizontalOptions="FillAndExpand"></Button>
+                    <Button Grid.Row="0" Grid.Column="1" CornerRadius="9" Text="Leave Group" Command="{Binding DeleteAssignmentCommand}" HorizontalOptions="FillAndExpand" BackgroundColor="#EB5757"></Button>
+                </Grid>-->
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

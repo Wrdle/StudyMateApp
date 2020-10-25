@@ -3,37 +3,128 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Mobile.Views.ProfilePage"
              xmlns:vm="clr-namespace:Mobile.ViewModels"
+             xmlns:model="clr-namespace:Mobile.Models"
+             xmlns:local="clr-namespace:Mobile.ViewModels"
              Title="{Binding Title}">
 
     <ContentPage.BindingContext>
         <vm:ProfileViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Content>
-        <StackLayout Padding="20">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="" Text="Edit"/>
+        <ToolbarItem Text="Edit Profile" Order="Secondary" Clicked="EditProfilePopupCommandAsync"></ToolbarItem>
+        <ToolbarItem Text="Edit Profile Picture" Order="Secondary" Command="{Binding EditProfilePictureCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+
+            <!--User Info-->
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height ="*"/>
-                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="20"/>
+                    <RowDefinition Height ="20"/>
+                    <RowDefinition Height ="20"/>
+                    <RowDefinition Height ="20"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <Label Text="{Binding DisplayName}" Grid.Row="0" Grid.Column="1"/>
-                <Label Text="{Binding DisplayUniversity}" Grid.Row="1" Grid.Column="1"/>
+                <Frame Grid.Column="0" Grid.RowSpan="4" Padding="0,0,0,0" HasShadow="False">
+                    <Frame CornerRadius="800" Padding="0,0,0,0" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image Source="{Binding ProfilePicture}" Aspect="AspectFill"></Image>
+                    </Frame>
+                </Frame>
+                <Label Text="{Binding DisplayUsername}" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding DisplayInstitution}" Grid.Row="1" Grid.Column="1"/>
+                <Label Text="{Binding DisplayMajor}" Grid.Row="2" Grid.Column="1"/>
+                <Label Text="{Binding DisplayEmail}" Grid.Row="3" Grid.Column="1"/>
             </Grid>
 
-            <Frame CornerRadius="2" Padding="0,0,0,0" VerticalOptions="StartAndExpand">
-                <Label Text="{Binding SkillsTitle}"/>
-                
+            <!--Skills-->
+            <Frame HasShadow="True">
+                <StackLayout>
+                    <Label Text="Skills" FontSize="Medium" FontAttributes="Bold"></Label>
+                    <FlexLayout x:Name="UsersCurrentSkillsView" Wrap="Wrap"                     
+                        BindableLayout.ItemsSource="{Binding UsersCurrentSkills}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="5" x:DataType="x:String" 
+                                       BackgroundColor="#56CCF2" HasShadow="False" 
+                                       Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
+                                       VerticalOptions="FillAndExpand"
+                                       Margin="8,0,0,0"
+                                       HeightRequest="30">
+                                    <StackLayout AbsoluteLayout.LayoutFlags="All">
+                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                                            <Label Text="{Binding .}" TextColor="White">
+                                            </Label>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                    <Button Text="Add Skill" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
+                    BackgroundColor="#4F4F4F" HorizontalOptions="Center" WidthRequest="60"
+                    CornerRadius="5" Clicked="AddSkillPopupCommandAsync"/>
+                </StackLayout>
+            </Frame>
 
+            <!--Current Subjects-->
+            <Frame HasShadow="True">
+                <StackLayout>
+                    <Label Text="Current Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
+                    <FlexLayout x:Name="UsersCurrentSubjectsView" Wrap="Wrap"                      
+                        BindableLayout.ItemsSource="{Binding UsersCurrentSubjects}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="5" x:DataType="x:String" 
+                                       BackgroundColor="#27ae60" HasShadow="False" 
+                                       Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
+                                       VerticalOptions="FillAndExpand"
+                                       Margin="8,0,0,0"
+                                       HeightRequest="30">
+                                    <StackLayout AbsoluteLayout.LayoutFlags="All">
+                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                                            <Label Text="{Binding .}" TextColor="White">
+                                            </Label>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+
+                    <!--Previous Subjects-->
+                    <Label Text="Previous Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
+                    <FlexLayout x:Name="UsersPreviousSubjectsView" Wrap="Wrap"                      
+                        BindableLayout.ItemsSource="{Binding UsersPreviousSubjects}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="5" x:DataType="x:String" 
+                                       BackgroundColor="#bdbdbd" HasShadow="False" 
+                                       Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
+                                       VerticalOptions="FillAndExpand"
+                                       Margin="8,0,0,0"
+                                       HeightRequest="30">
+                                    <StackLayout AbsoluteLayout.LayoutFlags="All">
+                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                                            <Label Text="{Binding .}" TextColor="White">
+                                            </Label>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                    <Button Text="Add Subject" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
+                    BackgroundColor="#4F4F4F" HorizontalOptions="Center" WidthRequest="60"
+                    CornerRadius="5" Clicked="AddSubjectPopupCommandAsync"/>
+                </StackLayout>
             </Frame>
         </StackLayout>
-    </ContentPage.Content>
+    </ScrollView>
 </ContentPage>
-
-<!--<Frame>
-    <Frame CornerRadius="2" Padding="0,0,0,0" VerticalOptions="StartAndExpand">
-    </Frame>
-</Frame>-->

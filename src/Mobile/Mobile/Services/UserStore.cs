@@ -4,9 +4,15 @@ using Mobile.Data;
 using Mobile.Models;
 using Mobile.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Forms;
+using SkillEntity = Mobile.Data.Entites.Skill;
 using UserEntity = Mobile.Data.Entites.User;
+using UserSubjectEntity = Mobile.Data.Entites.UserSubject;
+using UserSkillEntity = Mobile.Data.Entites.UserSkill;
+using Mobile.Views;
 
 namespace Mobile.Services
 {
@@ -15,6 +21,8 @@ namespace Mobile.Services
         //------------------------------
         //          Fields
         //------------------------------
+
+        private readonly ImageConverter _imageConverter;
 
         private static long? _currentUserId = null;
 
@@ -50,7 +58,7 @@ namespace Mobile.Services
 
         public UserStore()
         {
-
+            _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
         //------------------------------
@@ -65,7 +73,9 @@ namespace Mobile.Services
                 var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Email == normalizedEmail);
                 if (user == null)
                 {
-                    throw new Exception(Error.IncorrectEmailPassword);
+                    user = new UserEntity { Email = email.ToUpper(), FirstName = "John", LastName = "Smith" };
+                    await dbContext.Users.AddAsync(user);
+                    await dbContext.SaveChangesAsync();
                 }
 
                 _currentUserId = user.Id;
@@ -75,6 +85,7 @@ namespace Mobile.Services
         public async Task Logout()
         {
             _currentUserId = null;
+            Application.Current.MainPage = new LoginPage();
         }
 
         public async Task CreateAccount(string email, string firstName, string lastName)
@@ -84,6 +95,7 @@ namespace Mobile.Services
                 Email = email.ToUpper(),
                 FirstName = firstName.ToUpper(),
                 LastName = lastName.ToUpper(),
+                ProfilePictureBytes = new byte[] { }
             };
 
             using (var dbContext = new AppDbContext())
@@ -114,23 +126,18 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
-                var userSkills = await dbContext.UserSkills
+                // Get user entity
+                var user = await dbContext.Users
+                    .Include(u => u.UserSubjects)
+                    .SingleOrDefaultAsync(u => u.Id == CurrentUserId);
+
+                // Get user's current skills
+                var skills = await dbContext.UserSkills
                     .Include(us => us.User)
                     .Include(us => us.Skill)
                     .Where(us => us.UserId == _currentUserId.Value)
+                    .Select(us => us.Skill.Name)
                     .ToListAsync();
-
-                // This is probably not a good idea. A user may have just not added skills yet.
-                /*if (userSkills.Count < 1)
-                {
-                    throw new Exception(Error.AccountDoesNotExist);
-                }
-
-                var user = userSkills[0].User;*/
-
-                var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == CurrentUserId);
-
-                var skills = userSkills.Select(us => new Skill(us.Skill.Id, us.Skill.Name)).ToList();
 
                 return new User
                 {
@@ -140,6 +147,10 @@ namespace Mobile.Services
                     LastName = user.LastName,
                     Institution = user.Institution,
                     Major = user.Major,
+
+                    ProfilePicture = user.ProfilePictureBytes != null && user.ProfilePictureBytes.Length > 0 ? _imageConverter.BytesToImage(user.ProfilePictureBytes) : ImageSource.FromFile("user.png"),
+                    CurrentSubjects = user.UserSubjects.Where(us => us.IsCurrent).Select(us => us.Subject).ToList(),
+                    PreviousSubjects = user.UserSubjects.Where(us => !us.IsCurrent).Select(us => us.Subject).ToList(),
                     Skills = skills
                 };
             }
@@ -154,26 +165,77 @@ namespace Mobile.Services
 
             using (var dbContext = new AppDbContext())
             {
-                var savedUser = await dbContext.Users.SingleAsync(u => u.Id == _currentUserId.Value);
-                if (savedUser == null)
+                using (var transaction = await dbContext.Database.BeginTransactionAsync())
                 {
-                    throw new Exception(Error.AccountDoesNotExist);
-                }
+                    try
+                    {
+                        // Get current user
+                        var savedUser = await dbContext.Users
+                            .Include(u => u.UserSubjects)
+                            .Include(u => u.UserSkills)
+                            .SingleOrDefaultAsync(u => u.Id == _currentUserId.Value);
 
-                savedUser.FirstName = user.FirstName;
-                savedUser.LastName = user.LastName;
-                savedUser.Institution = user.Institution;
-                savedUser.Major = user.Major;
+                        if (savedUser == null)
+                        {
+                            throw new Exception(Error.AccountDoesNotExist);
+                        }
 
-                try
-                {
-                    dbContext.Users.Update(savedUser);
-                    await dbContext.SaveChangesAsync();
-                    return user;
-                }
-                catch (Exception)
-                {
-                    throw new Exception(Error.ServerFailure);
+                        // Update user fields
+                        savedUser.FirstName = user.FirstName;
+                        savedUser.LastName = user.LastName;
+                        savedUser.Institution = user.Institution;
+                        savedUser.Major = user.Major;
+                        savedUser.ProfilePictureBytes = user.ProfilePictureBytes;
+                        savedUser.UserSubjects.Clear();
+
+                        var currentSubjects = user.CurrentSubjects.Select((cs) => new UserSubjectEntity { Subject = cs, IsCurrent = true });
+                        (savedUser.UserSubjects as List<UserSubjectEntity>).AddRange(currentSubjects);
+                        var previousSubjects = user.PreviousSubjects.Select((cs) => new UserSubjectEntity { Subject = cs, IsCurrent = false });
+                        (savedUser.UserSubjects as List<UserSubjectEntity>).AddRange(currentSubjects);
+
+                        savedUser.UserSkills.Clear();
+                        dbContext.Users.Update(savedUser);
+                        await dbContext.SaveChangesAsync();
+
+                        // Normalize updated skills
+                        for (int i = 0; i < user.Skills.Count; i++)
+                        {
+                            user.Skills[i] = user.Skills[i].Trim().ToLower();
+                        }
+
+                        // Get skills that exist in the database
+                        var existingSkills = await dbContext.Skills
+                            .Where(s => user.Skills.Contains(s.Name))
+                            .ToListAsync();
+
+                        // Get skills that don't exist in the database and add them
+                        var skillsNotInDb = new List<SkillEntity>();
+                        foreach (var skill in user.Skills)
+                        {
+                            if (!existingSkills.Any(s => s.Name == skill))
+                            {
+                                skillsNotInDb.Add(new SkillEntity { Name = skill });
+                            }
+                        }
+                        await dbContext.Skills.AddRangeAsync(skillsNotInDb);
+                        await dbContext.SaveChangesAsync();
+                        existingSkills.Concat(skillsNotInDb);
+
+                        // Assign skills to user
+                        var newUserSkills = existingSkills
+                            .Select(s => new UserSkillEntity { UserId = savedUser.Id, SkillId = s.Id })
+                            .ToList();
+                        await dbContext.UserSkills.AddRangeAsync(newUserSkills);
+                        await dbContext.SaveChangesAsync();
+
+                        // Commit transaction
+                        await transaction.CommitAsync();
+                        return user;
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception(Error.ServerFailure);
+                    }
                 }
             }
         }

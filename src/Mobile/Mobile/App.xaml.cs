@@ -1,6 +1,7 @@
 ﻿using Mobile.Data;
 using Mobile.Services;
 using Mobile.Services.Interfaces;
+using Mobile.Views;
 using MvvmHelpers;
 using Xamarin.Forms;
 
@@ -11,12 +12,9 @@ namespace Mobile
 
         public App()
         {
-            // Initialize app
             InitializeComponent();
-
-            // Register services
-            DependencyService.Register<ICoverColorStore, CoverColorStore>();
-            DependencyService.Register<MockDataStore>();
+            DependencyService.Register<ImageConverter>();
+            DependencyService.Register<ICoverColorStore, CoverColorStore>();    
             DependencyService.Register<IUserStore, UserStore>();
             DependencyService.Register<IGroupStore, GroupStore>();
             DependencyService.Register<IAssignmentStore, AssignmentStore>();
@@ -27,11 +25,11 @@ namespace Mobile
 
             {
                 var userStore = DependencyService.Get<IUserStore>();
-                userStore.Login(AppDbSeeder.TestUser.Email, "").SafeFireAndForget();
+                //userStore.Login(AppDbSeeder.TestUser.Email, "").SafeFireAndForget();
             }
 
-            // Set main page
-            MainPage = new AppShell();
+            // Load the login page on app startup
+            MainPage = new NavigationPage(new LoginPage());
         }
 
         protected override void OnStart()

@@ -1,8 +1,9 @@
 ﻿using Mobile.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
+using System.Runtime.CompilerServices;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
@@ -10,25 +11,21 @@ namespace Mobile.ViewModels.Assignments
     [QueryProperty(nameof(inputAssignmentID), nameof(AssignmentID))]
     class AssignmentViewModel : BaseViewModel
     {
-        public Command<Checkpoint> CheckpointTapped { get; }
-
-        /// <summary>
-        /// Constructor for AssignmentViewModel. Called on class instantiation
-        /// </summary>
-        public AssignmentViewModel()
-        {
-            Title = "Assignment";
-            Debug.WriteLine("We made it to the assignment page");
-
-            CheckpointTapped = new Command<Checkpoint>(OnCheckpointSelected);
-        }
-
-        // =============================
-        //       ASSIGNMENT DATA
-        // =============================
+        //------------------------------
+        //          Fields
+        //------------------------------
 
         private Assignment assignment;
+        private long assignmentID;
+        private string assignmentNotes;
+        private bool showCoverPhoto;
+        private Checkpoint _selectedCheckpoint;
+        private ObservableCollection<Checkpoint> checkpoints;
 
+        public Command SettingsTapped { get; }
+        public Command<Checkpoint> CheckpointTapped { get; }
+
+        // Current Assignment
         public Assignment Assignment
         {
             get => assignment;
@@ -41,44 +38,49 @@ namespace Mobile.ViewModels.Assignments
             set => AssignmentID = Convert.ToInt64(value);
         }
 
-        private long assignmentID;
-
         public long AssignmentID
         {
             get => assignmentID;
             set
             {
                 SetProperty(ref assignmentID, Convert.ToInt64(value));
-                LoadAssignmentId(value);
             }
         }
 
+        // Assignment Notes
+        public string AssignmentNotes
+        {
+            get => assignmentNotes;
+            set
+            {
+                // Update Locally
+                SetProperty(ref assignmentNotes, value);
+
+                if (value != null)
+                {
+                    assignment.Notes = value;
+
+                    // Update DB 
+                    AssignmentStore.Update(assignment);
+                }
+            }
+        }
 
         // SHOW COVER PHOTO
-        private bool showCoverPhoto;
-
         public bool ShowCoverPhoto
         {
             get => showCoverPhoto;
             set => SetProperty(ref showCoverPhoto, value);
         }
 
-
         // CHECKPOINTS
-        private ObservableCollection<Checkpoint> checkpoints;
-
         public ObservableCollection<Checkpoint> Checkpoints
         {
             get => checkpoints;
             set => SetProperty(ref checkpoints, value);
         }
 
-        // =============================
-        //       TAP CHECKPOINT
-        // =============================
-
-        private Checkpoint _selectedCheckpoint;
-
+        // Checkpoint Tapped
         public Checkpoint SelectedCheckpoint
         {
             get => _selectedCheckpoint;
@@ -87,6 +89,30 @@ namespace Mobile.ViewModels.Assignments
                 SetProperty(ref _selectedCheckpoint, value);
                 OnCheckpointSelected(value);
             }
+        }
+
+        //------------------------------
+        //          Constructors
+        //------------------------------
+
+        /// <summary>
+        /// Constructor for AssignmentViewModel. Called on class instantiation
+        /// </summary>
+        public AssignmentViewModel()
+        {
+            Title = "Assignment";
+
+            CheckpointTapped = new Command<Checkpoint>(OnCheckpointSelected);
+            SettingsTapped = new Command(OnSettingsTapped);
+        }
+
+        //------------------------------
+        //          Methods
+        //------------------------------
+
+        public void OnAppearing()
+        {
+            LoadAssignmentId(AssignmentID);
         }
 
         /// <summary>
@@ -102,6 +128,15 @@ namespace Mobile.ViewModels.Assignments
             await Shell.Current.GoToAsync($"assignments/assignmentCheckpoint?{nameof(CheckpointViewModel.CheckpointID)}={checkpoint.Id}");
         }
 
+        async void OnSettingsTapped()
+        {
+            if (Assignment == null)
+                return;
+
+            // This will push the CheckpointPage onto the navigation stack
+            await Shell.Current.GoToAsync($"assignments/assignmentSettings?{nameof(AssignmentSettingsViewModel.AssignmentID)}={Assignment.Id}");
+        }
+
         /// <summary>
         /// Loads a assignment from the datastore given an assignment id
         /// </summary>
@@ -115,10 +150,10 @@ namespace Mobile.ViewModels.Assignments
 
                 // Extract and store data
                 Title = assignment.Title;
+                AssignmentNotes = assignment.Notes;
                 ShowCoverPhoto = CheckCoverPhoto();
 
                 var coverColors = await CoverColorStore.GetAll();
-                //CoverBackgroundColor = coverColors.SingleOrDefault(cc => cc.Id == assignment.CoverColor.Id).BackgroundColor;
 
                 // Load the assignments checkpoints
                 LoadCheckpoints(Assignment.Id);
