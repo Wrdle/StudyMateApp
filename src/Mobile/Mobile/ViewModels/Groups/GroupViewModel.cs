@@ -11,6 +11,7 @@ namespace Mobile.ViewModels.Groups
     {
         public Command<Assignment> AssignmentTapped { get; }
         public Command AddAssignmentCommand { get; }
+        public Command InfoTappedCommand { get; }
 
         public GroupViewModel()
         {
@@ -18,6 +19,7 @@ namespace Mobile.ViewModels.Groups
             Debug.WriteLine("We made it to the group page");
             AssignmentTapped = new Command<Assignment>(OnAssignmentSelected);
             AddAssignmentCommand = new Command(OnAddAssignmentTapped);
+            InfoTappedCommand = new Command(OnInfoTappedCommand);
         }
 
         // =============================
@@ -116,6 +118,11 @@ namespace Mobile.ViewModels.Groups
         async void OnAddAssignmentTapped()
         {
             await Shell.Current.GoToAsync($"assignments/addAssignment?{nameof(AddAssignmentViewModel.GroupID)}={Group.Id}");
+        }
+
+        async void OnInfoTappedCommand()
+        {
+            await Shell.Current.GoToAsync($"groups/groupInfo?{nameof(GroupInfoViewModel.GroupId)}={Group.Id}");
         }
     }
 }

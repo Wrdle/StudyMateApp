@@ -9,7 +9,7 @@
     <!--Toolbar-->
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="add.png" Command="{Binding AddAssignmentCommand}"></ToolbarItem>
-        <ToolbarItem IconImageSource="tab_about.png"></ToolbarItem>
+        <ToolbarItem IconImageSource="tab_about.png" Command="{Binding InfoTappedCommand}"></ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <!--Content-->
