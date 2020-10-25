@@ -251,7 +251,7 @@ namespace Mobile.Services
                         Title = ga.Assignment.Title,
                         DateDue = ga.Assignment.Due,
                         CoverColor = new CoverColor { Id = ga.Assignment.CoverColor.Id, BackgroundColor = ga.Assignment.CoverColor.BackgroundColorFromHex, FontColor = ga.Assignment.CoverColor.FontColorFromHex },
-                        CoverPhoto = _imageConverter.BytesToImage(ga.Assignment.CoverPhoto)
+                        CoverPhotoBytes = ga.Assignment.CoverPhotoBytes
                     })
                     .ToListAsync();
 
