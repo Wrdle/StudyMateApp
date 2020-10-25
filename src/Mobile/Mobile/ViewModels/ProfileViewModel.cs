@@ -1,24 +1,17 @@
-﻿using Mobile.Data.Entites;
-using Mobile.Models;
-using MvvmHelpers.Commands;
-using Rg.Plugins.Popup.Services;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Mobile.Views.Profile;
-using static Mobile.Helpers.Helpers;
 
 // Helpers
+using static Mobile.Helpers.Helpers;
+
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore.Query;
 using Acr.UserDialogs;
 using Mobile.Data;
 using Mobile.Services.Interfaces;
+using Xamarin.Forms;
 
 namespace Mobile.ViewModels
 {
@@ -66,6 +59,11 @@ namespace Mobile.ViewModels
         public string Email
         {
             get => email;
+        }
+
+        public ImageSource ProfilePicture
+        {
+            get => LoggedInUser.ProfilePicture;
         }
 
         public string DisplayUsername => $"Name: {FirstName}" + " " + $"{LastName}";

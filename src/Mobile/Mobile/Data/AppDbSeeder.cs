@@ -26,6 +26,7 @@ namespace Mobile.Data
             LastName = "User",
             Institution = "QUT",
             Major = "Pro Gamer",
+            ProfilePictureBytes = EncodedImages.Image3,
             UserSubjects = new List<UserSubject>
             {
                 new UserSubject { Subject = "Swag101", IsCurrent = true },

@@ -13,7 +13,7 @@
     <ScrollView>
         <!--<RefreshView x:DataType="local:ProfileViewModel" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">-->
         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
-
+        
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height ="20"/>
@@ -25,6 +25,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
+                <Frame Grid.Column="0" Grid.RowSpan="4" Padding="0,0,0,0" HasShadow="False">
+                    <Frame CornerRadius="800" Padding="0,0,0,0" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image Source="{Binding ProfilePicture}" Aspect="AspectFill"></Image>
+                    </Frame>
+                </Frame>
                 <Label Text="{Binding DisplayUsername}" Grid.Row="0" Grid.Column="1"/>
                 <Label Text="{Binding DisplayInstitution}" Grid.Row="1" Grid.Column="1"/>
                 <Label Text="{Binding DisplayMajor}" Grid.Row="2" Grid.Column="1"/>
