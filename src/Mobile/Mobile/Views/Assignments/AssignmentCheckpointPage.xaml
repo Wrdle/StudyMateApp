@@ -125,13 +125,13 @@
 
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <StackLayout Orientation="Horizontal">
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                         <CheckBox x:Name="checkBox" IsChecked="{Binding IsDone}" Color="DarkSeaGreen"/>
-                                        <Label VerticalOptions="Center" Text="{ Binding Text }">
+                                        <components:CustomEntry VerticalOptions="Center" HorizontalOptions="FillAndExpand"  Text="{ Binding Text, Mode=TwoWay}">
 
                                             <!-- Checkbox animation -->
-                                            <Label.Triggers>
-                                                <DataTrigger TargetType="Label"
+                                            <components:CustomEntry.Triggers>
+                                                <DataTrigger TargetType="Entry"
                                              Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}"
                                              Value="true">
                                                     <Setter Property="FontAttributes"
@@ -140,8 +140,8 @@
                                             Value="Medium" />
 
                                                 </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
+                                            </components:CustomEntry.Triggers>
+                                        </components:CustomEntry>
                                     </StackLayout>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>

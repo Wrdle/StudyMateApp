@@ -25,7 +25,7 @@ namespace Mobile
 
             {
                 var userStore = DependencyService.Get<IUserStore>();
-                userStore.Login(AppDbSeeder.TestUser.Email, "").SafeFireAndForget();
+                //userStore.Login(AppDbSeeder.TestUser.Email, "").SafeFireAndForget();
             }
 
             // Load the login page on app startup
