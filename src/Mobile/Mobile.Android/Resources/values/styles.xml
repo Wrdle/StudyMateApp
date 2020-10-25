@@ -14,7 +14,7 @@
     <item name="colorPrimaryDark">#080808</item>
     <!-- colorAccent is used as the default value for colorControlActivated
          which is used to tint widgets -->
-<!-- <item name="colorAccent">#9c050a</item> -->
+    <item name="colorAccent">#9c050a</item>
 
   </style>
 </resources>

@@ -7,10 +7,6 @@
              xmlns:components="clr-namespace:Mobile.Components;assembly=Mobile"
              Title="{ Binding Title }">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="settings.png"></ToolbarItem>
-    </ContentPage.ToolbarItems>
-
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="Fill" Orientation="Vertical">
@@ -54,8 +50,11 @@
                                 Text="Description: "
                                 TextColor="Black"
                                 />
-                            <Editor
+                            <components:CustomEditor
                                 Placeholder="Add a description here"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand"
+                                HeightRequest="70"
                                 Text="{Binding CheckpointNotes, Mode=TwoWay}"
                                 AutoSize="TextChanges" MaxLength="110" Keyboard="Text"
                                 />
@@ -77,24 +76,24 @@
                             FontSize="Medium"
                             FontAttributes="Bold"
                             />
-                            <Button
+                            <!--<Button
                                 Grid.Column="1"
                                 Text="+"
                                 FontAttributes="Bold"
                                 BackgroundColor="#bcc3c4"
-                                HeightRequest="33"
-                                HorizontalOptions="EndAndExpand"
-                                VerticalOptions="EndAndExpand"
+                                HeightRequest="35"
+                                HorizontalOptions="End"
+                                VerticalOptions="End"
                                 BorderRadius="360"
-                                WidthRequest="33"
+                                WidthRequest="35"
                                 Clicked="Button_Clicked"
-                            />
+                            />-->
                         </Grid>
                         <StackLayout
                             Orientation="Horizontal"
-                                HorizontalOptions="StartAndExpand"
-                                x:Name="CheckpointUserListItem"
-                                BindableLayout.ItemsSource="{Binding Checkpoint.AssignedUsers}"
+                            HorizontalOptions="StartAndExpand"
+                            x:Name="CheckpointUserListItem"
+                            BindableLayout.ItemsSource="{Binding Checkpoint.AssignedUsers}"
                                 >
                             <!-- Assigned users list: auto add user profile pic -->
                             <BindableLayout.ItemTemplate >
@@ -139,7 +138,7 @@
                                             Value="Italic, Bold" />
                                                     <Setter Property="FontSize"
                                             Value="Medium" />
-                                            
+
                                                 </DataTrigger>
                                             </components:CustomEntry.Triggers>
                                         </components:CustomEntry>

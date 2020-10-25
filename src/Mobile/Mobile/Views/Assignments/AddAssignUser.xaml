@@ -6,20 +6,6 @@
     xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup" xmlns:model="clr-namespace:Mobile.Models"
     x:Class="Mobile.Views.Assignments.AddAssignUser">
 
-    <!--Animation-->
-    <!--<pages:PopupPage.Animation>
-        <animations:ScaleAnimation 
-            PositionIn="Center"
-            PositionOut="Center"
-            ScaleIn="1.2"
-            ScaleOut="0.8"
-            DurationIn="400"
-            DurationOut="300"
-            EasingIn="SinOut"
-            EasingOut="SinIn"
-            HasBackgroundAnimation="True"/>
-    </pages:PopupPage.Animation>-->
-
     <!-- List of unassigned users: -->
     <StackLayout
         x:Name="UnassignedUserList"
@@ -35,7 +21,7 @@
                 BackgroundColor="DarkSeaGreen"
                 CornerRadius="9"
                 />
-        <StackLayout Orientation="Horizontal" BindableLayout.ItemsSource="{ Binding Checkpoint.UnassignUser }">
+        <StackLayout Orientation="Horizontal" BindableLayout.ItemsSource="{ Binding Checkpoint.UnassignedUsers }">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="model:CheckpointUserListItem">
                     <StackLayout Orientation="Horizontal">
@@ -43,8 +29,8 @@
                         <CheckBox x:Name="checkBox1"  Color="DarkSeaGreen"/>
                         <Label VerticalOptions="Center" Text="{ Binding Email }">
 
-                            <!-- Checkbox animation -->
-                            <!--<Label.Triggers>
+                            <!--Checkbox animation-->
+                            <Label.Triggers>
                                 <DataTrigger TargetType="Label"
                                              Binding="{Binding Source={x:Reference checkBox1}, Path=IsChecked}"
                                              Value="true">
@@ -53,7 +39,7 @@
                                     <Setter Property="FontSize"
                                             Value="Medium" />
                                 </DataTrigger>
-                            </Label.Triggers>-->
+                            </Label.Triggers>
                         </Label>
                     </StackLayout>
                 </DataTemplate>

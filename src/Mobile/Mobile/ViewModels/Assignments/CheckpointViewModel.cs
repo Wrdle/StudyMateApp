@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Xamarin.Forms;
 using Mobile.ViewModels.Assignments;
-using System.Diagnostics;
-using Mobile.Models;
 using System.Threading.Tasks;
 
 namespace Mobile.ViewModels.Assignments
