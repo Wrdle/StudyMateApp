@@ -31,7 +31,7 @@
                 <StackLayout>
                     <Label Text="{Binding Checkpoint.AssignedUsers}" FontSize="Small"></Label>
                     <Button Text="Add member"
-                            BackgroundColor="#32573a"
+                            BackgroundColor="Gray"
                             HeightRequest="46"
                             BorderRadius="9"
                             BorderWidth="2"/>
@@ -47,7 +47,7 @@
 
                     <!-- Check box: Checklist items -->
                     <StackLayout x:Name="CheckListItems"
-                                 BindableLayout.ItemsSource="{ Binding Checklist }"
+                                 BindableLayout.ItemsSource="{ Binding Checkpoint.ChecklistItems }"
                                  FlowDirection="LeftToRight">
 
                         <BindableLayout.ItemTemplate>
@@ -55,7 +55,6 @@
                                 <StackLayout Orientation="Horizontal">
                                     <CheckBox x:Name="checkBox" IsChecked="{Binding IsDone}" Color="DarkSeaGreen"/>
                                     <Label VerticalOptions="Center" Text="{ Binding Text }">
-
                                         <!-- Checkbox animation -->
                                         <Label.Triggers>
                                             <DataTrigger TargetType="Label"
@@ -67,12 +66,12 @@
                                             Value="Medium" />
                                             </DataTrigger>
                                         </Label.Triggers>
-
                                     </Label>
                                 </StackLayout>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </StackLayout>
+
 
                     <!-- ADD task button -->
                     <Grid>
@@ -82,7 +81,7 @@
                         </Grid.ColumnDefinitions>
                         <Button Text="Add task"
                                 CornerRadius="9"
-                                BackgroundColor="#32573a"
+                                BackgroundColor="Gray"
                                 HeightRequest="46"
                                 Clicked="AddTaskPopup"/>
                     </Grid>

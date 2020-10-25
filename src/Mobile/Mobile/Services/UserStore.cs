@@ -91,7 +91,7 @@ namespace Mobile.Services
                 Email = email.ToUpper(),
                 FirstName = firstName.ToUpper(),
                 LastName = lastName.ToUpper(),
-                ProfilePicture = await _imageConverter.ImageToBytes(null)
+                ProfilePictureBytes = new byte[] { }
             };
 
             using (var dbContext = new AppDbContext())
@@ -143,7 +143,7 @@ namespace Mobile.Services
                     LastName = user.LastName,
                     Institution = user.Institution,
                     Major = user.Major,
-                    ProfilePicture = _imageConverter.BytesToImage(user.ProfilePicture),
+                    ProfilePictureBytes = user.ProfilePictureBytes,
                     CurrentSubjects = user.UserSubjects.Where(us => us.IsCurrent).Select(us => us.Subject).ToList(),
                     PreviousSubjects = user.UserSubjects.Where(us => !us.IsCurrent).Select(us => us.Subject).ToList(),
                     Skills = skills
@@ -180,7 +180,7 @@ namespace Mobile.Services
                         savedUser.LastName = user.LastName;
                         savedUser.Institution = user.Institution;
                         savedUser.Major = user.Major;
-                        savedUser.ProfilePicture = await _imageConverter.ImageToBytes(user.ProfilePicture);
+                        savedUser.ProfilePictureBytes = user.ProfilePictureBytes;
                         savedUser.UserSubjects.Clear();
 
                         var currentSubjects = user.CurrentSubjects.Select((cs) => new UserSubjectEntity { Subject = cs, IsCurrent = true });

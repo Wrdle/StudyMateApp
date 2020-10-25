@@ -13,8 +13,7 @@ namespace Mobile.Views.Assignments
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AssignmentPage : ContentPage
     {
-        private AssignmentViewModel _viewModel;
-
+        AssignmentViewModel _viewModel;
         public AssignmentPage()
         {
             InitializeComponent();
@@ -24,8 +23,8 @@ namespace Mobile.Views.Assignments
 
         protected override void OnAppearing()
         {
-            _viewModel.LoadAssignmentId(_viewModel.AssignmentID);
             base.OnAppearing();
+            _viewModel.OnAppearing();
         }
     }
 }

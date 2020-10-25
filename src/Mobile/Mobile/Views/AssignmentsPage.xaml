@@ -11,7 +11,7 @@
 
         <ToolbarItem Text="{Binding ShowArchivedButtonText}" Command="{Binding ShowArchivedCommand}" Order="Secondary"/>
     </ContentPage.ToolbarItems>
-
+    
     <RefreshView x:DataType="local:AssignmentsViewModel" Command="{Binding LoadAssignmentsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <StackLayout>
             <Label Text="{Binding AssignmentsHeading}" FontSize="Large" FontAttributes="Bold" Margin="20,15,0,-5"></Label>

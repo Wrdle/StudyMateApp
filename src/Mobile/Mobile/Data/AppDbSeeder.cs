@@ -24,6 +24,9 @@ namespace Mobile.Data
             Email = "test-user@studymate.com",
             FirstName = "Test",
             LastName = "User",
+            Institution = "QUT",
+            Major = "Pro Gamer",
+            ProfilePictureBytes = EncodedImages.Image3,
             UserSubjects = new List<UserSubject>
             {
                 new UserSubject { Subject = "Swag101", IsCurrent = true },
@@ -83,7 +86,7 @@ namespace Mobile.Data
                 {
                     Name = "Test Group",
                     DateCreated = DateTime.Now,
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhotoBytes = EncodedImages.Image2,
                     CoverColorId = 6,
                     UserGroups = new List<UserGroup>
                     {
@@ -100,7 +103,7 @@ namespace Mobile.Data
                     Title = "Test Assignment",
                     Description = "blah blah blah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhotoBytes = EncodedImages.Image1,
                     CoverColorId = 1,
                     UserAssignments = new List<UserAssignment>
                     {
@@ -115,7 +118,7 @@ namespace Mobile.Data
                     Title = "Test Group Assignment",
                     Description = "blafadagsflah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhotoBytes = new byte[] { },
                     CoverColorId = 8,
                     GroupAssignments = new List<GroupAssignment>
                     {
@@ -167,6 +170,29 @@ namespace Mobile.Data
                 await dbContext.Checkpoints.AddAsync(checkpoint3);
                 await dbContext.SaveChangesAsync();
 
+                // NEW USERSKILL TEST
+                var skill = new Skill
+                {
+                    Id = 1,
+                    Name = "Python",
+                    UserSkills = new List<UserSkill>
+                    {
+                        new UserSkill { UserId = TestUser.Id }
+                    }
+                };
+                var skill2 = new Skill
+                {
+                    Id = 2,
+                    Name = "Unity",
+                    UserSkills = new List<UserSkill>
+                    {
+                        new UserSkill { UserId = TestUser.Id }
+                    }
+                };
+
+                await dbContext.Skills.AddAsync(skill);
+                await dbContext.Skills.AddAsync(skill2);
+                await dbContext.SaveChangesAsync();
             }
         }
     }
