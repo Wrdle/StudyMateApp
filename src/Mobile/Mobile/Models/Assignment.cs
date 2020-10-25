@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Mobile.Services;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Xamarin.Forms;
 
 namespace Mobile.Models
@@ -13,7 +16,7 @@ namespace Mobile.Models
         public ICollection<Skill> Skills { get; set; }
         public DateTime DateDue { get; set; }
         public bool IsArchived { get; set; }
-        public ImageSource CoverPhoto { get; set; }
+        public byte[] CoverPhotoBytes { get; set; }
         public CoverColor CoverColor { get; set; }
 
         /// <summary>
@@ -32,6 +35,33 @@ namespace Mobile.Models
             get
             {
                 return "Due: " + DateDue.ToString("d/M/yyyy");
+            }
+        }
+
+        public ImageSource CoverPhoto
+        {
+            get
+            {
+                if (CoverPhotoBytes != null)
+                    return ImageSource.FromStream(() => new MemoryStream(CoverPhotoBytes));
+                return null;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    var cancellationToken = System.Threading.CancellationToken.None;
+                    using (var imageStream = ((StreamImageSource)value).Stream(cancellationToken).Result)
+                    using (var byteStream = new MemoryStream())
+                    {
+                        imageStream.CopyTo(byteStream);
+                        CoverPhotoBytes = byteStream.ToArray();
+                    }
+                } 
+                else
+                {
+                    CoverPhotoBytes = new byte[] { };
+                }
             }
         }
 

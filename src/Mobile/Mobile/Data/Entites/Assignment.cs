@@ -11,7 +11,7 @@ namespace Mobile.Data.Entites
         public string Notes { get; set; }
         public DateTime Due { get; set; }
         public bool IsArchived { get; set; }
-        public byte[] CoverPhoto { get; set; }
+        public byte[] CoverPhotoBytes { get; set; }
         public int CoverColorId { get; set; }
 
         // Referenced Entities

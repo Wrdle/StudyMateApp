@@ -1,23 +1,30 @@
 ﻿using Mobile.Models;
-using MvvmHelpers;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Mobile.ViewModels.Assignments
 {
     [QueryProperty(nameof(inputAssignmentID), nameof(AssignmentID))]
-    public class AssignmentSettingsViewModel : Mobile.ViewModels.BaseViewModel
+    class AssignmentSettingsViewModel : BaseViewModel
     {
-        private Assignment assignment;
+        private Assignment placeholder = new Assignment() { Id = 0, Title = "", Description = "", Notes = "", Skills = null, DateDue = DateTime.Now, IsArchived = false, CoverPhoto = null, CoverColor = null };
+
         private long assignmentID;
-        bool CoverPhotoChanged;
+        private Assignment assignment;
+
+        public Command PickImageCommand { get; }
+        public Command RemoveImageCommand { get; }
+        public Command ColorTappedCommand { get; }
+        public Command TapArchiveButtonCommand { get; }
+
+        public ObservableCollection<CoverColor> ColorChoices { get; set; }
 
         // ASSIGNMENT ID
         public string inputAssignmentID
@@ -34,205 +41,196 @@ namespace Mobile.ViewModels.Assignments
             }
         }
 
-        private string name = "";
-        public string Name
+        public Assignment Assignment
         {
-            get => name;
-            set => SetProperty(ref name, value);
-        }
-
-
-        public string description;
-        public string Description
-        {
-            get => description;
-            set => SetProperty(ref description, value);
-        }
-
-
-        public DateTime MinDate
-        {
-            get => DateTime.Now;
-        }
-
-
-        public DateTime selectedDate = DateTime.Now;
-        public DateTime SelectedDate
-        {
-            get => selectedDate;
-            set => SetProperty(ref selectedDate, value);
-        }
-
-
-        ImageSource coverPhoto = null;
-        public ImageSource CoverPhoto
-        {
-            get => coverPhoto;
+            get
+            {
+                if (assignment == null)
+                    return placeholder;
+                return assignment;
+            }
             set
             {
-                SetProperty(ref coverPhoto, value);
-                if (CoverPhoto != null)
-                {
-                    ShowRemoveImageButton = true;
-                }
-                else
-                {
-                    ShowRemoveImageButton = false;
-                }
-                CoverPhotoChanged = true;
+                if (value != assignment || value != placeholder)
+                    SetProperty(ref assignment, value);
+                AssignmentStore.Update(value);
             }
         }
 
-
-        public Command PickImageCommand { get; }
-        /// <summary>
-        /// Pick image from phones gallery
-        /// </summary>
-        private async void OnPickImageTapped()
+        public String AssignmentName
         {
-            var selectedPhoto = await RunImagePicker();
-            if (selectedPhoto != null)
-                CoverPhoto = selectedPhoto;
+            get => Assignment.Title;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.Title = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentName));
+            }
         }
 
-
-        private bool showRemoveImageButton;
-        public bool ShowRemoveImageButton
+        public String AssignmentDescription
         {
-            get => showRemoveImageButton;
-            set => SetProperty(ref showRemoveImageButton, value);
+            get => Assignment.Description;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.Description = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentDescription));
+            }
         }
 
-        private bool isArchived;
-        public bool IsArchived
+        public DateTime AssignmentDueDate
         {
-            get => isArchived;
-            set => SetProperty(ref isArchived, value);
+            get => Assignment.DateDue;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.DateDue = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentDueDate));
+            }
         }
 
-
-        public Command RemoveImageCommand { get; }
-        private void OnRemoveImageTapped()
+        public ImageSource AssignmentCoverPhoto
         {
-            CoverPhoto = null;
+            get
+            {
+                OnPropertyChanged(nameof(ShowCoverPhoto));
+                return Assignment.CoverPhoto;
+            }
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.CoverPhoto = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentCoverPhoto));
+                OnPropertyChanged(nameof(ShowCoverPhoto));
+            }
         }
 
-
-        public ObservableCollection<CoverColor> ColorChoices { get; set; }
-
-
-        private CoverColor selectedColor; // Default Colour
-        public CoverColor SelectedColor
+        public bool ShowCoverPhoto
         {
-            get => selectedColor;
-            set => SetProperty(ref selectedColor, value);
+            get => Assignment.CoverPhoto != null;
         }
 
-
-        public Command ColorTappedCommand { get; }
-        /// <summary>
-        /// Set the selected colour
-        /// </summary>
-        /// <param name="colourTapped"></param>
-        private void OnColorTapped(CoverColor colourTapped)
+        public CoverColor AssignmentCoverColor
         {
-            SelectedColor = colourTapped;
+            get => Assignment.CoverColor;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.CoverColor = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentCoverColor));
+            }
         }
 
-
-
-
-        public Command CancelCommand { get; }
-        /// <summary>
-        /// Cancel and return to previous page
-        /// </summary>
-        private async void OnCancel()
+        public bool AssignmentIsArchived
         {
-            // This will pop the current page off the navigation stack
-            await Shell.Current.GoToAsync("../..");
+            get => Assignment.IsArchived;
+            set
+            {
+                var assignmentEdits = Assignment;
+                assignmentEdits.IsArchived = value;
+                Assignment = assignmentEdits;
+                OnPropertyChanged(nameof(AssignmentCoverColor));
+            }
         }
 
-
-        public Command SaveCommand { get; }
-        /// <summary>
-        /// Save assignment and go back one screen
-        /// </summary>
-        private async void OnSave()
-        {
-            assignment.Description = Description;
-            assignment.Title = Name;
-            assignment.DateDue = selectedDate;
-            assignment.CoverColor = SelectedColor;
-            assignment.IsArchived = IsArchived;
-
-            if (CoverPhotoChanged == true)
-                assignment.CoverPhoto = CoverPhoto;
-
-            await AssignmentStore.Update(assignment);
-
-            await Shell.Current.Navigation.PopAsync();
-        }
 
         public string ArchiveButtonText
         {
             get
             {
-                if (IsArchived != true)
+                if (AssignmentIsArchived != true)
                     return "Archive Assignment";
                 return "Unarchive Assignment";
             }
         }
 
-        public Command TapArchiveButtonCommand { get; }
-        private void OnTapArchiveButton()
+        public bool ShowRemoveImageButton
         {
-            IsArchived = IsArchived == true ? false : true;
-            OnPropertyChanged(nameof(ArchiveButtonText));
+            get
+            {
+                if (AssignmentCoverPhoto == null)
+                    return false;
+                return true;
+            }
         }
 
-        /// <summary>
-        /// Defult constructor
-        /// </summary>
         public AssignmentSettingsViewModel()
         {
-            LoadColors().SafeFireAndForget();
-            SaveCommand = new Command(OnSave, ValidateSave);
-            CancelCommand = new Command(OnCancel);
-            PickImageCommand = new Command(OnPickImageTapped);
-            ColorTappedCommand = new Command<CoverColor>(OnColorTapped);
-            RemoveImageCommand = new Command(OnRemoveImageTapped);
-            TapArchiveButtonCommand = new Command(OnTapArchiveButton);
+            //Assignment = placeholder;
 
-            this.PropertyChanged +=
-                (_, __) => SaveCommand.ChangeCanExecute();
+            PickImageCommand = new Command(OnPickImageCommand);
+            RemoveImageCommand = new Command(OnRemoveImageCommand);
+            ColorTappedCommand = new Command<CoverColor>(OnColorTappedCommand);
+            TapArchiveButtonCommand = new Command(OnTapArchiveButton);
         }
 
         public void OnAppearing()
         {
+            //Assignment = placeholder;
             LoadAssignmentId(AssignmentID);
         }
+
+
+        private void OnTapArchiveButton()
+        {
+            AssignmentIsArchived = AssignmentIsArchived == true ? false : true;
+            OnPropertyChanged(nameof(ArchiveButtonText));
+        }
+
+        private async void OnPickImageCommand()
+        {
+            var selectedPhoto = await RunImagePicker();
+            if (selectedPhoto != null)
+            {
+                AssignmentCoverPhoto = selectedPhoto;
+                OnPropertyChanged(nameof(ShowRemoveImageButton));
+            }
+        }
+
+        private void OnRemoveImageCommand()
+        {
+            AssignmentCoverPhoto = null;
+        }
+
+        private void OnColorTappedCommand(CoverColor colorTapped)
+        {
+            AssignmentCoverColor = colorTapped;
+        }
+
 
         /// <summary>
         /// Loads a assignment from the datastore given an assignment id
         /// </summary>
         /// <param name="id">Assignment Id</param>
-        public void LoadAssignmentId(long id)
+        public async void LoadAssignmentId(long id)
         {
             try
             {
                 // Get Assignment
-                assignment = AssignmentStore.GetById(id).Result;
+                assignment = await AssignmentStore.GetById(id);
+                var colorChoices = await CoverColorStore.GetAll();
 
-                Description = assignment.Description;
-                Name = assignment.Title;
-                selectedDate = assignment.DateDue;
-                CoverPhoto = assignment.CoverPhoto;
-                SelectedColor = assignment.CoverColor;
-                IsArchived = assignment.IsArchived;
                 Title = "Edit Assignment";
 
-                CoverPhotoChanged = false;
+                ColorChoices = Helpers.Helpers.ConvertListToObservableCollection<CoverColor>(colorChoices.ToList());
 
+                OnPropertyChanged(nameof(AssignmentName));
+                OnPropertyChanged(nameof(AssignmentDescription));
+                OnPropertyChanged(nameof(AssignmentDueDate));
+                OnPropertyChanged(nameof(AssignmentCoverPhoto));
+                OnPropertyChanged(nameof(AssignmentCoverColor));
+                OnPropertyChanged(nameof(ColorChoices));
+                OnPropertyChanged(nameof(AssignmentIsArchived));
+
+                OnPropertyChanged(nameof(ArchiveButtonText));
+                OnPropertyChanged(nameof(ShowRemoveImageButton));
+                OnPropertyChanged(nameof(ShowCoverPhoto));
             }
             catch (Exception)
             {
@@ -242,27 +240,6 @@ namespace Mobile.ViewModels.Assignments
             {
                 IsBusy = false;
             }
-        }
-
-        public async Task LoadColors()
-        {
-            var coverColors = await CoverColorStore.GetAll();
-            SelectedColor = coverColors.SingleOrDefault(cc => cc.Id == 1);
-            ColorChoices = new ObservableCollection<CoverColor>();
-            foreach (var cc in coverColors)
-            {
-                ColorChoices.Add(cc);
-            }
-        }
-
-        /// <summary>
-        /// Check all fields are valid
-        /// </summary>
-        /// <returns>True/False</returns>
-        private bool ValidateSave()
-        {
-            return !String.IsNullOrWhiteSpace(Name)
-                && !String.IsNullOrWhiteSpace(description);
         }
     }
 }

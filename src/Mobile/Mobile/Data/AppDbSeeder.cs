@@ -72,7 +72,7 @@ namespace Mobile.Data
                 var group = new Group
                 {
                     Name = "Test Group",
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhoto = new byte[] { },
                     CoverColorId = 6,
                     UserGroups = new List<UserGroup>
                     {
@@ -91,7 +91,7 @@ namespace Mobile.Data
                     Title = "Test Assignment",
                     Description = "blah blah blah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = image,
+                    CoverPhotoBytes = image,
                     CoverColorId = 1,
                     UserAssignments = new List<UserAssignment>
                     {
@@ -106,7 +106,7 @@ namespace Mobile.Data
                     Title = "Test Group Assignment",
                     Description = "blafadagsflah",
                     Due = DateTime.UtcNow,
-                    CoverPhoto = await _imageConverter.ImageToBytes(null),
+                    CoverPhotoBytes = new byte[] { },
                     CoverColorId = 8,
                     GroupAssignments = new List<GroupAssignment>
                     {

@@ -15,7 +15,7 @@
             <StackLayout Padding="20,20,20,20">
                 <Frame CornerRadius="2" Padding="0,0,0,0" Margin="0,8,0,8">
                     <AbsoluteLayout BackgroundColor="{Binding AssignmentCoverColor.BackgroundColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                        <Image Source="{Binding AssignmentCoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill"></Image>
+                        <Image Source="{Binding AssignmentCoverPhoto}" HeightRequest="80" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" Aspect="AspectFill" IsVisible="{Binding ShowCoverPhoto}"></Image>
                         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
                             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Orientation="Vertical">
                                 <Label Text="{Binding AssignmentName}" 
@@ -78,10 +78,14 @@
                     </StackLayout>
                 </Frame>
 
-                <StackLayout Orientation="Horizontal">
-                    <Button CornerRadius="9" Text="{Binding ArchiveButtonText}" Command="{Binding TapArchiveButtonCommand}" HorizontalOptions="FillAndExpand"></Button>
-                    <Button CornerRadius="9" Text="Delete Assignment" Command="{Binding DeleteAssignmentCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowRemoveImageButton}" BackgroundColor="#EB5757"></Button>
-                </StackLayout>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" CornerRadius="9" Text="{Binding ArchiveButtonText}" Command="{Binding TapArchiveButtonCommand}" HorizontalOptions="FillAndExpand"></Button>
+                    <Button Grid.Row="0" Grid.Column="1" CornerRadius="9" Text="Delete Assignment" Command="{Binding DeleteAssignmentCommand}" HorizontalOptions="FillAndExpand" BackgroundColor="#EB5757"></Button>
+                </Grid>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
