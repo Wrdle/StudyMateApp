@@ -1,6 +1,9 @@
 ﻿using Mobile.ViewModels;
+using Mobile.ViewModels.Profile;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,48 +17,42 @@ namespace Mobile.Views.Profile
     [XamlCompilation(XamlCompilationOptions.Compile)]
 
 
-    public partial class AddSkillPopup
+    public partial class AddSkillPopup : Rg.Plugins.Popup.Pages.PopupPage
     {
-        Mobile.ViewModels.ProfileViewModel _viewModel;
+        private AddSkillPopupViewModel _viewModel;
+        private ProfileViewModel _parentViewModel;
+
+        string newSkill;
+
         public AddSkillPopup()
         {
+
+        }
+
+        public AddSkillPopup(ProfileViewModel parentViewModel)
+        {
+            CloseWhenBackgroundIsClicked = true;
             InitializeComponent();
-            BindingContext = _viewModel = new ViewModels.ProfileViewModel();
+            BindingContext = _viewModel = new AddSkillPopupViewModel();
+            _parentViewModel = parentViewModel;
         }
 
-        //protected override void OnAppearing()
-        //{
-        //    _viewModel.LoadProfileSkillsCommand.Execute(null);   
-        //}
-
-        private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
+        protected override void OnAppearing()
         {
-            SkillListSearch.ItemsSource = UpdateSearch(e.NewTextValue);
-            
+            base.OnAppearing();
+            _viewModel.OnAppearing();
         }
 
-        private IEnumerable<Models.Skill> UpdateSearch(string searchText = null)
+        private async void OnClick_Cancel(object sender, System.EventArgs e)
         {
-            if (string.IsNullOrEmpty(searchText))
-            {
-                return _viewModel.ProfileSkills;
-            }
-            else
-            {
-                return _viewModel.ProfileSkills.Where(p => p.Name.ToLower().StartsWith(searchText));
-            }
+            await PopupNavigation.Instance.PopAsync();
         }
 
-        void OnTap (Object sender, ItemTappedEventArgs e)
+        private async void OnClick_Create(object sender, System.EventArgs e)
         {
-            Models.Skill tempTappedSkill;
-
-            tempTappedSkill = (Models.Skill)e.Item;
-
-            _viewModel.ProfileSkills.Add(tempTappedSkill);
-            
+            newSkill =  ((AddSkillPopupViewModel)BindingContext).AddSkill();
+            _parentViewModel.ExecuteAddNewSkillAsync(newSkill);
+            await PopupNavigation.Instance.PopAsync();
         }
-
-
     }
 }

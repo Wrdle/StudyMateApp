@@ -15,6 +15,7 @@ namespace Mobile.ViewModels
         public IGroupStore GroupStore { get; }
         public IAssignmentStore AssignmentStore { get; }
         public ICheckpointStore CheckpointStore { get; }
+        public ISkillStore SkillStore { get; }
 
         public Models.User LoggedInUser { get; private set; }
         //------------------------------
@@ -29,6 +30,7 @@ namespace Mobile.ViewModels
             GroupStore = DependencyService.Get<IGroupStore>();
             AssignmentStore = DependencyService.Get<IAssignmentStore>();
             CheckpointStore = DependencyService.Get<ICheckpointStore>();
+            SkillStore = DependencyService.Get<ISkillStore>();
 
             // Temp
             UserStore.Login("test-user@studymate.com", "fake-password");

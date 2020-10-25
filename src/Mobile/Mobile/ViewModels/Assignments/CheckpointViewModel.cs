@@ -1,7 +1,11 @@
-﻿using Mobile.Models;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Xamarin.Forms;
+using Mobile.ViewModels.Assignments;
+using System.Diagnostics;
+using Mobile.Models;
+using System.Threading.Tasks;
 
 namespace Mobile.ViewModels.Assignments
 {
@@ -11,28 +15,13 @@ namespace Mobile.ViewModels.Assignments
     {
 
         private Checkpoint checkpoint;
-        private ObservableCollection<ChecklistItem> checklist;
 
         public Checkpoint Checkpoint
         {
             get => checkpoint;
-            set
-            {
-                SetProperty(ref checkpoint, value);
-                var newChecklist = new ObservableCollection<ChecklistItem>();
-                foreach (var item in value.ChecklistItems)
-                {
-                    newChecklist.Add(item);
-                }
-                Checklist = newChecklist;
-            }
+            set => SetProperty(ref checkpoint, value);
         }
 
-        public ObservableCollection<ChecklistItem> Checklist
-        {
-            get => checklist;
-            set => SetProperty(ref checklist,  value);
-        }
 
 
         private string checkpointID;

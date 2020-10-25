@@ -10,34 +10,36 @@
     <ContentPage.BindingContext>
         <vm:ProfileViewModel />
     </ContentPage.BindingContext>
-
-    <RefreshView x:DataType="local:ProfileViewModel" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+    <ScrollView>
+        <!--<RefreshView x:DataType="local:ProfileViewModel" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">-->
         <StackLayout Padding="20, 20, 20, 20" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
 
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height ="20"/>
                     <RowDefinition Height ="20"/>
-                    <RowDefinition Height ="*"/>
-                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="20"/>
+                    <RowDefinition Height ="20"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <Label Text="{Binding DisplayName}" Grid.Row="0" Grid.Column="1"/>
-                <Label Text="{Binding DisplayUniversity}" Grid.Row="1" Grid.Column="1"/>
+                <Label Text="{Binding DisplayUsername}" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="{Binding DisplayInstitution}" Grid.Row="1" Grid.Column="1"/>
+                <Label Text="{Binding DisplayMajor}" Grid.Row="2" Grid.Column="1"/>
+                <Label Text="{Binding DisplayEmail}" Grid.Row="3" Grid.Column="1"/>
             </Grid>
 
-
+            <!--Skills-->
             <Frame HasShadow="True">
                 <StackLayout>
                     <Label Text="Skills" FontSize="Medium" FontAttributes="Bold"></Label>
-                    <FlexLayout x:Name="SkillsListView" Wrap="Wrap"                      
-                        BindableLayout.ItemsSource="{Binding ProfileSkills }">
+                    <FlexLayout x:Name="UsersCurrentSkillsView" Wrap="Wrap"                     
+                        BindableLayout.ItemsSource="{Binding UsersCurrentSkills}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame CornerRadius="5" x:DataType="model:Skill" 
+                                <Frame CornerRadius="5" x:DataType="x:String" 
                                        BackgroundColor="#56CCF2" HasShadow="False" 
                                        Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
                                        VerticalOptions="FillAndExpand"
@@ -45,7 +47,7 @@
                                        HeightRequest="30">
                                     <StackLayout AbsoluteLayout.LayoutFlags="All">
                                         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-                                            <Label Text="{Binding Name}">
+                                            <Label Text="{Binding .}" TextColor="White">
                                             </Label>
                                         </StackLayout>
                                     </StackLayout>
@@ -53,26 +55,29 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
+                    <Button Text="Add Skill" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
+                    BackgroundColor="#4F4F4F" HorizontalOptions="Center" WidthRequest="60"
+                    CornerRadius="5" Clicked="AddSkillPopupCommandAsync"/>
                 </StackLayout>
             </Frame>
 
+            <!--Current Subjects-->
             <Frame HasShadow="True">
                 <StackLayout>
-                    <!--Current Subjects-->
                     <Label Text="Current Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
-                    <FlexLayout x:Name="CurrentSubjectsList" Wrap="Wrap"                      
-                        BindableLayout.ItemsSource="{Binding CurrentSubjects}">
+                    <FlexLayout x:Name="UsersCurrentSubjectsView" Wrap="Wrap"                      
+                        BindableLayout.ItemsSource="{Binding UsersCurrentSubjects}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame CornerRadius="0" x:DataType="model:Subject" 
-                                       BackgroundColor="#27AE60" HasShadow="False" 
+                                <Frame CornerRadius="5" x:DataType="x:String" 
+                                       BackgroundColor="#27ae60" HasShadow="False" 
                                        Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
                                        VerticalOptions="FillAndExpand"
                                        Margin="8,0,0,0"
                                        HeightRequest="30">
                                     <StackLayout AbsoluteLayout.LayoutFlags="All">
                                         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-                                            <Label Text="{Binding Name}">
+                                            <Label Text="{Binding .}" TextColor="White">
                                             </Label>
                                         </StackLayout>
                                     </StackLayout>
@@ -80,22 +85,22 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
-                    
-                    <!--Past Subjects-->
-                    <Label Text="Past Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
-                    <FlexLayout x:Name="PastSubjectsList" Wrap="Wrap"                      
-                        BindableLayout.ItemsSource="{Binding PastSubjects}">
+
+                    <!--Previous Subjects-->
+                    <Label Text="Previous Subjects" FontSize="Medium" FontAttributes="Bold"></Label>
+                    <FlexLayout x:Name="UsersPreviousSubjectsView" Wrap="Wrap"                      
+                        BindableLayout.ItemsSource="{Binding UsersPreviousSubjects}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame CornerRadius="0" x:DataType="model:Subject" 
-                                       BackgroundColor="DarkGray" HasShadow="False" 
+                                <Frame CornerRadius="5" x:DataType="x:String" 
+                                       BackgroundColor="#bdbdbd" HasShadow="False" 
                                        Padding="4,4,4,4" HorizontalOptions="StartAndExpand" 
                                        VerticalOptions="FillAndExpand"
                                        Margin="8,0,0,0"
                                        HeightRequest="30">
                                     <StackLayout AbsoluteLayout.LayoutFlags="All">
                                         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-                                            <Label Text="{Binding Name}">
+                                            <Label Text="{Binding .}" TextColor="White">
                                             </Label>
                                         </StackLayout>
                                     </StackLayout>
@@ -103,20 +108,12 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </FlexLayout>
+                    <Button Text="Add Subject" FontSize="Micro" HeightRequest="35" Padding="4,4,4,4" Margin="8,0,0,0"
+                    BackgroundColor="#4F4F4F" HorizontalOptions="Center" WidthRequest="60"
+                    CornerRadius="5" Clicked="AddSubjectPopupCommandAsync"/>
                 </StackLayout>
             </Frame>
-
-            <Button Text="PoPuP"
-                    BackgroundColor="DodgerBlue" HorizontalOptions="FillAndExpand"
-                    VerticalOptions="Center"
-                    CornerRadius="20"
-                    TextColor="White"
-                    Clicked="AddSkillPopupCommand"
-                    />
-            
-                   
-
         </StackLayout>
-    </RefreshView>
+        <!--</RefreshView>-->
+    </ScrollView>
 </ContentPage>
-    

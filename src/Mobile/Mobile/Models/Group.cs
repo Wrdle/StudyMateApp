@@ -11,13 +11,13 @@ namespace Mobile.Models
         public DateTime DateCreated { get; set; }
         public ImageSource CoverPhoto { get; set; }
         public CoverColor CoverColor { get; set; }
-        public ICollection<UserListItem> Members { get; set; }
-        public ICollection<Assignment> Assignments { get; set; }
+        public ICollection<UserListItem> Members { get; private set; }
+        public ICollection<AssignmentListItem> Assignments { get; private set; }
 
         public Group()
         {
             Members = new List<UserListItem>();
-            Assignments = new List<Assignment>();
+            Assignments = new List<AssignmentListItem>();
         }
 
     }

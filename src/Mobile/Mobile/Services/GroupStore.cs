@@ -20,7 +20,6 @@ namespace Mobile.Services
         //------------------------------
 
         private readonly IUserStore _userStore;
-        private readonly IAssignmentStore _assignmentStore;
         private readonly ImageConverter _imageConverter;
 
         //------------------------------
@@ -30,7 +29,6 @@ namespace Mobile.Services
         public GroupStore()
         {
             _userStore = DependencyService.Get<IUserStore>();
-            _assignmentStore = DependencyService.Get<IAssignmentStore>();
             _imageConverter = DependencyService.Get<ImageConverter>();
         }
 
@@ -134,17 +132,13 @@ namespace Mobile.Services
                 var group = await dbContext.Groups
                     .Include(g => g.CoverColor)
                     .SingleOrDefaultAsync(g => g.Id == id);
-
-                var assignments = await _assignmentStore.GetByGroupId(id);
-
                 return new Group
                 {
                     Id = group.Id,
                     Name = group.Name,
                     DateCreated = group.DateCreated,
                     CoverPhoto = _imageConverter.BytesToImage(group.CoverPhoto),
-                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex },
-                    Assignments = assignments
+                    CoverColor = new CoverColor { Id = group.CoverColor.Id, BackgroundColor = group.CoverColor.BackgroundColorFromHex, FontColor = group.CoverColor.FontColorFromHex }
                 };
             }
         }

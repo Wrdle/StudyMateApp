@@ -1,4 +1,5 @@
-﻿using Mobile.Views.Profile;
+﻿using Mobile.ViewModels;
+using Mobile.Views.Profile;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,17 @@ namespace Mobile.Views
         {
             base.OnAppearing();
             _viewModel.OnAppearing();
-            _viewModel.LoadProfileSkillsCommand.Execute(null);
-            _viewModel.LoadSubjectsCommand.Execute(null);
+            _viewModel.ExecuteLoadUserProfile();
         }
 
-        protected void AddSkillPopupCommand(object sender, EventArgs e)
+        protected async void AddSkillPopupCommandAsync(object sender, EventArgs e)
         {
-            PopupNavigation.Instance.PushAsync(new AddSkillPopup());//PopupNavigation.PushAsync(new AddSkillPopup());
+            await PopupNavigation.Instance.PushAsync(new AddSkillPopup((ProfileViewModel)BindingContext));
+        }
+
+        protected async void AddSubjectPopupCommandAsync(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.PushAsync(new AddSubjectPopup((ProfileViewModel)BindingContext));
         }
     }
 }
